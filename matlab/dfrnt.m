@@ -1,4 +1,4 @@
-function result = dfrnt(source, a, m)
+function [result, decodeEig] = dfrnt(source, a, m)
 %dfrnt 1-D discrete fractional random transform
 %
 % - Description:
@@ -13,6 +13,7 @@ function result = dfrnt(source, a, m)
 % 
 % - Returns:
 %       - result [1xN matrix] the result matrix with 1xN size
+%       - decodeEig [1xN matrix] the eigenvector matrix use to decode
 %
 
 % get size of source matrix
@@ -25,7 +26,8 @@ p = rand(sourceCols, sourceCols);
 q = (p + p') / 2;
 
 % get the eigenvector of 'q', named 'v'
-v = eig(q);
+v = eig(q)';
+decodeEig = v;
 
 % define the matrix 'd'
 d = zeros(sourceCols, sourceCols);
@@ -34,7 +36,7 @@ for n = 1 : sourceCols
 end
 
 % caculate the kernel matrix 'r'
-r = v' * d * v;
+r = v * d * v';
 
 % caculate the result
 result = r * source;
