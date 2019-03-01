@@ -32,7 +32,7 @@ for n = 1 : sourceCols
 end
 
 % caculate the kernel matrix 'r'
-r = v * d * v';
+r = v' * d * v;
 
 % caculate the result
 result = r * source;
