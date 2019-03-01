@@ -24,7 +24,6 @@ q = (p + p') / 2;
 
 % get the eigenvector of 'q', named 'v'
 v = eig(q)';
-decodeEig = v;
 
 % define the matrix 'd'
 d = zeros(sourceCols, sourceCols);
