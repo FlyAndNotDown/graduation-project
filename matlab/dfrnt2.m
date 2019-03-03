@@ -31,8 +31,8 @@ rr = v * d * v';
 q = (pc + pc') / 2;
 [v, ~] = eig(q);
 v = orth(v);
-d = zeros(sourceCols, sourceCols);
-for n = 1 : sourceCols
+d = zeros(sourceRows, sourceRows);
+for n = 1 : sourceRows
     d(n, n) = exp(-1i * 2 * pi * (n - 1) * a / m);
 end
 rc = v * d * v';
