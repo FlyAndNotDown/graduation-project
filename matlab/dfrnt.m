@@ -1,5 +1,5 @@
 function output = dfrnt(source, a, m, p)
-%dfrnt - one-dimension DFRnT
+%dfrnt - one-dimension DFRNT
 %
 % - Description:
 %       the one dimension discrete fractional random transform
