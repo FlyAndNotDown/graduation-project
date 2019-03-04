@@ -8,6 +8,7 @@ p = rand(4, 4);
 u = [0, 1, 0, 0];
 
 output = lqdfrnt(source, 0.25, 1, p, u);
+reSource = lqdfrnt(output, -0.25, 1, p, u);
 output4 = lqdfrnt(output, 0.25, 1, p, u);
 output4 = lqdfrnt(output4, 0.25, 1, p, u);
 output4 = lqdfrnt(output4, 0.25, 1, p, u);
