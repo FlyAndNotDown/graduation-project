@@ -12,7 +12,7 @@ function output = lqdfrnt(source, a, m, p, u)
 %       - u [1x4 vector] a unit pure quaternion vector
 %
 % - Returns:
-%       - output [1xnx4 double matrix] 1xnx3 output signal matrix
+%       - output [1xnx4 double matrix] 1xnx4 output signal matrix
 %
 % - Tips:
 %       some u examples:
