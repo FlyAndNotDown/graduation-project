@@ -1,7 +1,9 @@
-lena = rgb2gray(double(imread('lena.bmp')));
+source = rgb2gray(im2double(imread('lena.bmp')));
 
-r = dfrntKernal(0.25, 1, rand(512, 512));
+[sourceRows, sourceCols] = size(source);
 
-result = dfrnt2(lena, r);
+figure(1);
+imshow(source);
 
-figure, imshow(result);
+figure(2);
+imshow(dfrnt2(source, 0.25, 1, rand(sourceCols, sourceCols), rand(sourceRows, sourceRows)));
