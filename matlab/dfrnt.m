@@ -9,6 +9,7 @@ function output = dfrnt(source, a, m, p)
 %       - a [double] the fractional order of transform
 %       - m [integer] the cycle of transform, must be mutiple of 'a'
 %       - p [nxn double matrix] a nxn key matrix, the item can be number from 0 to 1
+%
 % - Returns:
 %       - output [1xn double matrix] the output signal vector 
 

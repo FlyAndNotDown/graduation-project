@@ -5,11 +5,13 @@ function output = dfrnt2(source, a, m, pr, pc)
 %       the two dimension discrete fractional random transform
 %
 % - Arguments:
-%       - source [mxn double matrix] mxn source signal vector
+%       - source [mxn double matrix] mxn source signal matrix
 %       - a [double] the fractional order of transform
 %       - m [integer] the cycle of transform, must be mutiple of 'a'
 %       - pr [nxn double matrix] a mxm key matrix, it will use when row 1-d DFRNT, the item can be number from 0 to 1
 %       - pc [mxm double matrix] a nxn key matrix, it will use when col 1-d DFRNT, the item can be number from 0 to 1
+% - Returns:
+%       - output [mxn double matrix] mxn output signal matrix
 
 % init the output
 output = source;
