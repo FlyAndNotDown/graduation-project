@@ -23,7 +23,7 @@ for n = 1 : sourceRows
     output(n, :) = dfrnt(output(n, :), rr);
 end
 
-% do the DFRNT to event col
+% do the DFRNT to eveny col
 for n = 1 : sourceCols
     output(:, n) = dfrnt(output(:, n)', rc)';
 end

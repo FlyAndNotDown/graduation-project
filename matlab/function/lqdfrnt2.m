@@ -1,4 +1,4 @@
-function output = lqdfrnt2(source, a, m, pr, pc, u)
+function output = lqdfrnt2(source, rr, rc, u)
 %lqdfrnt2 - two-dimension LQDFRNT
 %
 % - Description:
@@ -6,10 +6,8 @@ function output = lqdfrnt2(source, a, m, pr, pc, u)
 %
 % - Arguments:
 %       - source [mxnx4 double matrix] mxnx4 source signal matrix
-%       - a [double] the fractional order of transform
-%       - m [integer] the cycle of transform, must be mutiple of 'a'
-%       - pr [nxn double matrix] a nxn key matrix, it will be used when row 1-d LQDFRNT, item can be number from 0 to 1
-%       - pc [mxm double matrix] a mxm key matrix, it will be used when col 1-d LQDFRNT, item can be number from 0 to 1
+%       - rr [nxn double matrix] a kernel matrix, it will be used when doing LQDFRNT to every row
+%       - pc [mxm double matrix] a kernel matrix, it will be used when doing LQDFRNT to every col
 %       - u [1x4 vector] a unit pure quaternion vector
 %
 % - Returns:
@@ -20,5 +18,21 @@ function output = lqdfrnt2(source, a, m, pr, pc, u)
 %       - [0 1 0 0]
 %       - [0 0 1 0]
 %       - [0 0 0 1]
+
+% get size info
+[sourceRows, sourceCols, sourceHeight] = size(source);
+
+% init the output
+output = source;
+
+% do the LQDFRNT to every row
+for n = 1 : sourceRows
+    output(n, :, :) = lqdfrnt(output(n, :, :), rr, u);
+end
+
+% to the LQDFRNT to every col
+for n = 1 : sourceCols
+    output(:, n, :) = lqdfrnt(output(:, n, :)', rc, u);
+end
 
 end
