@@ -7,8 +7,11 @@ source(:, :, 4) = [3, 4, 5, 6];
 p = rand(4, 4);
 u = [0, 1, 0, 0];
 
-output = rqdfrnt(source, 0.25, 1, p, u);
-reSource = rqdfrnt(output, -0.25, 1, p, u);
-output4 = rqdfrnt(output, 0.25, 1, p, u);
-output4 = rqdfrnt(output4, 0.25, 1, p, u);
-output4 = rqdfrnt(output4, 0.25, 1, p, u);
+r = dfrntKernel(0.25, 1, p);
+ir = dfrntKernel(-0.25, 1, p);
+
+output = rqdfrnt(source, r, u);
+reSource = rqdfrnt(output, ir, u);
+output4 = rqdfrnt(output, r, u);
+output4 = rqdfrnt(output4, r, u);
+output4 = rqdfrnt(output4, r, u);
