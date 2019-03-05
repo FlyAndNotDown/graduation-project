@@ -20,7 +20,7 @@ function output = lqdfrnt2(source, rr, rc, u)
 %       - [0 0 0 1]
 
 % get size info
-[sourceRows, sourceCols, sourceHeight] = size(source);
+[sourceRows, sourceCols, ~] = size(source);
 
 % init the output
 output = source;
@@ -32,7 +32,8 @@ end
 
 % to the LQDFRNT to every col
 for n = 1 : sourceCols
-    output(:, n, :) = lqdfrnt(output(:, n, :)', rc, u);
+    t = lqdfrnt(permute(output(:, n, :), [2, 1, 3]), rc, u);
+    output(:, n, :) = permute(t, [2, 1, 3]);
 end
 
 end
