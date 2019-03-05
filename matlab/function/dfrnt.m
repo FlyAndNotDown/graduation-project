@@ -16,24 +16,8 @@ function output = dfrnt(source, a, m, p)
 % do the transposition to source matrix
 source = source';
 
-% get size info of source matrix
-[sourceRows, ~] = size(source);
-
-% calculate the random symmetrical matrix
-q = (p + p') / 2;
-
-% get the random eigen matrix
-[v, ~] = eig(q);
-v = orth(v);
-
-% get the special matrix 'd'
-d = zeros(sourceRows, sourceRows);
-for n = 1 : sourceRows
-    d(n, n) = exp(-1i * 2 * pi * (n - 1) * a / m);
-end
-
 % get the kernal matrix of DFRNT
-r = v * d * v';
+r = dfrntKernel(a, m, p);
 
 % get the output matrix
 output = r * source;
