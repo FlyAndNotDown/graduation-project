@@ -18,16 +18,15 @@ function result = iarnold(source, s)
 result = zeros(sourceRow, sourceRow);
 
 % do inverse arnold transform to matrix
-for n1 = 1 : sourceRow
-    for n2 = 1 : sourceRow
-        x = n1;
-        y = n2;
-        for n = 1 : s
-            x = mod(2 * (x - 1) - (y - 1), sourceRow) + 1;
-            y = mod((y - 1) - (x - 1), sourceRow) + 1;
+for n = 1 : s
+    for n1 = 1 : sourceRow
+        for n2 = 1 : sourceRow
+            x = mod(2 * (n1 - 1) - (n2 - 1), sourceRow) + 1;
+            y = mod((n2 - 1) - (n1 - 1), sourceRow) + 1;
+            result(y, x) = source(n2, n1);
         end
-        result(x, y) = source(n1, n2);;
     end
+    source = result;
 end
 
 end
