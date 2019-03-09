@@ -9,7 +9,7 @@ function blocks = splitBlock(source, blockLength)
 %       - blockLength [integer] smaller block length, must be factor of n and m
 %
 % - Returns:
-%       - blocks [ixjx3 matrix cell array] smaller blocks
+%       - blocks [1xn cell array {ixjx3 matrix}] smaller blocks
 
 % get size info
 [sourceRow, sourceCol, ~] = size(source);
