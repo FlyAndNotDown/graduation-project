@@ -24,11 +24,11 @@ blocks = cell(1, blockNumPerRow * blockNumPerCol);
 % copy
 for n1 = 1 : blockNumPerCol
     for n2 = 1 : blockNumPerRow
-        blocks{1, blockNumPerRow * n1 + n2} = zeros(blockLength, blockLength, 3);
+        blocks{1, blockNumPerRow * (n1 - 1) + n2} = zeros(blockLength, blockLength, 3);
         for n3 = 1 : blockLength
             for n4 = 1 : blockLength
                 for n5 = 1 : 3
-                    blocks{1, blockNumPerRow * n1 + n2}(n3, n4, n5) = source((n1 - 1) * blockLength + n3, (n2 - 1) * blockLength + n4, n5);
+                    blocks{1, blockNumPerRow * (n1 - 1) + n2}(n3, n4, n5) = source((n1 - 1) * blockLength + n3, (n2 - 1) * blockLength + n4, n5);
                 end
             end
         end
