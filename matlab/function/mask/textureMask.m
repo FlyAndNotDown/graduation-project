@@ -11,7 +11,7 @@ function mask = textureMask(source)
 %       - mask [double] texture mask value of target pixel
 
 % get size info
-[sourceRow, sourceCol] = size(source);
+[sourceRow, sourceCol, ~] = size(source);
 
 % get center position
 centerRow = fix(sourceRow / 2) + 1;
