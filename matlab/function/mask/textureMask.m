@@ -18,7 +18,7 @@ function mask = textureMask(source, l)
 windowSize = (2 * l + 1) * (2 * l + 1);
 
 % for every pixel, calculate its texture mask value
-mask = 0
+mask = 0;
 for n1 = 1 : sourceRow
     for n2 = 1 : sourceCol
         % get near (2l + 1)^2 size pixels' pixel sum
@@ -26,8 +26,8 @@ for n1 = 1 : sourceRow
         sumG = 0;
         sumB = 0;
         for n3 = (n1 - l) : (n1 + l)
-            for n4 = (n2 - l) : (n2 - l)
-                if n3 > 1 && n3 < sourceRow && n4 > 1 && n4 < sourceCol
+            for n4 = (n2 - l) : (n2 + l)
+                if n3 >= 1 && n3 <= sourceRow && n4 >= 1 && n4 <= sourceCol
                     sumR = sumR + source(n3, n4, 1);
                     sumG = sumG + source(n3, n4, 2);
                     sumB = sumB + source(n3, n4, 3);
@@ -46,7 +46,7 @@ for n1 = 1 : sourceRow
         textureB = abs(source(n1, n2, 3) - averageB);
 
         % get mask and add it to result
-        mask = mark + max([textureR, textureG, textureB]);
+        mask = mask + max([textureR, textureG, textureB]);
     end
 end
 
