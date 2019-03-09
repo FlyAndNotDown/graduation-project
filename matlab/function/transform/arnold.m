@@ -15,17 +15,19 @@ function result = arnold(source, s)
 [sourceRow, ~] = size(source);
 
 % init result
-result = source;
+result = zeros(sourceRow, sourceRow);
 
 % do arnold transform to matrix
-for n = 1 : s
-    temp = zeros(sourceRow, sourceRow);
-    for n1 = 1 : sourceRow
-        for n2 = 1 : sourceRow
-            temp(n1 + n2, n1 + 2 * n2) = result(n1, n2);
+for n1 = 1 : sourceRow
+    for n2 = 1 : sourceRow
+        x = n1;
+        y = n2;
+        for n = 1 : s
+            x = mod((x - 1) + (y - 1), sourceRow) + 1;
+            y = mod((x - 1) + 2 * (y - 1), sourceRow) + 1;
         end
+        result(x, y) = source(n1, n2);
     end
-    result = temp;
 end
 
 end
