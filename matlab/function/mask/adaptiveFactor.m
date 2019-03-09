@@ -21,7 +21,7 @@ factors = zeros(1, blockNum);
 
 % for every blocks, calculate its texture mask value
 for n = 1 : blockNum
-    textureMasks(1, n) = textureMasks(blocks{1, n}, l);
+    textureMasks(1, n) = textureMask(blocks{1, n}, l);
 end
 
 % get max texture mask value
