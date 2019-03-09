@@ -1,4 +1,4 @@
-function f = adaptiveFactor(blocks, l)
+function factors = adaptiveFactor(blocks, l)
 %adaptiveFactor - get adaptive factor of every blocks in image
 %
 % - Description:
@@ -17,7 +17,7 @@ function f = adaptiveFactor(blocks, l)
 % generate some vector to save texture mask, temp adaptive factor and result
 textureMasks = zeros(1, blockNum);
 tempAdaptiveFactors = zeros(1, blockNum);
-f = zeros(1, blockNum);
+factors = zeros(1, blockNum);
 
 % for every blocks, calculate its texture mask value
 for n = 1 : blockNum
@@ -43,7 +43,7 @@ minTempAdaptiveFactor = min(tempAdaptiveFactors);
 
 % get result
 for n = 1 : blockNum
-    f(1, n) = round(6 * (tempAdaptiveFactors(1, n) - minTempAdaptiveFactor) / (maxTempAdaptiveFactor - minTempAdaptiveFactor));
+    factors(1, n) = round(6 * (tempAdaptiveFactors(1, n) - minTempAdaptiveFactor) / (maxTempAdaptiveFactor - minTempAdaptiveFactor));
 end
 
 end
