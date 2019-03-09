@@ -8,4 +8,9 @@ imshow(source);
 
 % show image after one time arnold transform
 subplot(2, 2, 2);
-imshow(arnold(source, 1));
+output = arnold(source, 1);
+imshow(output, []);
+
+% show image restored from output image
+subplot(2, 2, 3);
+imshow(iarnold(output, 1), []);
