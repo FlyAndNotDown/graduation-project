@@ -22,6 +22,7 @@ secretArnold = arnold(secret, ks);
 
 % get binary secret sequence
 secretSequence = matrixToVector(secretArnold);
+[~, secretSequenceLength] = size(secretSequence);
 
 % split picture to 8x8 smaller blocks
 blocks = splitBlock(source, 8);
@@ -44,18 +45,28 @@ end
 % get adaptive factor of every block
 adaptiveFactors = adaptiveFactor(blocks, 1);
 
+% % add some info
+% for n = 1 : blocksLength
+%     encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + 0.2;
+% end
+
+% restoredBlocks = cell(1, blocksLength);
+% for n = 1 : blocksLength
+%     restoredBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, ikt, ikt, u);
+%     restoredBlocks{1, n} = restoredBlocks{1, n}(:, :, [2, 3, 4]);
+% end
+
+% output = mergeBlock(restoredBlocks, fix(sourceCol / 8));
+
+% sort with order 'adpadtiveFactor'
+adaptiveFactorsWithPosition = cell(1, blocksLength);
+for n = 1 : blocksLength
+    adaptiveFactorsWithPosition{1, n} = zeros(1, 2);
+    adaptiveFactorsWithPosition{1, n}(1, 1) = n;
+    adaptiveFactorsWithPosition{1, n}(1, 2) = adaptiveFactors(1, n);
+end
+
+% select target position
 % TODO
-% add some info
-for n = 1 : blocksLength
-    encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + 1;
-end
-
-restoredBlocks = cell(1, blocksLength);
-for n = 1 : blocksLength
-    restoredBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, ikt, ikt, u);
-    restoredBlocks{1, n} = restoredBlocks{1, n}(:, :, [2, 3, 4]);
-end
-
-output = mergeBlock(restoredBlocks, fix(sourceCol / 8));
 
 end
