@@ -14,6 +14,9 @@ function output = qdfrntMark(source, secret, ks, kt, ikt)
 % - Returns:
 %       - output [nxnx3 double matrix] output matrix
 
+% get size info
+[sourceRow, sourceCol, sourceHeight] = size(source);
+
 % do arnold transform to secret
 secretArnold = arnold(secret, ks);
 
@@ -32,13 +35,27 @@ encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
     [blockRow, blockCol, blockHeight] = size(blocks{1, n});
     t = zeros(blockRow, blockCol, blockHeight + 1);
-    for n = 2 : 4
-        t(:, :, n) = blocks{1, n}(:, :, n - 1);
+    for n1 = 2 : 4
+        t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
     encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
 end
 
 % get adaptive factor of every block
 adaptiveFactors = adaptiveFactor(blocks, 1);
+
+% TODO
+% add some info
+for n = 1 : blocksLength
+    encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + 1;
+end
+
+restoredBlocks = cell(1, blocksLength);
+for n = 1 : blocksLength
+    restoredBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, ikt, ikt, u);
+    restoredBlocks{1, n} = restoredBlocks{1, n}(:, :, [2, 3, 4]);
+end
+
+output = mergeBlock(restoredBlocks, fix(sourceCol / 8));
 
 end

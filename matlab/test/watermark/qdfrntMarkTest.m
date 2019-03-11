@@ -9,3 +9,10 @@ ir = dfrntKernel(-0.25, 1, p);
 
 % watermarking
 output = qdfrntMark(source, secret, 3, r, ir);
+
+% show result
+figure();
+subplot(1, 2, 1);
+imshow(source);
+subplot(1, 2, 2);
+imshow(output);
