@@ -7,3 +7,6 @@ source(4, :, :) = [4, 75, 6; 25, 6, 7; 36, 7, 8; 7, 28, 9; 9, 810, 11; 910, 11, 
 
 % split blocks
 blocks = splitBlock(source, 2);
+
+% restore
+output = mergeBlock(blocks, 3);
