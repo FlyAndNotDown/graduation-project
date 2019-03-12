@@ -47,64 +47,9 @@ end
 % get adaptive factor of every block
 adaptiveFactors = adaptiveFactor(blocks, 1);
 
-% % add some info
-% for n = 1 : blocksLength
-%     encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + 0.2;
-% end
-
-% restoredBlocks = cell(1, blocksLength);
-% for n = 1 : blocksLength
-%     restoredBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, ikt, ikt, u);
-%     restoredBlocks{1, n} = restoredBlocks{1, n}(:, :, [2, 3, 4]);
-% end
-
-% output = mergeBlock(restoredBlocks, fix(sourceCol / 8));
-
-% sort with order 'adpadtiveFactor'
-adaptiveFactorsWithPosition = cell(1, blocksLength);
+% add some info
 for n = 1 : blocksLength
-    adaptiveFactorsWithPosition{1, n} = zeros(1, 2);
-    adaptiveFactorsWithPosition{1, n}(1, 1) = n;
-    adaptiveFactorsWithPosition{1, n}(1, 2) = adaptiveFactors(1, n);
-end
-
-% select all blocks where 'adaptiveFactor' == 2 || 'adaptiveFactor' == 3
-x = 1;
-n = 1;
-while n <= blocksLength
-    marked = false;
-    if x > secretSequenceLength
-        break;
-    end
-    f = adaptiveFactorsWithPosition{1, n}(1, 2);
-    if f == 2 || f == 3
-        blockPosition = adaptiveFactorsWithPosition{1, n}(1, 1);
-        % start watermarking
-        t = encodedBlocks{1, blockPosition};
-        for n1 = 1 : blockRow
-            for n2 = 1 : blockCol
-                average = 0;
-                for n3 = -1 : 1
-                    for n4 = -1 : 1
-                        row = n1 + n3;
-                        col = n2 + n4;
-                        if row >= 1 && row <= blockRow && col >= 1 && col <= blockCol
-                            average = average + t(row, col, 3);
-                        end 
-                    end
-                end
-                average = (average - t(n1, n2, 3)) / 8;
-                encodedBlocks{1, blockPosition}(n1, n2, 3) = average + (2 * secretSequence(1, x) - 1) * f * intensity;
-                marked = true;
-            end
-        end
-    end
-    if marked
-        x = x + 1;
-        n = n + 50;
-    else
-        n = n + 1;
-    end
+    encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + intensity;
 end
 
 % do ILQDFRNT to every blocks
