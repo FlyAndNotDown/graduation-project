@@ -70,7 +70,9 @@ end
 
 % select all blocks where 'adaptiveFactor' == 2 || 'adaptiveFactor' == 3
 x = 1;
-for n = 1 : blocksLength
+n = 1;
+while n <= blocksLength
+    marked = false;
     if x > secretSequenceLength
         break;
     end
@@ -92,9 +94,15 @@ for n = 1 : blocksLength
                 end
                 average = (average - encodedBlocks{1, blockPosition}(n1, n2)) / 8;
                 encodedBlocks{1, blockPosition}(n1, n2, 3) = average + (2 * secretSequence(1, x) - 1) * f * intensity;
-                x = x + 1;
+                marked = true;
             end
         end
+    end
+    if marked
+        x = x + 1;
+        n = n + 50;
+    else
+        n = n + 1;
     end
 end
 
