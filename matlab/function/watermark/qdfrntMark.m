@@ -80,10 +80,10 @@ while n <= blocksLength
     if f == 2 || f == 3
         blockPosition = adaptiveFactorsWithPosition{1, n}(1, 1);
         % start watermarking
+        t = encodedBlocks{1, blockPosition};
         for n1 = 1 : blockRow
             for n2 = 1 : blockCol
                 average = 0;
-                t = encodedBlocks{1, blockPosition};
                 for n3 = -1 : 1
                     for n4 = -1 : 1
                         row = n1 + n3;
