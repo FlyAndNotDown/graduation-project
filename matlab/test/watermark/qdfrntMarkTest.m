@@ -8,7 +8,7 @@ r = dfrntKernel(0.25, 1, p);
 ir = dfrntKernel(-0.25, 1, p);
 
 % watermarking
-output = qdfrntMark(source, secret, 3, r, ir, 0.5);
+output = qdfrntMark(source, secret, 3, r, ir, 0.05);
 
 % show result
 figure();
