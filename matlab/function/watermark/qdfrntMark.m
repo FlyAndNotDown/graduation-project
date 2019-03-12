@@ -83,16 +83,17 @@ while n <= blocksLength
         for n1 = 1 : blockRow
             for n2 = 1 : blockCol
                 average = 0;
+                t = encodedBlocks{1, blockPosition};
                 for n3 = -1 : 1
                     for n4 = -1 : 1
                         row = n1 + n3;
                         col = n2 + n4;
                         if row >= 1 && row <= blockRow && col >= 1 && col <= blockCol
-                            average = average + encodedBlocks{1, blockPosition}(row, col);
+                            average = average + t(row, col, 3);
                         end 
                     end
                 end
-                average = (average - encodedBlocks{1, blockPosition}(n1, n2)) / 8;
+                average = (average - t(n1, n2, 3)) / 8;
                 encodedBlocks{1, blockPosition}(n1, n2, 3) = average + (2 * secretSequence(1, x) - 1) * f * intensity;
                 marked = true;
             end
