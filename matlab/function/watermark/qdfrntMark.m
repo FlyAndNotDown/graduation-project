@@ -44,12 +44,11 @@ for n = 1 : blocksLength
     encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
 end
 
-% get adaptive factor of every block
-adaptiveFactors = adaptiveFactor(blocks, 1);
-
 % add some info
 for n = 1 : blocksLength
-    encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + intensity;
+    if rem(n, 10) == 0
+        encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + intensity;
+    end
 end
 
 % do ILQDFRNT to every blocks
