@@ -33,6 +33,9 @@ blocks = splitBlock(source, 8);
 % set a pure unit quaternion
 u = [0, 1, 0, 0];
 
+% get adaptive factors of every blocks
+adaptiveFactors = adaptiveFactor(blocks, 1);
+
 % do QDFRNT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
@@ -44,10 +47,71 @@ for n = 1 : blocksLength
     encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
 end
 
-% add some info
+% % add some info
+% for n = 1 : blocksLength
+%     if rem(n, 10) == 0
+%         encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + intensity;
+%     end
+% end
+
+% start watermarking
+x = 1;
 for n = 1 : blocksLength
-    if rem(n, 10) == 0
-        encodedBlocks{1, n}(1, 1, 3) = encodedBlocks{1, n}(1, 1, 3) + intensity;
+    % if adaptive factor is 0, not do watermarking
+    if adaptiveFactors(1, n) > 0
+        % get channel 3 info of blocks
+        blockK = encodedBlocks{1, n}(:, :, 3);
+
+        % get sequence
+        blockKSequence = zeros(64, 3);
+        for n1 = 1 : 8
+            for n2 = 1 : 8
+                if blockK(n1, n2) >= 0
+                    blockKSequence((n1 - 1) * 8 + n2, 1) = blockK(n1, n2);
+                else
+                    if blockK(n1, n2) < -1
+                        blockKSequence((n1 - 1) * 8 + n2, 1) = 2 + blockK(n1, n2);
+                    else
+                        blockKSequence((n1 - 1) * 8 + n2, 1) = 1 + blockK(n1, n2);
+                    end
+                end
+                blockKSequence((n1 - 1) * 8 + n2, 2) = n1;
+                blockKSequence((n1 - 1) * 8 + n2, 3) = n2;
+            end
+        end
+
+        % sorting by sequence value
+        for n1 = 1 : 63
+            minIndex = n1;
+            for n2 = n1 + 1 : 64
+                if blockKSequence(n2, 1) < blockKSequence(minIndex, 1)
+                    minIndex = n2;
+                end
+            end
+            t = blockKSequence(n1, :);
+            blockKSequence(n1, :) = blockKSequence(minIndex, :);
+            blockKSequence(minIndex, :) = t;
+        end
+
+        % get middle sequence value's position
+        t = 32;
+        u = blockKSequence(t, 2);
+        v = blockKSequence(t, 3);
+        count = 1;
+        flag = true;
+        while ~(u >= 2 && u <= 7 && v >= 2 && v <= 7)
+            if flag
+                t = t + count;
+            else
+                t = t - count;
+            end
+            count = count + 1;
+            flag = ~flag;
+            u = blockKSequence(t, 2);
+            v = blockKSequence(t, 3);
+        end
+
+        a = 1;
     end
 end
 
