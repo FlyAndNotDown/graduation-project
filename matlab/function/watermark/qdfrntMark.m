@@ -16,7 +16,7 @@ function output = qdfrntMark(source, secret, ks, kt, ikt, intensity)
 %       - output [nxnx3 double matrix] output matrix
 
 % get size info
-[sourceRow, sourceCol, sourceHeight] = size(source);
+[sourceRow, ~, ~] = size(source);
 
 % do arnold transform to secret
 secretArnold = arnold(secret, ks);
@@ -28,7 +28,7 @@ secretSequence = matrixToVector(secretArnold);
 % split picture to 8x8 smaller blocks
 blocks = splitBlock(source, 8);
 [~, blocksLength] = size(blocks);
-[blockRow, blockCol, blockHeight] = size(blocks{1, 1});
+[blockRow, ~, ~] = size(blocks{1, 1});
 
 % set a pure unit quaternion
 u = [0, 1, 0, 0];
@@ -57,6 +57,11 @@ end
 % start watermarking
 x = 1;
 for n = 1 : blocksLength
+    % if secret sequence mark over, break
+    if x > secretSequenceLength
+        break;
+    end
+
     % if adaptive factor is 0, not do watermarking
     if adaptiveFactors(1, n) > 0
         % get channel 3 info of blocks
@@ -95,11 +100,11 @@ for n = 1 : blocksLength
 
         % get middle sequence value's position
         t = 32;
-        u = blockKSequence(t, 2);
-        v = blockKSequence(t, 3);
+        row = blockKSequence(t, 2);
+        col = blockKSequence(t, 3);
         count = 1;
         flag = true;
-        while ~(u >= 2 && u <= 7 && v >= 2 && v <= 7)
+        while ~(row >= 2 && row <= 7 && col >= 2 && col <= 7)
             if flag
                 t = t + count;
             else
@@ -107,11 +112,22 @@ for n = 1 : blocksLength
             end
             count = count + 1;
             flag = ~flag;
-            u = blockKSequence(t, 2);
-            v = blockKSequence(t, 3);
+            row = blockKSequence(t, 2);
+            col = blockKSequence(t, 3);
         end
 
-        a = 1;
+        % get average
+        average = 0;
+        for n1 = -1 : 1
+            for n2 = -1 : 1
+                average = average + blockK(row + n1, col + n2);
+            end
+        end
+        average = (average - blockK(row, col)) / 8;
+
+        % watermark
+        encodedBlocks{1, n}(row, col, 3) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
+        x = x + 1;
     end
 end
 
