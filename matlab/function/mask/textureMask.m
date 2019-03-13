@@ -27,10 +27,15 @@ for n1 = 1 : sourceRow
         sumB = 0;
         for n3 = (n1 - l) : (n1 + l)
             for n4 = (n2 - l) : (n2 + l)
+                % TODO
                 if n3 >= 1 && n3 <= sourceRow && n4 >= 1 && n4 <= sourceCol
                     sumR = sumR + source(n3, n4, 1);
                     sumG = sumG + source(n3, n4, 2);
                     sumB = sumB + source(n3, n4, 3);
+                else
+                    sumR = sumR + source(n1, n2, 1);
+                    sumG = sumG + source(n1, n2, 2);
+                    sumB = sumB + source(n1, n2, 2);
                 end
             end
         end
