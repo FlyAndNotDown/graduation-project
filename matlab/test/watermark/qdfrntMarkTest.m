@@ -11,7 +11,7 @@ ir1 = dfrntKernel(-0.25, 1, p1);
 r2 = dfrntKernel(0.25, 2, p2);
 ir2 = dfrntKernel(-0.25, 2, p2);
 r3 = dfrntKernel(0.75, 1, p3);
-ir3 = dfrntKernel(0.75, 1, p3);
+ir3 = dfrntKernel(-0.75, 1, p3);
 
 % watermarking
 output1 = qdfrntMark(source, secret, 3, r1, ir1, 0.005);
@@ -23,21 +23,20 @@ output6 = qdfrntMark(source, secret, 3, r3, ir3, 0.02);
 output7 = qdfrntMark(source, secret, 3, r3, ir3, 0.05);
 
 % show result
-figure(1, 'Test 1');
-subplot(2, 2, 1);
+figure();
+subplot(2, 4, 1);
 imshow(source);
-subplot(2, 2, 2);
+subplot(2, 4, 2);
 imshow(output1);
-subplot(2, 2, 3);
+subplot(2, 4, 3);
 imshow(output2);
-subplot(2, 2, 4);
+subplot(2, 4, 4);
 imshow(output3);
-figure(2, 'Test 2');
-subplot(2, 2, 1);
+subplot(2, 4, 5);
 imshow(output4);
-subplot(2, 2, 2);
+subplot(2, 4, 6);
 imshow(output5);
-subplot(2, 2, 3);
+subplot(2, 4, 7);
 imshow(output6);
-subplot(2, 2, 4);
+subplot(2, 4, 8);
 imshow(output7);
