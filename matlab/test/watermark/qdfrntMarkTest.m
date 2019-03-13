@@ -3,17 +3,27 @@ source = im2double(imread('lena.bmp'));
 secret = imread('secret.bmp');
 
 % calculate the kernel of DFRNT
-p = rand(8, 8);
-r = dfrntKernel(0.75, 1, p);
-ir = dfrntKernel(-0.75, 1, p);
+p1 = rand(8, 8);
+p2 = rand(8, 8);
+p3 = rand(8, 8);
+r1 = dfrntKernel(0.25, 1, p1);
+ir1 = dfrntKernel(-0.25, 1, p1);
+r2 = dfrntKernel(0.25, 2, p2);
+ir2 = dfrntKernel(-0.25, 2, p2);
+r3 = dfrntKernel(0.75, 1, p3);
+ir3 = dfrntKernel(0.75, 1, p3);
 
 % watermarking
-output1 = qdfrntMark(source, secret, 3, r, ir, 0.005);
-output2 = qdfrntMark(source, secret, 3, r, ir, 0.01);
-output3 = qdfrntMark(source, secret, 3, r, ir, 0.02);
+output1 = qdfrntMark(source, secret, 3, r1, ir1, 0.005);
+output2 = qdfrntMark(source, secret, 3, r1, ir1, 0.02);
+output3 = qdfrntMark(source, secret, 3, r2, ir2, 0.005);
+output4 = qdfrntMark(source, secret, 3, r2, ir2, 0.02);
+output5 = qdfrntMark(source, secret, 3, r3, ir3, 0.005);
+output6 = qdfrntMark(source, secret, 3, r3, ir3, 0.02);
+output7 = qdfrntMark(source, secret, 3, r3, ir3, 0.05);
 
 % show result
-figure();
+figure(1, 'Test 1');
 subplot(2, 2, 1);
 imshow(source);
 subplot(2, 2, 2);
@@ -22,3 +32,12 @@ subplot(2, 2, 3);
 imshow(output2);
 subplot(2, 2, 4);
 imshow(output3);
+figure(2, 'Test 2');
+subplot(2, 2, 1);
+imshow(output4);
+subplot(2, 2, 2);
+imshow(output5);
+subplot(2, 2, 3);
+imshow(output6);
+subplot(2, 2, 4);
+imshow(output7);
