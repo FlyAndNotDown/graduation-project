@@ -56,78 +56,87 @@ end
 
 % start watermarking
 x = 1;
-for n = 1 : blocksLength
-    % if secret sequence mark over, break
-    if x > secretSequenceLength
+over = false;
+for channel = 3 : 4
+    % if over, break
+    if over
         break;
     end
 
-    % if adaptive factor is 0, not do watermarking
-    if adaptiveFactors(1, n) > 0
-        % get channel 3 info of blocks
-        blockK = encodedBlocks{1, n}(:, :, 3);
-
-        % get sequence
-        blockKSequence = zeros(64, 3);
-        for n1 = 1 : 8
-            for n2 = 1 : 8
-                if blockK(n1, n2) >= 0
-                    blockKSequence((n1 - 1) * 8 + n2, 1) = blockK(n1, n2);
-                else
-                    if blockK(n1, n2) < -1
-                        blockKSequence((n1 - 1) * 8 + n2, 1) = 2 + blockK(n1, n2);
+    for n = 1 : blocksLength
+        % if secret sequence mark over, break
+        if x > secretSequenceLength
+            over = true;
+            break;
+        end
+    
+        % if adaptive factor is 0, not do watermarking
+        if adaptiveFactors(1, n) > 0
+            % get channel 3 info of blocks
+            blockChannel = encodedBlocks{1, n}(:, :, channel);
+    
+            % get sequence
+            blockChannelSequence = zeros(64, 3);
+            for n1 = 1 : 8
+                for n2 = 1 : 8
+                    if blockChannel(n1, n2) >= 0
+                        blockChannelSequence((n1 - 1) * 8 + n2, 1) = blockChannel(n1, n2);
                     else
-                        blockKSequence((n1 - 1) * 8 + n2, 1) = 1 + blockK(n1, n2);
+                        if blockChannel(n1, n2) < -1
+                            blockChannelSequence((n1 - 1) * 8 + n2, 1) = 2 + blockChannel(n1, n2);
+                        else
+                            blockChannelSequence((n1 - 1) * 8 + n2, 1) = 1 + blockChannel(n1, n2);
+                        end
+                    end
+                    blockChannelSequence((n1 - 1) * 8 + n2, 2) = n1;
+                    blockChannelSequence((n1 - 1) * 8 + n2, 3) = n2;
+                end
+            end
+    
+            % sorting by sequence value
+            for n1 = 1 : 63
+                minIndex = n1;
+                for n2 = n1 + 1 : 64
+                    if blockChannelSequence(n2, 1) < blockChannelSequence(minIndex, 1)
+                        minIndex = n2;
                     end
                 end
-                blockKSequence((n1 - 1) * 8 + n2, 2) = n1;
-                blockKSequence((n1 - 1) * 8 + n2, 3) = n2;
+                t = blockChannelSequence(n1, :);
+                blockChannelSequence(n1, :) = blockChannelSequence(minIndex, :);
+                blockChannelSequence(minIndex, :) = t;
             end
-        end
-
-        % sorting by sequence value
-        for n1 = 1 : 63
-            minIndex = n1;
-            for n2 = n1 + 1 : 64
-                if blockKSequence(n2, 1) < blockKSequence(minIndex, 1)
-                    minIndex = n2;
+    
+            % get middle sequence value's position
+            t = 32;
+            row = blockChannelSequence(t, 2);
+            col = blockChannelSequence(t, 3);
+            count = 1;
+            flag = true;
+            while ~(row >= 2 && row <= 7 && col >= 2 && col <= 7)
+                if flag
+                    t = t + count;
+                else
+                    t = t - count;
+                end
+                count = count + 1;
+                flag = ~flag;
+                row = blockChannelSequence(t, 2);
+                col = blockChannelSequence(t, 3);
+            end
+    
+            % get average
+            average = 0;
+            for n1 = -1 : 1
+                for n2 = -1 : 1
+                    average = average + blockChannel(row + n1, col + n2);
                 end
             end
-            t = blockKSequence(n1, :);
-            blockKSequence(n1, :) = blockKSequence(minIndex, :);
-            blockKSequence(minIndex, :) = t;
+            average = (average - blockChannel(row, col)) / 8;
+    
+            % watermark
+            encodedBlocks{1, n}(row, col, 3) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
+            x = x + 1;
         end
-
-        % get middle sequence value's position
-        t = 32;
-        row = blockKSequence(t, 2);
-        col = blockKSequence(t, 3);
-        count = 1;
-        flag = true;
-        while ~(row >= 2 && row <= 7 && col >= 2 && col <= 7)
-            if flag
-                t = t + count;
-            else
-                t = t - count;
-            end
-            count = count + 1;
-            flag = ~flag;
-            row = blockKSequence(t, 2);
-            col = blockKSequence(t, 3);
-        end
-
-        % get average
-        average = 0;
-        for n1 = -1 : 1
-            for n2 = -1 : 1
-                average = average + blockK(row + n1, col + n2);
-            end
-        end
-        average = (average - blockK(row, col)) / 8;
-
-        % watermark
-        encodedBlocks{1, n}(row, col, 3) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
-        x = x + 1;
     end
 end
 

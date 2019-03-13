@@ -4,13 +4,13 @@ secret = imread('secret.bmp');
 
 % calculate the kernel of DFRNT
 p = rand(8, 8);
-r = dfrntKernel(0.25, 1, p);
-ir = dfrntKernel(-0.25, 1, p);
+r = dfrntKernel(0.75, 1, p);
+ir = dfrntKernel(-0.75, 1, p);
 
 % watermarking
-output1 = qdfrntMark(source, secret, 3, r, ir, 0.05);
-output2 = qdfrntMark(source, secret, 3, r, ir, 0.1);
-output3 = qdfrntMark(source, secret, 3, r, ir, 0.2);
+output1 = qdfrntMark(source, secret, 3, r, ir, 0.005);
+output2 = qdfrntMark(source, secret, 3, r, ir, 0.01);
+output3 = qdfrntMark(source, secret, 3, r, ir, 0.02);
 
 % show result
 figure();
