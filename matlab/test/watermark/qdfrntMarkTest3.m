@@ -3,12 +3,12 @@ source = im2double(imread('lena.bmp'));
 secret = imread('secret.bmp');
 
 % calculate the kernel of DFRNT
-p1 = rand(8, 8);
-r = dfrntKernel(0.25, 1, p1);
-ir = dfrntKernel(-0.25, 1, p1);
+p = rand(8, 8);
+r = dfrntKernel(0.75, 1, p);
+ir = dfrntKernel(-0.75, 1, p);
 
 % watermarking
-output = qdfrntMark(source, secret, 3, r, ir, 0.005);
+output = qdfrntMark(source, secret, 5, r, ir, 0.005);
 
 % show result
 figure();
