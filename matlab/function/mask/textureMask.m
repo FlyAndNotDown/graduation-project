@@ -9,7 +9,7 @@ function mask = textureMask(source, l)
 %       - l [integer] window length
 %
 % - Returns:
-%       - mask [double] texture mask value of target pixel
+%       - mask [double] texture mask value of target block
 
 % get size info
 [sourceRow, sourceCol, ~] = size(source);
