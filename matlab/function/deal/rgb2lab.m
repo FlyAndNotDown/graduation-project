@@ -33,6 +33,8 @@ xn = 95.047;
 yn = 100.0;
 zn = 108.883;
 result = [0, 0, 0];
-
+result(1, 1) = 116 * rgb2labFt(y / yn) - 16;
+result(1, 2) = 500 * (rgb2labFt(x / xn) - rgb2labFt(y / yn));
+result(1, 3) = 200 * (rgb2labFt(y / yn) - rgb2labFt(z / zn));
 
 end
