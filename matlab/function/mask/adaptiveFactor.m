@@ -1,4 +1,4 @@
-function factors = adaptiveFactor(blocks, l)
+function factors = adaptiveFactor(blocks, l, s)
 %adaptiveFactor - get adaptive factor of every blocks in image
 %
 % - Description:
@@ -7,6 +7,7 @@ function factors = adaptiveFactor(blocks, l)
 % - Arguments:
 %       - blocks [1xn cell array {mxnx3 matrix}] smaller block splited from origin image matrix
 %       - l [integer] window length, use when get texture mask value
+%       - s [double from 0 to 1] a factor used when get color mask value
 %
 % - Returns:
 %       - factor [1xn double matrix] adaptive factor of every blocks
