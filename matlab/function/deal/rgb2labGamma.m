@@ -1,5 +1,5 @@
 function result = rgb2labGamma(x)
-%rgb2labGamma - 'gamma' function used when rgb2lab
+%rgb2labGamma - 'gamma' function which will be used in 'rgb2lab'
 %
 % - Arguments:
 %       - x [double{[0, 1]}] input value

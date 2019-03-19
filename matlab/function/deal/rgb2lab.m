@@ -16,24 +16,9 @@ g = source(1, 2);
 b = source(1, 3);
 
 % get gamma value of RGB
-gammaR = r;
-gammaG = g;
-gammaB = b;
-if r > 0.04045
-    gammaR = ((r + 0.055) / 1.055) ^ 2.4;
-else
-    gammaR = r / 12.92;
-end
-if g > 0.04045
-    gammaG = ((g + 0.055) / 1.055) ^ 2.4;
-else
-    gammaG = g / 12.92;
-end
-if b > 0.04045
-    gammaB = ((b + 0.055) / 1.055) ^ 2.4;
-else
-    gammaB = b / 12.92;
-end
+gammaR = rgb2labGamma(r);
+gammaG = rgb2labGamma(g);
+gammaB = rgb2labGamma(b);
 
 % change space from RGB to XYZ
 m = [0.4124, 0.3576, 0.1805; 0.2126, 0.7152, 0.0722; 0.0193, 0.1192, 0.9505];
