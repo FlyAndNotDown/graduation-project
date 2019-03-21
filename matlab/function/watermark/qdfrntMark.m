@@ -134,7 +134,7 @@ for channel = 3 : 4
             average = (average - blockChannel(row, col)) / 8;
     
             % watermark
-            encodedBlocks{1, n}(row, col, 3) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
+            encodedBlocks{1, n}(row, col, channel) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
             x = x + 1;
         end
     end
