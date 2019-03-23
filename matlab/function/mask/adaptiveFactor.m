@@ -74,7 +74,7 @@ end
 
 % get temp adaptive factor
 for n = 1 : blockNum
-    tempAdaptiveFactors(1, n) = 0.7 * textureMasks(1, n) - 0.3 * colorMasks(1, n);
+    tempAdaptiveFactors(1, n) = 0.5 * textureMasks(1, n) - 0.5 * colorMasks(1, n);
 end
 
 % get max and min adaptive factor
