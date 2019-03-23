@@ -15,27 +15,66 @@ function factors = adaptiveFactor(blocks, l, s)
 % get num of blocks
 [~, blockNum] = size(blocks);
 
-% generate some vector to save texture mask, temp adaptive factor and result
+% get size info of every block
+[blockRow, blockCol, ~] = size(blocks{1, 1});
+
+% change color space from RGB to CIELab
+blocksLab = cell(1, blockNum);
+for n = 1 : blockNum
+    blocksLab{1, n} = rgb2lab(blocks{1, n});
+end
+
+% do normalization
+channelAMax = blocksLab{1, n}(1, 1, 2);
+channelBMax = blocksLab{1, n}(1, 1, 3);
+for n = 1 : blockNum
+    for n1 = blockRow
+        for n2 = blockCol
+            channelA = blocksLab{1, n}(n1, n2, 2);
+            channelB = blocksLab{1, n}(n1, n2, 3);
+            if channelA > channelAMax
+                channelAMax = channelA;
+            end
+            if channelB > channelBMax
+                channelBMax = channelB;
+            end
+        end
+    end
+end
+for n = 1 : blockNum
+    for n1 = blockRow
+        for n2 = blockCol
+            blocksLab{1, n}(n1, n2, 2) = blocksLab{1, n}(n1, n2, 2) / channelAMax;
+            blocksLab{1, n}(n1, n2, 3) = blocksLab{1, n}(n1, n2, 3) / channelBMax;
+        end
+    end
+end
+
+% generate some vector to save texture mask, color mask, temp adaptive factor and result
 textureMasks = zeros(1, blockNum);
+colorMasks = zeros(1, blockNum);
 tempAdaptiveFactors = zeros(1, blockNum);
 factors = zeros(1, blockNum);
 
-% for every blocks, calculate its texture mask value
+% for every blocks, calculate its texture mask value and color mask value
 for n = 1 : blockNum
     textureMasks(1, n) = textureMask(blocks{1, n}, l);
+    colorMasks(1, n) = colorMasks(blocksLab{1, n}, s);
 end
 
-% get max texture mask value
+% get max texture mask value and color mask
 maxTextureMask = max(textureMasks);
+maxColorMask = max(colorMasks);
 
 % normalization
 for n = 1 : blockNum
     textureMasks(1, n) = textureMasks(1, n) / maxTextureMask;
+    colorMasks(1, n) = colorMasks(1, n) / maxColorMask;
 end
 
 % get temp adaptive factor
 for n = 1 : blockNum
-    tempAdaptiveFactors(1, n) = textureMasks(1, n);
+    tempAdaptiveFactors(1, n) = 0.5 * textureMasks(1, n) - 0.5 * colorMasks(1, n);
 end
 
 % get max and min adaptive factor
