@@ -59,7 +59,7 @@ factors = zeros(1, blockNum);
 % for every blocks, calculate its texture mask value and color mask value
 for n = 1 : blockNum
     textureMasks(1, n) = textureMask(blocks{1, n}, l);
-    colorMasks(1, n) = colorMasks(blocksLab{1, n}, s);
+    colorMasks(1, n) = colorMask(blocksLab{1, n}, s);
 end
 
 % get max texture mask value and color mask
