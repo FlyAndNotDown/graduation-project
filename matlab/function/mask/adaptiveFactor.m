@@ -28,8 +28,8 @@ end
 channelAMax = blocksLab{1, n}(1, 1, 2);
 channelBMax = blocksLab{1, n}(1, 1, 3);
 for n = 1 : blockNum
-    for n1 = blockRow
-        for n2 = blockCol
+    for n1 = 1 : blockRow
+        for n2 = 1 : blockCol
             channelA = blocksLab{1, n}(n1, n2, 2);
             channelB = blocksLab{1, n}(n1, n2, 3);
             if channelA > channelAMax
@@ -42,8 +42,8 @@ for n = 1 : blockNum
     end
 end
 for n = 1 : blockNum
-    for n1 = blockRow
-        for n2 = blockCol
+    for n1 = 1 : blockRow
+        for n2 = 1 : blockCol
             blocksLab{1, n}(n1, n2, 2) = blocksLab{1, n}(n1, n2, 2) / channelAMax;
             blocksLab{1, n}(n1, n2, 3) = blocksLab{1, n}(n1, n2, 3) / channelBMax;
         end
@@ -74,7 +74,7 @@ end
 
 % get temp adaptive factor
 for n = 1 : blockNum
-    tempAdaptiveFactors(1, n) = 0.5 * textureMasks(1, n) - 0.5 * colorMasks(1, n);
+    tempAdaptiveFactors(1, n) = 0.7 * textureMasks(1, n) - 0.3 * colorMasks(1, n);
 end
 
 % get max and min adaptive factor
