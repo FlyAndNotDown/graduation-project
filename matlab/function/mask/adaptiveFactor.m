@@ -53,6 +53,7 @@ end
 % generate some vector to save texture mask, color mask, temp adaptive factor and result
 textureMasks = zeros(1, blockNum);
 colorMasks = zeros(1, blockNum);
+edgeMasks = zeros(1, blockNum);
 tempAdaptiveFactors = zeros(1, blockNum);
 factors = zeros(1, blockNum);
 
@@ -60,21 +61,24 @@ factors = zeros(1, blockNum);
 for n = 1 : blockNum
     textureMasks(1, n) = textureMask(blocks{1, n}, l);
     colorMasks(1, n) = colorMask(blocksLab{1, n}, s);
+    edgeMasks(1, n) = edgeMask(blocks{1, n});
 end
 
 % get max texture mask value and color mask
 maxTextureMask = max(textureMasks);
 maxColorMask = max(colorMasks);
+maxEdgeMask = max(edgeMasks);
 
 % normalization
 for n = 1 : blockNum
     textureMasks(1, n) = textureMasks(1, n) / maxTextureMask;
     colorMasks(1, n) = colorMasks(1, n) / maxColorMask;
+    edgeMasks(1, n) = edgeMasks(1, n) / maxEdgeMask;
 end
 
 % get temp adaptive factor
 for n = 1 : blockNum
-    tempAdaptiveFactors(1, n) = 0.5 * textureMasks(1, n) - 0.5 * colorMasks(1, n);
+    tempAdaptiveFactors(1, n) = 0.2 * textureMasks(1, n) - 0.5 * edgeMasks(1, n) - 0.3 * colorMasks(1, n);
 end
 
 % get max and min adaptive factor

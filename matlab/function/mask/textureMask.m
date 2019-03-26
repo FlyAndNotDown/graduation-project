@@ -1,5 +1,5 @@
 function mask = textureMask(source, l)
-%textureMask - get texture mark value of a image block
+%textureMask - get texture mask value of a image block
 %
 % - Description:
 %       get texture mark value of a image block
