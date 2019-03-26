@@ -2,5 +2,6 @@
 /.vscode
 
 # LaTex temp file
-/*/*.log
-/*/*.synctex*
+/translation/*.log
+/translation/*.synctex*
+/translation/*.gz
