@@ -1,2 +1,6 @@
 # VS Code
 /.vscode
+
+# LaTex temp file
+/*/*.log
+/*/*.synctex*
