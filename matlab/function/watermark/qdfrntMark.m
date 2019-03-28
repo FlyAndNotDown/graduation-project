@@ -39,8 +39,9 @@ adaptiveFactors = adaptiveFactor(blocks, 1, 0.25);
 % do QDFRNT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
-    [blockRow, blockCol, blockHeight] = size(blocks{1, n});
-    t = zeros(blockRow, blockCol, blockHeight + 1);
+    % [blockRow, blockCol, blockHeight] = size(blocks{1, n});
+    % t = zeros(blockRow, blockCol, blockHeight + 1);
+    t = zeros(blockRow, blockRow, 4);
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
@@ -71,7 +72,7 @@ for channel = 3 : 4
         end
     
         % if adaptive factor is 0, not do watermarking
-        if adaptiveFactors(1, n) > 1
+        if adaptiveFactors(1, n) > 0
             % get channel 3 info of blocks
             blockChannel = encodedBlocks{1, n}(:, :, channel);
     

@@ -10,4 +10,32 @@ function model = qdfrntTrain(source, secret, kt, intensity)
 % - Returns:
 %       - model [SVM model] train result model
 
+% get size info
+[sourceRow, ~, ~] = size(source);
+[~, secretLength] == size(secret);
+
+% split picture to 8x8 smaller blocks
+blocks = splitBlock(source, 8);
+[~, blocksLength] = size(blocks);
+[blockRow, ~, ~] = size(blocks{1, 1});
+
+% set a pure unit quaternion
+u = [0, 1, 0, 0];
+
+% get adaptive factors of every blocks
+adaptiveFactors = adaptiveFactors(blocks, 1, 0.25);
+
+% do QDFRNT to every blocks
+encodedBlocks = cell(1, blocksLength);
+for n = 1 : blocksLength
+    t = zeros(blockRow, blockRow, 4);
+    for n1 = 2 : 4
+        t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
+    end
+    encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
+end
+
+% start watermarking
+% TODO
+
 end
