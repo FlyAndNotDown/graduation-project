@@ -22,6 +22,14 @@ output5 = qdfrntMark(source, secret, 3, r3, ir3, 0.005);
 output6 = qdfrntMark(source, secret, 3, r3, ir3, 0.02);
 output7 = qdfrntMark(source, secret, 3, r3, ir3, 0.05);
 
+[ssimVal1, ~] = ssim(source, output1);
+[ssimVal2, ~] = ssim(source, output2);
+[ssimVal3, ~] = ssim(source, output3);
+[ssimVal4, ~] = ssim(source, output4);
+[ssimVal5, ~] = ssim(source, output5);
+[ssimVal6, ~] = ssim(source, output6);
+[ssimVal7, ~] = ssim(source, output7);
+
 % show result
 figure();
 subplot(2, 4, 1);

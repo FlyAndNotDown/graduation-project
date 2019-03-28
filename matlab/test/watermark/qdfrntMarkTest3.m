@@ -10,6 +10,8 @@ ir = dfrntKernel(-0.75, 1, p);
 % watermarking
 output = qdfrntMark(source, secret, 3, r, ir, 0.005);
 
+[ssimVal, ~] = ssim(source, output);
+
 % show result
 figure();
 subplot(1, 2, 1);
