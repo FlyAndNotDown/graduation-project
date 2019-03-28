@@ -8,7 +8,7 @@ r = dfrntKernel(0.75, 1, p);
 ir = dfrntKernel(-0.75, 1, p);
 
 % watermarking
-output = qdfrntMark(source, secret, 3, r, ir, 0.005);
+output = qdfrntMark(source, secret, 3, r, ir, 0.05);
 
 [ssimVal, ~] = ssim(source, output);
 
