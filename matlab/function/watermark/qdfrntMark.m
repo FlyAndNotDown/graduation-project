@@ -71,7 +71,7 @@ for channel = 3 : 4
         end
     
         % if adaptive factor is 0, not do watermarking
-        if adaptiveFactors(1, n) > 0
+        if adaptiveFactors(1, n) > 1
             % get channel 3 info of blocks
             blockChannel = encodedBlocks{1, n}(:, :, channel);
     
