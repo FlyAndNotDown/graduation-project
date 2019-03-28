@@ -82,11 +82,12 @@ for channel = 3 : 4
                     if blockChannel(n1, n2) >= 0
                         blockChannelSequence((n1 - 1) * 8 + n2, 1) = blockChannel(n1, n2);
                     else
-                        if blockChannel(n1, n2) < -1
-                            blockChannelSequence((n1 - 1) * 8 + n2, 1) = 2 + blockChannel(n1, n2);
-                        else
-                            blockChannelSequence((n1 - 1) * 8 + n2, 1) = 1 + blockChannel(n1, n2);
-                        end
+                        % if blockChannel(n1, n2) < -1
+                        %     blockChannelSequence((n1 - 1) * 8 + n2, 1) = 2 + blockChannel(n1, n2);
+                        % else
+                        %     blockChannelSequence((n1 - 1) * 8 + n2, 1) = 1 + blockChannel(n1, n2);
+                        % end
+                        blockChannelSequence((n1 - 1) * 8 + n2, 1) = 0 - blockChannel(n1, n2);
                     end
                     blockChannelSequence((n1 - 1) * 8 + n2, 2) = n1;
                     blockChannelSequence((n1 - 1) * 8 + n2, 3) = n2;
