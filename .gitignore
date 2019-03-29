@@ -5,3 +5,6 @@
 /translation/*.log
 /translation/*.synctex*
 /translation/*.gz
+
+# data
+/matlab/data/*
