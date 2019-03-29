@@ -72,13 +72,18 @@ for n = 1 : kpRow
     distanceToZero = abs(predictResult - 0);
     distanceToOne = abs(predictResult - 1);
     if distanceToZero > distanceToOne
-        secret[secretCount] = 1;
+        secretSequence[secretCount] = 1;
     else
-        secret[secretCount] = 0;
+        sesecretSequencecret[secretCount] = 0;
     end
     secretCount = secretCount + 1;
 end
 
-% TODO
+% change secret sequence to matrix
+[~, secretSequenceLength] = size(secretSequence);
+secret = vectorToMatrix(secretSequence, floor(sqrt(secretSequence)));
+
+% iarnold
+secret = iarnold(secret, ks);
 
 end
