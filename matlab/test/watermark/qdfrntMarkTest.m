@@ -10,7 +10,12 @@ ir = dfrntKernel(-0.75, 1, p);
 % watermarking
 [output, kp] = qdfrntMark(source, secret, 3, r, ir, 0.05);
 
+% calculate ssim
 [ssimVal, ~] = ssim(source, output);
+
+% restore
+model = load('data/model.dat', 'model');
+secretRestored = qdfrntRestore(output, model, kp, 3, r);
 
 % show result
 figure();
