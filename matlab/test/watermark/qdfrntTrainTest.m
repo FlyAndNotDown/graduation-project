@@ -2,7 +2,7 @@
 source = im2double(imread('lena.bmp'));
 
 % init secret sequence
-secret = rand(1, 200);
+secret = floor(rand(1, 2000) + 0.5);
 
 % calculate the kernel of DFRNT
 p = rand(8, 8);
