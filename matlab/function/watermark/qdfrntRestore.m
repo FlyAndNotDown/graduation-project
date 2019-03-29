@@ -80,7 +80,7 @@ end
 
 % change secret sequence to matrix
 [~, secretSequenceLength] = size(secretSequence);
-secret = vectorToMatrix(secretSequence, floor(sqrt(secretSequence)));
+secret = vectorToMatrix(secretSequence, floor(sqrt(secretSequenceLength)));
 
 % iarnold
 secret = iarnold(secret, ks);
