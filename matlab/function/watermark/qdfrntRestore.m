@@ -14,6 +14,7 @@ function secret = qdfrntRestore(source, model, kp, ks, kt, intentsity)
 
 % init secret sequence
 secretSequence = [];
+secretCount = 1;
 
 % get size info
 [sourceRow, ~, ~] = size(source);
@@ -48,10 +49,36 @@ for n = 1 : kpRow
     % calculate svm input data
     blockChannel = encodedBlocks{1, blockIndex}(:, :, channel);
     svmInput = zeros(1, 9);
+    average = 0;
     for n1 = -1 : 1
         for n2 = -1 : 1
+            average = average + blockChannel(row + n1, col + n2);
         end
     end
+    average = (average - blockChannel(row, col)) / 8;
+    for n1 = -1 : 1
+        for n2 = -1 : 1
+            index = (n1 + 1) * 3 + n2 + 2;
+            if n1 == 0 && n2 == 0
+                svmInput(1, index) = blockChannel(row, col) - average;
+            else
+                svmInput(1, index) = blockChannel(row, col) - blockChannel(row + n1, col + n2);
+            end
+        end
+    end
+
+    % get predict result
+    predictResult = predict(model, svmInput);
+    distanceToZero = abs(predictResult - 0);
+    distanceToOne = abs(predictResult - 1);
+    if distanceToZero > distanceToOne
+        secret[secretCount] = 1;
+    else
+        secret[secretCount] = 0;
+    end
+    secretCount = secretCount + 1;
 end
+
+% TODO
 
 end
