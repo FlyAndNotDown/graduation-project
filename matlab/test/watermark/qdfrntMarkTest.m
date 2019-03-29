@@ -14,7 +14,7 @@ ir = dfrntKernel(-0.75, 1, p);
 [ssimVal, ~] = ssim(source, output);
 
 % restore
-model = load('data/model.dat', 'model');
+model = load('data/model.mat', 'model');
 secretRestored = qdfrntRestore(output, model, kp, 3, r);
 
 % show result
