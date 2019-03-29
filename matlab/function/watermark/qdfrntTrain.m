@@ -17,7 +17,7 @@ dataRowCount = 1;
 
 % get size info
 [sourceRow, ~, ~] = size(source);
-[~, secretLength] == size(secret);
+[~, secretLength] = size(secret);
 
 % split picture to 8x8 smaller blocks
 blocks = splitBlock(source, 8);
