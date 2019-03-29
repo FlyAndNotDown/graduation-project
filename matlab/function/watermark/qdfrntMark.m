@@ -1,4 +1,4 @@
-function output = qdfrntMark(source, secret, ks, kt, ikt, intensity)
+function [output, kp] = qdfrntMark(source, secret, ks, kt, ikt, intensity)
 %qdfrntMark - add watermark to a picture
 %
 % - Description:
@@ -14,6 +14,11 @@ function output = qdfrntMark(source, secret, ks, kt, ikt, intensity)
 %
 % - Returns:
 %       - output [nxnx3 double matrix] output matrix
+%       - kp [kx2 integer matrix] mark location key
+
+% init mark location key
+kp = [];
+kpCount = 1;
 
 % get size info
 [sourceRow, ~, ~] = size(source);
@@ -125,6 +130,10 @@ for channel = 3 : 4
                 row = blockChannelSequence(t, 2);
                 col = blockChannelSequence(t, 3);
             end
+
+            % save mark location
+            kp(kpCount, :) = [n, channel, row, col];
+            kpCount = kpCount + 1;
     
             % get average
             average = 0;
