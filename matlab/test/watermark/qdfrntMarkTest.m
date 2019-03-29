@@ -19,7 +19,9 @@ secretRestored = qdfrntRestore(output, model, kp, 3, r);
 
 % show result
 figure();
-subplot(1, 2, 1);
+subplot(2, 2, 1);
 imshow(source);
-subplot(1, 2, 2);
+subplot(2, 2, 2);
 imshow(output);
+subplot(2, 2, 3);
+imshow(secretRestored);
