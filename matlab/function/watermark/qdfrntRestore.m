@@ -71,9 +71,9 @@ for n = 1 : kpRow
     distanceToZero = abs(predictResult - 0);
     distanceToOne = abs(predictResult - 1);
     if distanceToZero > distanceToOne
-        secretSequence[secretCount] = 1;
+        secretSequence(1, secretCount) = 1;
     else
-        sesecretSequencecret[secretCount] = 0;
+        secretSequence(1, secretCount) = 0;
     end
     secretCount = secretCount + 1;
 end
