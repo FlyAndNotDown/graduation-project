@@ -73,7 +73,7 @@ for channel = 3 : 4
     
         % if adaptive factor is 0, not do watermarking
         if adaptiveFactors(1, n) > 0
-            % get channel 3 info of blocks
+            % get a channel info of a blocks
             blockChannel = encodedBlocks{1, n}(:, :, channel);
     
             % get sequence
