@@ -10,6 +10,11 @@ function model = qdfrntTrain(source, secret, kt, intensity)
 % - Returns:
 %       - model [SVM model] train result model
 
+% init train data set
+trainDataSet = [];
+trainResponse = [];
+dataRowCount = 1;
+
 % get size info
 [sourceRow, ~, ~] = size(source);
 [~, secretLength] == size(secret);
@@ -101,9 +106,51 @@ for channel = 3 : 4
                 col = blockChannelSequence(t, 3);
             end
 
-            % TODO
+            % calculate train data
+            temp = zeros(1, 9);
+            increment = (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
+            average = 0;
+            for n1 = -1 : 1
+                for n2 = -1 : 1
+                    average = average + blockChannel(row + n1, col + n2);
+                end
+            end
+            average = (average - blockChannel(row, col)) / 8;
+            valueOnMarkPosition = average + increment;
+            for n1 = -1 : 1
+                for n2 = -1 : 1
+                    index = (n1 + 1) * 3 + n2 + 2;
+                    if n1 == 0 && n2 == 0
+                        temp(1, index) = increment;
+                    else
+                        rowTemp = row + n1;
+                        colTemp = col + n2;
+                        average = 0;
+                        for n3 = (rowTemp - 1) : (rowTemp + 1)
+                            for n4 = (colTemp - 1) : (colTemp + 1)
+                                if n3 >= 1 && n3 <= 8 && n4 >= 1 && n4 <= 8
+                                    average = average + blockChannel(n3, n4);
+                                end
+                            end
+                        end
+                        average = (average - blockChannel(rowTemp, colTemp)) / 8;
+                        temp(1, index) = valueOnMarkPosition - (average + increment);
+                    end
+                end
+            end
+            trainDataSet(dataRowCount, :) = temp;
+            if secretSequence(1, x) == 0
+                trainResponse(1, dataRowCount) = false;
+            else
+                trainResponse(1, dataRowCount) = true;
+            end
+            dataRowCount = dataRowCount + 1;
+            x = x + 1;
         end
     end
 end
+
+% start train
+model = fitcsvm(trainDataSet, trainResponse);
 
 end
