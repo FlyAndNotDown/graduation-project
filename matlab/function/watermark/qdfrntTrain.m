@@ -123,18 +123,19 @@ for channel = 3 : 4
                     if n1 == 0 && n2 == 0
                         temp(1, index) = increment;
                     else
-                        rowTemp = row + n1;
-                        colTemp = col + n2;
-                        average = 0;
-                        for n3 = (rowTemp - 1) : (rowTemp + 1)
-                            for n4 = (colTemp - 1) : (colTemp + 1)
-                                if n3 >= 1 && n3 <= 8 && n4 >= 1 && n4 <= 8
-                                    average = average + blockChannel(n3, n4);
-                                end
-                            end
-                        end
-                        average = (average - blockChannel(rowTemp, colTemp)) / 8;
-                        temp(1, index) = valueOnMarkPosition - (average + increment);
+                        % rowTemp = row + n1;
+                        % colTemp = col + n2;
+                        % average = 0;
+                        % for n3 = (rowTemp - 1) : (rowTemp + 1)
+                        %     for n4 = (colTemp - 1) : (colTemp + 1)
+                        %         if n3 >= 1 && n3 <= 8 && n4 >= 1 && n4 <= 8
+                        %             average = average + blockChannel(n3, n4);
+                        %         end
+                        %     end
+                        % end
+                        % average = (average - blockChannel(rowTemp, colTemp)) / 8;
+                        % temp(1, index) = valueOnMarkPosition - (average + increment);
+                        temp(1, index) = valueOnMarkPosition - blockChannel(row + n1, col + n2);
                     end
                 end
             end

@@ -12,8 +12,12 @@ function secret = qdfrntRestore(source, model, kp, ks, kt, intentsity)
 % - Returns:
 %       - secret [mxmx3 double matrix] watermark matrix
 
+% init secret sequence
+secretSequence = [];
+
 % get size info
 [sourceRow, ~, ~] = size(source);
+[kpRow, ~, ~] = size(kp);
 
 % split picture to 8x8 smaller blocks
 blocks = splitBlock(source, 8);
@@ -33,6 +37,21 @@ for n = 1 : blocksLength
     encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
 end
 
-% TODO
+% for every position, do some thing
+for n = 1 : kpRow
+    % get info
+    blockIndex = kp(n, 1);
+    channel = kp(n, 2);
+    row = kp(n, 3);
+    col = kp(n, 4);
+
+    % calculate svm input data
+    blockChannel = encodedBlocks{1, blockIndex}(:, :, channel);
+    svmInput = zeros(1, 9);
+    for n1 = -1 : 1
+        for n2 = -1 : 1
+        end
+    end
+end
 
 end
