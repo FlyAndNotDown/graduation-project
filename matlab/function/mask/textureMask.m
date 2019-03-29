@@ -32,11 +32,12 @@ for n1 = 1 : sourceRow
                     sumR = sumR + source(n3, n4, 1);
                     sumG = sumG + source(n3, n4, 2);
                     sumB = sumB + source(n3, n4, 3);
-                else
-                    sumR = sumR + source(n1, n2, 1);
-                    sumG = sumG + source(n1, n2, 2);
-                    sumB = sumB + source(n1, n2, 2);
                 end
+                % else
+                %     sumR = sumR + source(n1, n2, 1);
+                %     sumG = sumG + source(n1, n2, 2);
+                %     sumB = sumB + source(n1, n2, 2);
+                % end
             end
         end
 
