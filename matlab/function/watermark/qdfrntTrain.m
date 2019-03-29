@@ -108,7 +108,7 @@ for channel = 3 : 4
 
             % calculate train data
             temp = zeros(1, 9);
-            increment = (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
+            increment = (2 * secret(1, x) - 1) * adaptiveFactors(1, n) * intensity;
             average = 0;
             for n1 = -1 : 1
                 for n2 = -1 : 1
@@ -139,7 +139,7 @@ for channel = 3 : 4
                 end
             end
             trainDataSet(dataRowCount, :) = temp;
-            if secretSequence(1, x) == 0
+            if secret(1, x) == 0
                 trainResponse(1, dataRowCount) = false;
             else
                 trainResponse(1, dataRowCount) = true;
