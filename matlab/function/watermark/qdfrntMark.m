@@ -14,7 +14,7 @@ function [output, kp] = qdfrntMark(source, secret, ks, kt, ikt, intensity)
 %
 % - Returns:
 %       - output [nxnx3 double matrix] output matrix
-%       - kp [kx2 integer matrix] mark location key
+%       - kp [kx4 integer matrix] mark location key
 
 % init mark location key
 kp = [];
