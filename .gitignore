@@ -15,3 +15,6 @@
 
 # lock file
 /application/*/yarn.lock
+
+# TypeScript
+/application/frontend/src/react-app-env.d.ts

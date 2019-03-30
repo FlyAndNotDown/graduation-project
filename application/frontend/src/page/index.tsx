@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'antd';
+import { Button, Row, Col } from 'antd';
 
 interface Props {};
 interface State {};
@@ -14,7 +14,11 @@ export class IndexPage extends React.Component {
     render(): any {
         return (
             <div>
-                <Button>Hello</Button>
+                <Row>
+                    <Col>
+                        
+                    </Col>
+                </Row>
             </div>
         );
     };
