@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Button, Row, Col } from 'antd';
 
-interface Props {}
+interface Props extends React.Props<any> {}
 interface State {}
 
-export class IndexPage extends React.Component {
+export class IndexPage extends React.Component<Props> {
     state: State = {};
 
     constructor(props: Props) {

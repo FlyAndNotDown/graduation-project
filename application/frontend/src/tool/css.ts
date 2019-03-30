@@ -1,4 +1,4 @@
-interface Style {
+export interface Style {
     [propName: string]: string
 }
 
