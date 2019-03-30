@@ -12,3 +12,6 @@
 # Node.js
 /application/frontend/node_modules
 /application/backend/node_modules
+
+# lock file
+/application/*/yarn.lock
