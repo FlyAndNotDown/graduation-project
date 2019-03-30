@@ -1,6 +1,6 @@
 % load image
-source = im2double(imread('lena.bmp'));
-secret = imread('secret.bmp');
+source = im2double(imread('peppers.tiff'));
+secret = imread('secret2.bmp');
 
 % calculate the kernel of DFRNT
 p = rand(8, 8);
