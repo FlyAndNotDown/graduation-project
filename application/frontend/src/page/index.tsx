@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Button, Row, Col, Select } from 'antd';
 import { KLayout, ColorMode, WidthMode } from '../component/tool/k-layout';
 
-interface Props extends React.Props<any> {}
+interface Props extends React.Props<any> {
+    history: Object
+}
 interface State {}
 
 export class IndexPage extends React.Component<Props> {
