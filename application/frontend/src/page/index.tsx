@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, Row, Col } from 'antd';
 
-interface Props {};
-interface State {};
+interface Props {}
+interface State {}
 
 export class IndexPage extends React.Component {
     state: State = {};
