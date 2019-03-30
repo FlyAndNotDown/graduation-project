@@ -1,0 +1,416 @@
+/* 背景颜色 */
+.bg-color-none {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.bg-color-white {
+    background-color: white;
+}
+
+.bg-color-main {
+    background-color: #f6f6f6;
+}
+
+.bg-color-green {
+    background-color: green;
+}
+
+.bg-color-yellow {
+    background-color: yellow;
+}
+
+/* position */
+.position-fixed {
+    position: fixed;
+}
+
+.left-0 {
+    left: 0;
+}
+
+/* 宽 */
+.w-100 {
+    width: 100%;
+}
+
+.w-45 {
+    width: 45%;
+}
+
+.w-60px {
+    width: 60px;
+}
+
+.w-100px {
+    width: 100px;
+}
+
+/* 高 */
+.h-100 {
+    height: 100%;
+}
+
+.h-40px {
+    height: 40px;
+}
+
+.h-60px {
+    height: 60px;
+}
+
+.h-64px {
+    height: 64px;
+}
+
+.h-100px {
+    height: 100px;
+}
+
+.h-40vh {
+    height: 40vh;
+}
+
+.h-100vh {
+    height: 100vh;
+}
+
+/* 行高 */
+.lh-20px {
+    line-height: 20px;
+}
+
+.lh-40px {
+    line-height: 40px;
+}
+
+.lh-64px {
+    line-height: 64px;
+}
+
+.min-h-600px {
+    min-height: 600px;
+}
+
+/* 布局 */
+.m-0-auto {
+    margin: 0 auto;
+}
+
+.m-0 {
+    margin: 0;
+}
+.mt-0 {
+    margin-top: 0;
+}
+.mb-0 {
+    margin-bottom: 0;
+}
+.ml-0 {
+    margin-left: 0;
+}
+.mr-0 {
+    margin-right: 0;
+}
+
+.m-xs {
+    margin: 5px;
+}
+.mt-xs {
+    margin-top: 5px;
+}
+.mb-xs {
+    margin-bottom: 5px;
+}
+.ml-xs {
+    margin-left: 5px;
+}
+.mr-xs {
+    margin-right: 5px;
+}
+
+.m-sm {
+    margin: 10px;
+}
+.mt-sm {
+    margin-top: 10px;
+}
+.mb-sm {
+    margin-bottom: 10px;
+}
+.ml-sm {
+    margin-left: 10px;
+}
+.mr-sm {
+    margin-right: 10px;
+}
+
+.m-md {
+    margin: 15px;
+}
+.mt-md {
+    margin-top: 15px;
+}
+.mb-md {
+    margin-bottom: 15px;
+}
+.ml-md {
+    margin-left: 15px;
+}
+.mr-md {
+    margin-right: 15px;
+}
+
+.m-lg {
+    margin: 20px;
+}
+.mt-lg {
+    margin-top: 20px;
+}
+.mb-lg {
+    margin-bottom: 20px;
+}
+.ml-lg {
+    margin-left: 20px;
+}
+.mr-lg {
+    margin-right: 20px;
+}
+
+.m-xl {
+    margin: 25px;
+}
+.mt-xl {
+    margin-top: 25px;
+}
+.mb-xl {
+    margin-bottom: 25px;
+}
+.ml-xl {
+    margin-left: 25px;
+}
+.mr-xl {
+    margin-right: 25px;
+}
+
+/* 特殊对齐 */
+.mt-slogan {
+    margin-top: 100px;
+}
+
+.mb-slogan {
+    margin-bottom: 220px;
+}
+
+.p-0-auto {
+    padding: 0 auto;
+}
+
+.p-0 {
+    padding: 0;
+}
+.pt-0 {
+    padding-top: 0;
+}
+.pb-0 {
+    padding-bottom: 0;
+}
+.pl-0 {
+    padding-left: 0;
+}
+.pr-0 {
+    padding-right: 0;
+}
+
+.p-xs {
+    padding: 5px;
+}
+.pt-xs {
+    padding-top: 5px;
+}
+.pb-xs {
+    padding-bottom: 5px;
+}
+.pl-xs {
+    padding-left: 5px;
+}
+.pr-xs {
+    padding-right: 5px;
+}
+
+.p-sm {
+    padding: 10px;
+}
+.pt-sm {
+    padding-top: 10px;
+}
+.pb-sm {
+    padding-bottom: 10px;
+}
+.pl-sm {
+    padding-left: 10px;
+}
+.pr-sm {
+    padding-right: 10px;
+}
+
+.p-md {
+    padding: 15px;
+}
+.pt-md {
+    padding-top: 15px;
+}
+.pb-md {
+    padding-bottom: 15px;
+}
+.pl-md {
+    padding-left: 15px;
+}
+.pr-md {
+    padding-right: 15px;
+}
+
+.p-lg {
+    padding: 20px;
+}
+.pt-lg {
+    padding-top: 20px;
+}
+.pb-lg {
+    padding-bottom: 20px;
+}
+.pl-lg {
+    padding-left: 20px;
+}
+.pr-lg {
+    padding-right: 20px;
+}
+
+.p-xl {
+    padding: 25px;
+}
+.pt-xl {
+    padding-top: 25px;
+}
+.pb-xl {
+    padding-bottom: 25px;
+}
+.pl-xl {
+    padding-left: 25px;
+}
+.pr-xl {
+    padding-right: 25px;
+}
+
+/* 杂项 */
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.z-index-1 {
+    z-index: 1;
+}
+
+.z-index-0 {
+    z-index: 0;
+}
+
+.z-index-n1 {
+    z-index: -1;
+}
+
+/* 文字布局 */
+.text-align-center {
+    text-align: center;
+}
+
+/* 文字大小 */
+.font-size-xxs {
+    font-size: 10px;
+}
+
+.font-size-xs {
+    font-size: 15px;
+}
+
+.font-size-sm {
+    font-size: 20px;
+}
+
+.font-size-md {
+    font-size: 25px;
+}
+
+.font-size-lg {
+    font-size: 30px;
+}
+
+.font-size-xl {
+    font-size: 35px;
+}
+
+.font-size-xxl {
+    font-size: 40px;
+}
+
+/* 颜色 */
+.color-white {
+    color: white;
+}
+
+.color-grey {
+    color: grey;
+}
+
+.color-second {
+    color: #999999
+}
+
+.color-black {
+    color: black;
+}
+
+.color-text {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.color-dark {
+    color: rgba(0,0,0,0.85);
+}
+
+.color-text-a, .color-text-a:link, .color-text-a:visited, .color-text-a:hover, .color-text-a:active {
+    color: rgba(0, 0, 0, 0.65);
+    text-decoration: none;
+}
+
+.color-white-a, .color-white-a:link, .color-white-a:visited, .color-white-a:hover, .color-white-a:active {
+    color: white;
+    text-decoration: none;
+}
+
+.color-grey {
+    color: grey
+}
+
+/* 阴影 */
+.box-shadow-little {
+    box-shadow: 0 1px 3px rgba(26,26,26,.1);
+}
+
+/* 浮动 */
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+/* display */
+.display-flex {
+    display: flex;
+}
+
+/* text decoration */
+.text-decoration-none, .text-decoration-none:link, .text-decoration-none:visited, .text-decoration-none:hover, .text-decoration-none:active {
+    text-decoration: none
+}
