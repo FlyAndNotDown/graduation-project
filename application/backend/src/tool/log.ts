@@ -2,47 +2,63 @@ import { mainConfig } from "../config";
 
 
 export class Log {
-    public static log(content: string, detail: string & Error & Object): void {
+    public static log(context: string, detail?: Error & string): void {
         if (mainConfig.log) {
-            console.log(`[log] ${content}`);
-            if (mainConfig.devMode && typeof detail === 'object') {
-                return console.log(detail.stack);
+            console.log(`[log] ${context}`);
+            if (detail) {
+                if (typeof detail === 'object') {
+                    return console.log(detail.stack);
+                }
+                if (typeof detail === 'string') {
+                    let lines: string[] = detail.split('\n');
+                    return lines.forEach((line: string): void => { console.log(`      ${line}`); });
+                }
             }
-            let lines: string[] = detail.split('\n');
-            lines.forEach((line: string): void => { console.log(`      ${line}`); });
         }
     }
 
-    public static error(content: string, detail: string & Error): void {
+    public static error(context: string, detail?: Error & string): void {
         if (mainConfig.log) {
-            console.log(`[err] ${content}`);
-            if (mainConfig.devMode && typeof detail === 'object') {
-                return console.log(detail.stack);
+            console.log(`[error] ${context}`);
+            if (detail) {
+                if (typeof detail === 'object') {
+                    return console.log(detail.stack);
+                }
+                if (typeof detail === 'string') {
+                    let lines: string[] = detail.split('\n');
+                    return lines.forEach((line: string): void => { console.log(`      ${line}`); });
+                }
             }
-            let lines: string[] = detail.split('\n');
-            lines.forEach((line: string): void => { console.log(`      ${line}`); });
         }
     }
 
-    public static dev(content: string, detail: string & Error): void {
+    public static dev(context: string, detail?: Error & string): void {
         if (mainConfig.log && mainConfig.devMode) {
-            console.log(`[log] ${content}`);
-            if (mainConfig.devMode && typeof detail === 'object') {
-                return console.log(detail.stack);
+            console.log(`[log] ${context}`);
+            if (detail) {
+                if (typeof detail === 'object') {
+                    return console.log(detail.stack);
+                }
+                if (typeof detail === 'string') {
+                    let lines: string[] = detail.split('\n');
+                    return lines.forEach((line: string): void => { console.log(`      ${line}`); });
+                }
             }
-            let lines: string[] = detail.split('\n');
-            lines.forEach((line: string): void => { console.log(`      ${line}`); });
         }
     }
 
-    public static devError(content: string, detail: string & Error): void {
+    public static devError(context: string, detail?: Error & string): void {
         if (mainConfig.log && mainConfig.devMode) {
-            console.log(`[err] ${content}`);
-            if (mainConfig.devMode && typeof detail === 'object') {
-                return console.log(detail.stack);
+            console.log(`[error] ${context}`);
+            if (detail) {
+                if (typeof detail === 'object') {
+                    return console.log(detail.stack);
+                }
+                if (typeof detail === 'string') {
+                    let lines: string[] = detail.split('\n');
+                    return lines.forEach((line: string): void => { console.log(`      ${line}`); });
+                }
             }
-            let lines: string[] = detail.split('\n');
-            lines.forEach((line: string): void => { console.log(`      ${line}`); });
         }
     }
 }
