@@ -18,4 +18,8 @@ public class LogTool {
         System.out.println("[err] " + content);
         e.printStackTrace();
     }
+
+    public static void free(String content) {
+        System.out.println(content);
+    }
 }
