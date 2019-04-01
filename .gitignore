@@ -12,4 +12,5 @@
 # native
 /application/native/.idea
 /application/native/.gradle
-/application/native/ou
+/application/native/.project
+/application/native/.settings
