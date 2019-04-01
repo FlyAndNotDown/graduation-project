@@ -14,3 +14,4 @@
 /application/native/.gradle
 /application/native/.project
 /application/native/.settings
+/application/native/build
