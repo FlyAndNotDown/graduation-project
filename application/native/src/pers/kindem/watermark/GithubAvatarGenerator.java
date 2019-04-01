@@ -1,8 +1,11 @@
+package pers.kindem.watermark;
+
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.util.Random;
+
 
 /**
  * Github头像生成器

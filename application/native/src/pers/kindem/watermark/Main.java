@@ -1,3 +1,5 @@
+package pers.kindem.watermark;
+
 import org.opencv.core.Core;
 
 public class Main {

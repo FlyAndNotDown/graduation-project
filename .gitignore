@@ -8,3 +8,8 @@
 
 # data
 /matlab/data/*
+
+# native
+/application/native/.idea
+/application/native/native.iml
+/application/native/out
