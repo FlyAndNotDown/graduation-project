@@ -8,3 +8,11 @@
 
 # data
 /matlab/data/*
+
+# native
+/application/native/.idea
+/application/native/.gradle
+/application/native/.project
+/application/native/.settings
+/application/native/build
+/application/native/bin
