@@ -11,5 +11,5 @@
 
 # native
 /application/native/.idea
-/application/native/native.iml
-/application/native/out
+/application/native/.gradle
+/application/native/ou
