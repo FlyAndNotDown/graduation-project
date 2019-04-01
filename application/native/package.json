@@ -1,0 +1,15 @@
+{
+  "name": "native",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dev.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.1"
+  }
+}
