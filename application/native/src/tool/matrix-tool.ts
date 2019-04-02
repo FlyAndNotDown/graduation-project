@@ -64,7 +64,6 @@ export class MatrixTool {
             }
         }
 
-        // TODO
-        return [];
+        return smallerMatrixes;
     }
 }
