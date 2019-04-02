@@ -1,4 +1,4 @@
-import { Mat, Vec3 } from 'opencv4nodejs';
+import { Mat } from 'opencv4nodejs';
 
 export class MatrixTool {
     public static matrixToVector(matrix: Mat): Mat {
@@ -37,5 +37,34 @@ export class MatrixTool {
 
         // return result
         return matrix;
+    }
+
+    public static splitToSmallerSquareMatrix(matrix: Mat, smallerMatrixLength: number): Mat[] {
+        // get size info
+        let rows: number = matrix.rows;
+        let cols: number = matrix.cols;
+
+        // calculate smaller matrix number
+        let smallerMatrixPerRow: number = Math.floor(cols / smallerMatrixLength);
+        let smallerMatrixPerCol: number = Math.floor(rows / smallerMatrixLength);
+
+        // init result array
+        let smallerMatrixes: Mat[] = new Array();
+
+        // copy
+        for (let i = 0; i < smallerMatrixPerCol; i++) {
+            for (let j = 0; j < smallerMatrixPerRow; j++) {
+                let tempMatrix: Mat = new Mat(smallerMatrixLength, smallerMatrixLength, matrix.type);
+                for (let m = 0; m < smallerMatrixLength; m++) {
+                    for (let n = 0; n < smallerMatrixLength; n++) {
+                        tempMatrix.set(m, n, matrix.at(i * smallerMatrixLength + m, j * smallerMatrixLength + n));
+                    }
+                }
+                smallerMatrixes.push(tempMatrix);
+            }
+        }
+
+        // TODO
+        return [];
     }
 }
