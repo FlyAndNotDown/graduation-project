@@ -12,7 +12,7 @@ export class MatrixTool {
         // copy it
         for (let i: number = 0; i < matrix.rows; i++) {
             for (let j: number = 0; j < matrix.cols; j++) {
-                vector.set(1, i * cols + j, matrix.at(i, j));
+                vector.set(0, i * cols + j, matrix.at(i, j));
             }
         }
         
@@ -31,7 +31,7 @@ export class MatrixTool {
         // copy it
         for (let i: number = 0; i < matrixRows; i++) {
             for (let j: number = 0; j < colsPerRow; j++) {
-                matrix.set(i, j, vector.at(1, i * colsPerRow + j));
+                matrix.set(i, j, vector.at(0, i * colsPerRow + j));
             }
         }
 
