@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "opencv4nodejs": "^4.14.1"
+  },
+  "devDependencies": {
     "ts-node": "^8.0.3",
     "typescript": "^3.4.1"
   }
