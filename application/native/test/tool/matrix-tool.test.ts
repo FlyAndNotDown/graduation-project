@@ -7,7 +7,7 @@ describe('MatrixTool', () => {
     let matrix: Mat = new Mat(3, 4, CV_8U);
     for (let i: number = 0; i < matrix.rows; i++) {
         for (let j: number = 0; j < matrix.cols; j++) {
-            matrix.set(i, j, i * 4 + j);
+            matrix.set(i, j, i * matrix.cols + j);
         }
     }
     let vector: Mat = undefined;
@@ -59,6 +59,58 @@ describe('MatrixTool', () => {
                     expect(matrix2.at(i, j)).to.be.equal(matrix.at(i, j));
                 }
             }
+        });
+    });
+
+    describe('static splitToSmallerSquareMatrix(matrix: Mat, smallerMatrixLength: number): Mat[]', () => {
+        let source: Mat = new Mat(4, 6, CV_8U);
+        for (let i: number = 0; i < source.rows; i++) {
+            for (let j: number = 0; j < source.cols; j++) {
+                source.set(i, j, i * source.cols + j);
+            }
+        }
+        let smallerMatrixes = MatrixTool.splitToSmallerSquareMatrix(source, 2);
+
+        it('smaller matrix number', () => {
+            expect(smallerMatrixes.length).to.be.eq(6);
+        });
+
+        it('smaller matrix data', () => {
+            // 0  1  2  3  4  5
+            // 6  7  8  9  10 11
+            // 12 13 14 15 16 17
+            // 18 19 20 21 22 23
+
+            // block 0
+            expect(smallerMatrixes[0].at(0, 0)).to.be.eq(0);
+            expect(smallerMatrixes[0].at(0, 1)).to.be.eq(1);
+            expect(smallerMatrixes[0].at(1, 0)).to.be.eq(6);
+            expect(smallerMatrixes[0].at(1, 1)).to.be.eq(7);
+            // block 1
+            expect(smallerMatrixes[1].at(0, 0)).to.be.eq(2);
+            expect(smallerMatrixes[1].at(0, 1)).to.be.eq(3);
+            expect(smallerMatrixes[1].at(1, 0)).to.be.eq(8);
+            expect(smallerMatrixes[1].at(1, 1)).to.be.eq(9);
+            // block 2
+            expect(smallerMatrixes[2].at(0, 0)).to.be.eq(4);
+            expect(smallerMatrixes[2].at(0, 1)).to.be.eq(5);
+            expect(smallerMatrixes[2].at(1, 0)).to.be.eq(10);
+            expect(smallerMatrixes[2].at(1, 1)).to.be.eq(11);
+            // block 3
+            expect(smallerMatrixes[3].at(0, 0)).to.be.eq(12);
+            expect(smallerMatrixes[3].at(0, 1)).to.be.eq(13);
+            expect(smallerMatrixes[3].at(1, 0)).to.be.eq(18);
+            expect(smallerMatrixes[3].at(1, 1)).to.be.eq(19);
+            // block 4
+            expect(smallerMatrixes[4].at(0, 0)).to.be.eq(14);
+            expect(smallerMatrixes[4].at(0, 1)).to.be.eq(15);
+            expect(smallerMatrixes[4].at(1, 0)).to.be.eq(20);
+            expect(smallerMatrixes[4].at(1, 1)).to.be.eq(21);
+            // block 5
+            expect(smallerMatrixes[5].at(0, 0)).to.be.eq(16);
+            expect(smallerMatrixes[5].at(0, 1)).to.be.eq(17);
+            expect(smallerMatrixes[5].at(1, 0)).to.be.eq(22);
+            expect(smallerMatrixes[5].at(1, 1)).to.be.eq(23);
         });
     });
 });

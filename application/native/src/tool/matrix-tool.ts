@@ -64,6 +64,39 @@ export class MatrixTool {
             }
         }
 
+        // render result
         return smallerMatrixes;
+    }
+
+    public static mergeToBiggerMatrix(matrixes: Mat[], matrixPerRow: number): Mat {
+        // get size info
+        let matrixesLength: number = matrixes.length;
+        let matrixRows: number = matrixes[0].rows;
+        let matrixCols: number = matrixes[0].cols;
+
+        // get type
+        let matrixType: number = matrixes[0].type;
+
+        // calculate output matrix length
+        let matrixPerCol: number = Math.floor(matrixesLength / matrixPerRow);
+        let biggerMatrixRow: number = matrixRows * matrixPerCol;
+        let biggerMatrixCol: number = matrixCols * matrixPerRow;
+
+        // init output matrix
+        let biggerMatrix: Mat = new Mat(biggerMatrixRow, biggerMatrixCol, matrixType);
+
+        // copy
+        for (let i: number = 0; i < matrixesLength; i++) {
+            for (let j: number = 0; j < matrixRows; j++) {
+                for (let k: number = 0; k < matrixCols; k++) {
+                    let row: number = Math.floor(i / matrixPerRow) + 1;
+                    let col: number = i - row * matrixPerRow;
+                    biggerMatrix.set(row * matrixRows + j, col * matrixCols + k, matrixes[i].at(j, k));
+                }
+            }
+        }
+
+        // render it
+        return biggerMatrix;
     }
 }
