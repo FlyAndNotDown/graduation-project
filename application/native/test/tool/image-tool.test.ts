@@ -30,10 +30,30 @@ describe('ImageTool', () => {
         });
     });
 
-    describe('arnoldTransform(image: Mat, order: number): Mat', () => {
-        it('order 1 transform, result save to /test/dist/arnold.jpg', () => {
+    let lena: Mat = imread(Path.join('test', 'img', 'lena.bmp'), IMREAD_COLOR);
+    let arnold1 = ImageTool.arnoldTransform(lena, 1);
+    let arnold2 = ImageTool.arnoldTransform(lena, 2);
+    let arnoldRestore1 = ImageTool.inverseArnoldTransform(arnold1, 1);
+    let arnoldRestore2 = ImageTool.inverseArnoldTransform(arnold2, 2);
+
+    describe('static arnoldTransform(image: Mat, order: number): Mat', () => {
+        it('order 1 transform, result save to /test/dist/arnold-order-1.jpg', () => {
+            imwrite(Path.join('test', 'dist', 'arnold-order-1.jpg'), arnold1);
+        });
+
+        it('order 2 transform, result save to /test/dist/arnold-order-2.jpg', () => {
+            imwrite(Path.join('test', 'dist', 'arnold-order-2.jpg'), arnold2);
+        });
+    });
+
+    describe('static inverseArnoldTransform(image: Mat, order: number): Mat', () => {
+        it('order 1 inverse transform, result save to /test/dist/inverse-arnold-order-1.jpg', () => {
+            imwrite(Path.join('test', 'dist', 'inverse-arnold-order-1.jpg'), arnoldRestore1);
+        });
+
+        it('order 2 inverse transform, result save to /test/dist/inverse-arnold-order-2.jpg', () => {
             let lena: Mat = imread(Path.join('test', 'img', 'lena.bmp'), IMREAD_COLOR);
-            imwrite(Path.join('test', 'dist', 'arnold.jpg'), ImageTool.arnoldTransform(lena, 1));
+            imwrite(Path.join('test', 'dist', 'inverse-arnold-order-2.jpg'), arnoldRestore2);
         });
     });
 });

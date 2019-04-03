@@ -30,4 +30,28 @@ export class ImageTool {
         // return result
         return output;
     }
+
+    public static inverseArnoldTransform(image: Mat, order: number): Mat {
+        // get size info
+        let rows: number = image.rows;
+
+        // init output
+        let output: Mat = image.copy();
+
+        // do inverse arnold transform
+        for (let i = 0; i < order; i++) {
+            let temp: Mat = output.copy();
+            for (let j = 0; j < rows; j++) {
+                for (let k = 0; k < rows; k++) {
+                    let x: number = MathTool.mod(2 * j - k, rows);
+                    let y: number = MathTool.mod(k - j, rows);
+                    output.set(y, x, temp.at(k, j));
+                }
+            }
+            temp = output.copy();
+        }
+
+        // return result
+        return output;
+    }
 }
