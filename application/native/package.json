@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tensorflow/tfjs": "^1.0.3",
     "opencv4nodejs": "^4.14.1",
     "path": "^0.12.7"
   },
