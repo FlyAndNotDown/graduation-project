@@ -1,7 +1,8 @@
 import { ImageTool } from './../../src/tool/image-tool';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { Mat, CV_8UC3, CV_64FC3, Vec3, Vec } from 'opencv4nodejs';
+import { Mat, CV_8UC3, CV_64FC3, Vec3, imread, imwrite } from 'opencv4nodejs';
+import * as Path from 'path';
 
 describe('ImageTool', () => {
     describe('static image2Double(image: Mat): Mat', () => {
@@ -26,6 +27,18 @@ describe('ImageTool', () => {
                     expect(pixel.z >= 0 && pixel.z <= 1).to.be.true;
                 }
             }
+        });
+    });
+
+    describe('arnoldTransform(image: Mat, order: number): Mat', () => {
+        it('order 1 transform, result save to /test/dist/arnold1.jpg', () => {
+            let lena: Mat = imread(Path.join('..', 'img', 'lena.bmp'), 0);
+            imwrite('../dist/arnold1.jpg', ImageTool.arnoldTransform(lena, 1));
+        });
+
+        it('order 2 transform, result save to /test/dist/arnold2.jpg', () => {
+            let lena: Mat = imread(Path.join('..', 'img', 'lena.bmp'), 0);
+            imwrite('../dist/arnold2.jpg', ImageTool.arnoldTransform(lena, 2));
         });
     });
 });
