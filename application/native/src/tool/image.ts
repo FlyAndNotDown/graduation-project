@@ -2,17 +2,17 @@ import { Mat, CV_64FC3, CV_8UC3, Vec3 } from 'opencv4nodejs';
 import * as Mathjs from 'mathjs';
 
 export class ImageTool {
-    public imageToDouble(image: Mat) {
+    public static imageToDouble(image: Mat) {
         // change image to double type
         return image.convertTo(CV_64FC3, 1 / 255);
     }
 
-    public imageToUint(image: Mat) {
+    public static imageToUint(image: Mat) {
         // change image to integer type
         return image.convertTo(CV_8UC3, 255);
     }
 
-    public convertToMatrix(image: Mat): Mathjs.Matrix {
+    public static convertToMatrix(image: Mat): Mathjs.Matrix {
         // get size info
         let rows: number = image.rows;
         let cols: number = image.cols;
@@ -34,7 +34,7 @@ export class ImageTool {
         return result;
     }
 
-    public convertToImage(matrix: Mathjs.Matrix): Mat {
+    public static convertToImage(matrix: Mathjs.Matrix): Mat {
         // get size info
         let size: number[] = <number[]>Mathjs.size(matrix);
         let rows: number = size[0];
