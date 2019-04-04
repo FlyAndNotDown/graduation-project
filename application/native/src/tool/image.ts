@@ -1,40 +1,56 @@
 import { Mat, CV_64FC3, CV_8UC3, Vec3 } from 'opencv4nodejs';
+import * as Mathjs from 'mathjs';
 
 export class ImageTool {
-    public imageToDouble(rgbImage: Mat) {
+    public imageToDouble(image: Mat) {
         // change image to double type
-        return rgbImage.convertTo(CV_64FC3, 1 / 255);
+        return image.convertTo(CV_64FC3, 1 / 255);
     }
 
-    public imageToUint(rgbImage: Mat) {
+    public imageToUint(image: Mat) {
         // change image to integer type
-        return rgbImage.convertTo(CV_8UC3, 255);
+        return image.convertTo(CV_8UC3, 255);
     }
 
-    public convertToMatrix(rgbImage: Mat): number[][][] {
+    public convertToMatrix(image: Mat): Mathjs.Matrix {
         // get size info
-        let rows: number = rgbImage.rows;
-        let cols: number = rgbImage.cols;
+        let rows: number = image.rows;
+        let cols: number = image.cols;
 
-        // init array
-        let source: number[][][] = [];
+        // init matrix
+        let result: Mathjs.Matrix = <Mathjs.Matrix>Mathjs.zeros([rows, cols, 3]);
 
-        // copy
-        for (let i = 0; i < rows; i++) {
-            let temp: number[][] = [];
-            for (let j = 0; j < cols; j++) {
-                let pixel = <Vec3><unknown>rgbImage.at(i, j);
-                temp.push([pixel.x, pixel.y, pixel.z]);
+        // fill values
+        for (let i: number; i < rows; i++) {
+            for (let j: number; j < cols; j++) {
+                let pixel = <Vec3><unknown>image.at(i, j);
+                result.set([i, j, 0], pixel.x);
+                result.set([i, j, 1], pixel.y);
+                result.set([i, j, 2], pixel.z);
             }
-            source.push(temp);
         }
 
-        // return matrix
-        return source;
+        // return result
+        return result;
     }
 
-    public convertToImage(sourceMatrix: number[][][]): Mat {
-        // TODO
-        return null;
+    public convertToImage(matrix: Mathjs.Matrix): Mat {
+        // get size info
+        let size: number[] = <number[]>Mathjs.size(matrix);
+        let rows: number = size[0];
+        let cols: number = size[1];
+
+        // init image mat
+        let image: Mat = new Mat(rows, cols, CV_64FC3);
+
+        // copy values
+        for (let i: number; i < rows; i++) {
+            for (let j: number; j < cols; j++) {
+                image.set(i, j, [matrix.get([i, j, 0]), matrix.get([i, j, 1]), matrix.get([i, j, 2])]);
+            }
+        }
+
+        // return result
+        return image;
     }
 }
