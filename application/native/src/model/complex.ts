@@ -7,7 +7,7 @@ export class Complex {
     }
     
     public static add(a: Complex, b: Complex): Complex {
-        return new Complex(a.real + b.real, a.imag - b.imag);
+        return new Complex(a.real + b.real, a.imag + b.imag);
     }
 
     public static sub(a: Complex, b: Complex): Complex {
