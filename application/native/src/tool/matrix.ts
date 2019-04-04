@@ -19,11 +19,23 @@ export class MatrixTool {
         return vector;
     }
 
-    public static convertToMatrix(vector: number[][]): number[][][] {
+    public static convertToMatrix(vector: number[][], colsPerRow: number): number[][][] {
         // get size info
         let length: number = vector.length;
 
-        // TODO
-        return null;
+        // init matrix
+        let matrix: number[][][] = [];
+
+        // copy
+        for (let i: number = 0; i < length; i++) {
+            if (i % colsPerRow === 0) {
+                matrix.push([]);
+            }
+            let pixel: number[] = vector[i];
+            matrix[Math.floor(i / colsPerRow)].push([pixel[0], pixel[1], pixel[2]]);
+        }
+
+        // return result
+        return matrix;
     }
 }
