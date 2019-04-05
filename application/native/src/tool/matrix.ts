@@ -86,10 +86,10 @@ export class MatrixTool {
         for (let i: number = 0; i < length; i++) {
             for (let j: number = 0; j < rows; j++) {
                 let rowIndex: number = Math.floor(i / matrixesPerRow) * rows + j;
-                if (rowIndex <= biggerMatrix.length) { biggerMatrix.push([]); }
+                if (rowIndex >= biggerMatrix.length) { biggerMatrix.push([]); }
                 for (let k: number = 0; k < cols; k++) {
                     let colIndex: number = (i % matrixesPerRow) * cols + k;
-                    if (colIndex <= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
+                    if (colIndex >= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
                     let pixel: number[] = matrixes[i][j][k];
                     biggerMatrix[rowIndex][colIndex].push(pixel[0], pixel[1], pixel[2]);
                 }
