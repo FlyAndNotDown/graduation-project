@@ -99,4 +99,22 @@ export class MatrixTool {
         // return result
         return biggerMatrix;
     }
+
+    public static deepCopy(matrix: number[][][]): number[][][] {
+        // init result
+        let result: number[][][] = [];
+
+        // copy
+        for (let i: number = 0; i < matrix.length; i++) {
+            let row: number[][] = [];
+            for (let j: number = 0; j < matrix[i].length; j++) {
+                let pixel: number[] = matrix[i][j];
+                row.push([pixel[0], pixel[1], pixel[2]]);
+            }
+            result.push(row);
+        }
+
+        // return result
+        return result;
+    }
 }

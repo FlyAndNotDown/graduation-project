@@ -19,6 +19,8 @@ describe('MatrixTool', () => {
     let smallerMatrixes2: number[][][][] = MatrixTool.splitToSmallerMatrix(matrix2, 2);
     let restore2: number[][][] = MatrixTool.mergeToBiggerMatrix(smallerMatrixes2, 3);
 
+    let matrixCopy: number[][][] = MatrixTool.deepCopy(matrix);
+
     describe('convertToVector()', () => {
         it('data size', () => {
             let length: number = vector.length;
@@ -105,6 +107,32 @@ describe('MatrixTool', () => {
                 for (let j: number = 0; j < restore2[i].length; j++) {
                     for (let k: number = 0; k < restore2[i][j].length; k++) {
                         expect(restore2[i][j][k]).to.be.eq(matrix2[i][j][k]);
+                    }
+                }
+            }
+        });
+    });
+
+    describe('deepCopy()', () => {
+        it('point', () => {
+            expect(matrixCopy === matrix).to.be.false;
+        });
+
+        it('data size', () => {
+            expect(matrixCopy.length).to.be.eq(matrix.length);
+            for (let i: number = 0; i < matrixCopy.length; i++) {
+                expect(matrixCopy[i].length).to.be.eq(matrix[i].length);
+                for (let j: number = 0; j < matrixCopy[i].length; j++) {
+                    expect(matrixCopy[i][j].length).to.be.eq(matrix[i][j].length);
+                }
+            }
+        });
+
+        it('data', () => {
+            for (let i: number = 0; i < matrixCopy.length; i++) {
+                for (let j: number = 0; j < matrixCopy[i].length; j++) {
+                    for (let k: number = 0; k < matrixCopy[i][j].length; k++) {
+                        expect(matrixCopy[i][j][k]).to.be.eq(matrix[i][j][k]);
                     }
                 }
             }
