@@ -38,4 +38,38 @@ export class MatrixTool {
         // return result
         return matrix;
     }
+
+    public static splitToSmallerMatrix(matrix: number[][][], smallerMatrixLength: number): number[][][][] {
+        // get size info
+        let rows: number = matrix.length;
+        let cols: number = matrix[0].length;
+
+        // get smaller matrix num
+        let smallerMatrixesPerRow: number = Math.floor(cols / smallerMatrixLength);
+        let smallerMatrixesPerCol: number = Math.floor(rows / smallerMatrixLength);
+
+        // init result
+        let smallerMatrixes: number[][][][] = [];
+
+        // copy
+        for (let i: number = 0; i < smallerMatrixesPerCol; i++) {
+            for (let j: number = 0; j < smallerMatrixesPerRow; j++) {
+                let smallerMatrix: number[][][] = [];
+                for (let m: number = 0; m < smallerMatrixLength; m++) {
+                    let smallerMatrixRow: number[][] = [];
+                    for (let n: number = 0; n < smallerMatrixLength; n++) {
+                        let pixel: number[] = matrix[i * smallerMatrixLength + m][j * smallerMatrixLength + n];
+                        smallerMatrixRow.push([
+                            pixel[0], pixel[1], pixel[2]
+                        ]);
+                    }
+                    smallerMatrix.push(smallerMatrixRow);
+                }
+                smallerMatrixes.push(smallerMatrix);
+            }
+        }
+        
+        // return result
+        return smallerMatrixes;
+    }
 }
