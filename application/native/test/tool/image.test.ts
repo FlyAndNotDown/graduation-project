@@ -16,6 +16,8 @@ describe('ImageTool', () => {
     let matrix: number[][][] = ImageTool.convertToMatrix(sourceDouble);
     let restore: Mat = ImageTool.convertToImage(matrix);
 
+    let lena: number[][][] = ImageTool.readImageFileToDoubleMatrix('test/img/lena.bmp');
+
     describe('data source', () => {
         it('correct', () => {
             for (let i: number = 0; i < 3; i++) {
@@ -78,6 +80,30 @@ describe('ImageTool', () => {
                     expect(pixel.x).to.be.eq(matrix[i][j][2]);
                 }
             }
+        });
+    });
+
+    describe('loadImageFileToDoubleMatrix()', () => {
+        it('data size', () => {
+            expect(lena.length).to.be.eq(512);
+            expect(lena[0].length).to.be.eq(512);
+            expect(lena[0][0].length).to.be.eq(3);
+        });
+
+        it('data range', () => {
+            lena.forEach((cols: number[][]): void => {
+                if (Math.random() > 0.7) {
+                    cols.forEach((channels: number[]): void => {
+                        if (Math.random() > 0.7) {
+                            channels.forEach((channel: number): void => {
+                                if (Math.random() > 0.7) {
+                                    expect(channel >= 0 && channel <= 1);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         });
     });
 });
