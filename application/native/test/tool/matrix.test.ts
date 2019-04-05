@@ -17,7 +17,7 @@ describe('MatrixTool', () => {
         [ [191, 192, 193], [201, 202, 203], [211, 212, 213], [221, 222, 223], [231, 232, 233], [241, 242, 243] ]
     ];
     let smallerMatrixes2: number[][][][] = MatrixTool.splitToSmallerMatrix(matrix2, 2);
-    // let restore2: number[][][] = MatrixTool.mergeToBiggerMatrix(smallerMatrix2, 3);
+    let restore2: number[][][] = MatrixTool.mergeToBiggerMatrix(smallerMatrixes2, 3);
 
     describe('convertToVector()', () => {
         it('data size', () => {
