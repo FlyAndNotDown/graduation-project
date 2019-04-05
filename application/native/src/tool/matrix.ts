@@ -84,14 +84,14 @@ export class MatrixTool {
 
         // copy
         for (let i: number = 0; i < length; i++) {
-            let rowIndex: number = Math.floor(i / matrixesPerRow);
-            let colIndex: number = i % matrixesPerRow;
             for (let j: number = 0; j < rows; j++) {
-                if (rowIndex * rows + j <= biggerMatrix.length) { biggerMatrix.push([]); }
+                let rowIndex: number = Math.floor(i / matrixesPerRow) * rows + j;
+                if (rowIndex <= biggerMatrix.length) { biggerMatrix.push([]); }
                 for (let k: number = 0; k < cols; k++) {
-                    if (colIndex * cols + k <= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
+                    let colIndex: number = (i % matrixesPerRow) * cols + k;
+                    if (colIndex <= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
                     let pixel: number[] = matrixes[i][j][k];
-                    biggerMatrix[rowIndex * rows + j][colIndex * cols + k].push(pixel[0], pixel[1], pixel[2]);
+                    biggerMatrix[rowIndex][colIndex].push(pixel[0], pixel[1], pixel[2]);
                 }
             }
         }

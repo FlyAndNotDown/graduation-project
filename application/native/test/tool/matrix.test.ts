@@ -90,6 +90,24 @@ describe('MatrixTool', () => {
     });
 
     describe('mergeToBiggerMatrix()', () => {
-        // TODO
+        it('data size', () => {
+            expect(restore2.length).to.be.eq(4);
+            for (let i: number = 0; i < restore2.length; i++) {
+                expect(restore2[i].length).to.be.eq(6);
+                for (let j: number = 0; j < restore2[i].length; j++) {
+                    expect(restore2[i][j].length).to.be.eq(3);
+                }
+            }
+        });
+
+        it('data', () => {
+            for (let i: number = 0; i < restore2.length; i++) {
+                for (let j: number = 0; j < restore2[i].length; j++) {
+                    for (let k: number = 0; k < restore2[i][j].length; k++) {
+                        expect(restore2[i][j][k]).to.be.eq(matrix2[i][j][k]);
+                    }
+                }
+            }
+        });
     });
 });
