@@ -26,7 +26,7 @@ describe('MatrixTool', () => {
         });
     });
 
-    describe('convertToMatrix', () => {
+    describe('convertToMatrix()', () => {
         it('data size', () => {
             let rows: number = restore.length;
             let cols: number = restore[0].length;
@@ -45,5 +45,13 @@ describe('MatrixTool', () => {
                 }
             }
         });
+    });
+
+    describe('splitToSmallerMatrix()', () => {
+        // TODO
+    });
+
+    describe('mergeToBiggerMatrix()', () => {
+        // TODO
     });
 });

@@ -72,4 +72,19 @@ export class MatrixTool {
         // return result
         return smallerMatrixes;
     }
+
+    public static mergeToBiggerMatrix(matrixes: number[][][][], matrixesPerRow: number): number[][][] {
+        // get size info
+        let length: number = matrixes.length;
+        let rows: number = matrixes[0].length;
+        let cols: number = matrixes[0][0].length;
+
+        // get bigger matrix size
+        let matrixesPerCol: number = Math.floor(length / matrixesPerRow);
+        let biggerMatrixRows: number = rows * matrixesPerCol;
+        let biggerMatrixCols: number = cols * matrixesPerRow;
+
+        // TODO
+        return null;
+    }
 }
