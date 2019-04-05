@@ -79,12 +79,24 @@ export class MatrixTool {
         let rows: number = matrixes[0].length;
         let cols: number = matrixes[0][0].length;
 
-        // get bigger matrix size
-        let matrixesPerCol: number = Math.floor(length / matrixesPerRow);
-        let biggerMatrixRows: number = rows * matrixesPerCol;
-        let biggerMatrixCols: number = cols * matrixesPerRow;
+        // init result
+        let biggerMatrix: number[][][] = [];
 
-        // TODO
-        return null;
+        // copy
+        for (let i: number = 0; i < length; i++) {
+            let rowIndex: number = Math.floor(i / matrixesPerRow);
+            let colIndex: number = i - rowIndex * matrixesPerRow;
+            if (rowIndex <= biggerMatrix.length) { biggerMatrix.push([]); }
+            if (colIndex <= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
+            for (let j: number = 0; j < rows; i++) {
+                for (let k: number = 0; k < cols; k++) {
+                    let pixel: number[] = matrixes[i][j][k];
+                    biggerMatrix[rowIndex * rows + j][colIndex * cols + k].push(pixel[0], pixel[1], pixel[2]);
+                }
+            }
+        }
+
+        // return result
+        return biggerMatrix;
     }
 }
