@@ -117,25 +117,4 @@ export class MatrixTool {
         // return result
         return result;
     }
-
-    public static transport(matrix: number[][]): number[][] {
-        // get size info
-        let rows: number = matrix.length;
-        let cols: number = matrix[0].length;
-
-        // init result
-        let result: number[][] = [];
-
-        // transport
-        for (let i: number = 0; i < cols; i++) {
-            let temp: number[] = [];
-            for (let j: number = 0; j < rows; j++) {
-                temp.push(matrix[j][i]);
-            }
-            result.push(temp);
-        }
-
-        // return result
-        return result;
-    }
 }

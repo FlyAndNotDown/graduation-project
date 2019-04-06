@@ -21,13 +21,6 @@ describe('MatrixTool', () => {
 
     let matrixCopy: number[][][] = MatrixTool.deepCopy(matrix);
 
-    let matrix3: number[][] = [
-        [1, 2, 3, 4, 5, 6],
-        [7, 8, 9, 10, 11, 12],
-        [13, 14, 15, 16, 17, 18]
-    ];
-    let transport: number[][] = MatrixTool.transport(matrix3);
-
     describe('convertToVector()', () => {
         it('data size', () => {
             let length: number = vector.length;
@@ -141,23 +134,6 @@ describe('MatrixTool', () => {
                     for (let k: number = 0; k < matrixCopy[i][j].length; k++) {
                         expect(matrixCopy[i][j][k]).to.be.eq(matrix[i][j][k]);
                     }
-                }
-            }
-        });
-    });
-
-    describe('transport()', () => {
-        it('data size', () => {
-            expect(transport.length).to.be.eq(6);
-            for (let i: number = 0; i < 6; i++) {
-                expect(transport[i].length).to.be.eq(3);
-            }
-        });
-
-        it('data', () => {
-            for (let i: number = 0; i < 6; i++) {
-                for (let j: number = 0; j < 3; j++) {
-                    expect(transport[i][j]).to.be.eq(matrix3[j][i]);
                 }
             }
         });
