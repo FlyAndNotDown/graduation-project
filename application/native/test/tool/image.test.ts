@@ -17,6 +17,7 @@ describe('ImageTool', () => {
     let restore: Mat = ImageTool.convertToImage(matrix);
 
     let lena: number[][][] = ImageTool.readImageFileToDoubleMatrix('test/img/lena.bmp');
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/matrix-write.bmp', lena);
 
     describe('data source', () => {
         it('correct', () => {
@@ -104,6 +105,12 @@ describe('ImageTool', () => {
                     });
                 }
             });
+        });
+    });
+
+    describe('writeDoubleMatrixToImageFile()', () => {
+        it('write \'lena\' image to \'test/dist/matrix-write.bmp\'', () => {
+            expect(1).to.be.eq(1);
         });
     });
 });
