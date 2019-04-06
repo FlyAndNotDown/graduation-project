@@ -1,4 +1,4 @@
-import { Mat, CV_64FC3, CV_8UC3, Vec3 } from 'opencv4nodejs';
+import { Mat, CV_64FC3, CV_8UC3, Vec3, imread, IMREAD_COLOR, imwrite } from 'opencv4nodejs';
 
 export class ImageTool {
     public static imageToDouble(image: Mat) {
@@ -51,5 +51,15 @@ export class ImageTool {
 
         // return
         return image;
+    }
+
+    public static readImageFileToDoubleMatrix(path: string): number[][][] {
+        // return result
+        return ImageTool.convertToMatrix(ImageTool.imageToDouble(imread(path, IMREAD_COLOR)));
+    }
+
+    public static writeDoubleMatrixToImageFile(path: string, matrix: number[][][]) {
+        // do write
+        return imwrite(path, ImageTool.imageToUint(ImageTool.convertToImage(matrix)));
     }
 }

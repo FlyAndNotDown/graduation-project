@@ -16,6 +16,9 @@ describe('ImageTool', () => {
     let matrix: number[][][] = ImageTool.convertToMatrix(sourceDouble);
     let restore: Mat = ImageTool.convertToImage(matrix);
 
+    let lena: number[][][] = ImageTool.readImageFileToDoubleMatrix('test/img/lena.bmp');
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/matrix-write.bmp', lena);
+
     describe('data source', () => {
         it('correct', () => {
             for (let i: number = 0; i < 3; i++) {
@@ -78,6 +81,36 @@ describe('ImageTool', () => {
                     expect(pixel.x).to.be.eq(matrix[i][j][2]);
                 }
             }
+        });
+    });
+
+    describe('loadImageFileToDoubleMatrix()', () => {
+        it('data size', () => {
+            expect(lena.length).to.be.eq(512);
+            expect(lena[0].length).to.be.eq(512);
+            expect(lena[0][0].length).to.be.eq(3);
+        });
+
+        it('data range', () => {
+            lena.forEach((cols: number[][]): void => {
+                if (Math.random() > 0.9) {
+                    cols.forEach((channels: number[]): void => {
+                        if (Math.random() > 0.9) {
+                            channels.forEach((channel: number): void => {
+                                if (Math.random() > 0.9) {
+                                    expect(channel >= 0 && channel <= 1);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    describe('writeDoubleMatrixToImageFile()', () => {
+        it('write \'lena\' image to \'test/dist/matrix-write.bmp\'', () => {
+            expect(1).to.be.eq(1);
         });
     });
 });
