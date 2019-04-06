@@ -5,6 +5,34 @@ export class Complex {
         this.real = real;
         this.imag = imag;
     }
+
+    public add(other: Complex): Complex {
+        return new Complex(this.real + other.real, this.imag + other.imag);
+    }
+
+    public sub(other: Complex): Complex {
+        return new Complex(this.real - other.real, this.imag - other.imag);
+    }
+
+    public mul(other: number): Complex;
+    public mul(other: Complex): Complex;
+    public mul(other: any): Complex {
+        if (typeof other === 'number') {
+            return new Complex(this.real * other, this.imag * other);
+        } else {
+            return new Complex(
+                this.real * other.real - this.imag * other.imag,
+                this.imag * other.real + this.real * other.imag
+            );
+        }
+    }
+
+    public div(other: Complex): Complex {
+        return new Complex(
+            (this.real * other.real + this.imag * other.imag) / (other.real * other.real + other.imag * other.imag),
+            (this.imag * other.real - this.real * other.imag) / (other.real * other.real + other.imag * other.imag)
+        );
+    }
     
     public static add(a: Complex, b: Complex): Complex {
         return new Complex(a.real + b.real, a.imag + b.imag);

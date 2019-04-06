@@ -11,6 +11,9 @@ describe('Complex', () => {
             let result: Complex = Complex.add(a, b);
             expect(result.real).to.be.eq(5);
             expect(result.imag).to.be.eq(7);
+            result = a.add(b);
+            expect(result.real).to.be.eq(5);
+            expect(result.imag).to.be.eq(7);
         });
     });
 
@@ -22,6 +25,12 @@ describe('Complex', () => {
             result = Complex.sub(b, a);
             expect(result.real).to.be.eq(1);
             expect(result.imag).to.be.eq(1);
+            result = a.sub(b);
+            expect(result.real).to.be.eq(-1);
+            expect(result.imag).to.be.eq(-1);
+            result = b.sub(a);
+            expect(result.real).to.be.eq(-1);
+            expect(result.imag).to.be.eq(-1);
         });
     });
 
@@ -30,10 +39,16 @@ describe('Complex', () => {
             let result: Complex = Complex.mul(a, 3);
             expect(result.real).to.be.eq(6);
             expect(result.imag).to.be.eq(9);
+            result = a.mul(3);
+            expect(result.real).to.be.eq(6);
+            expect(result.imag).to.be.eq(9);
         });
 
         it('Complex with Complex', () => {
             let result: Complex = Complex.mul(a, b);
+            expect(result.real).to.be.eq(-6);
+            expect(result.imag).to.be.eq(17);
+            result = a.mul(b);
             expect(result.real).to.be.eq(-6);
             expect(result.imag).to.be.eq(17);
         });
@@ -44,6 +59,9 @@ describe('Complex', () => {
             let c: Complex = new Complex(6, 6);
             let d: Complex = new Complex(2, 2);
             let result: Complex = Complex.div(c, d);
+            expect(result.real).to.be.eq(3);
+            expect(result.imag).to.be.eq(0);
+            result = c.div(d);
             expect(result.real).to.be.eq(3);
             expect(result.imag).to.be.eq(0);
         });
