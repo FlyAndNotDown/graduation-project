@@ -29,8 +29,8 @@ describe('Complex', () => {
             expect(result.real).to.be.eq(-1);
             expect(result.imag).to.be.eq(-1);
             result = b.sub(a);
-            expect(result.real).to.be.eq(-1);
-            expect(result.imag).to.be.eq(-1);
+            expect(result.real).to.be.eq(1);
+            expect(result.imag).to.be.eq(1);
         });
     });
 
