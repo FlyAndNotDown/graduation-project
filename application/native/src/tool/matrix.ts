@@ -1,55 +1,17 @@
+import { Matrix3D } from './../model/matrix3d';
+
 export class MatrixTool {
-    public static convertToVector(matrix: number[][][]): number[][] {
+    public static splitToSmallerMatrix(matrix: Matrix3D, smallerMatrixLength: number): Matrix3D[] {
         // get size info
-        let rows: number = matrix.length;
-        let cols: number = matrix[0].length;
-
-        // init vector
-        let vector: number[][] = [];
-
-        // copy
-        for (let i: number = 0; i < rows; i++) {
-            for (let j: number = 0; j < cols; j++) {
-                let pixel: number[] = matrix[i][j];
-                vector.push([pixel[0], pixel[1], pixel[2]]);
-            }
-        }
-
-        // return vector
-        return vector;
-    }
-
-    public static convertToMatrix(vector: number[][], colsPerRow: number): number[][][] {
-        // get size info
-        let length: number = vector.length;
-
-        // init matrix
-        let matrix: number[][][] = [];
-
-        // copy
-        for (let i: number = 0; i < length; i++) {
-            if (i % colsPerRow === 0) {
-                matrix.push([]);
-            }
-            let pixel: number[] = vector[i];
-            matrix[Math.floor(i / colsPerRow)].push([pixel[0], pixel[1], pixel[2]]);
-        }
-
-        // return result
-        return matrix;
-    }
-
-    public static splitToSmallerMatrix(matrix: number[][][], smallerMatrixLength: number): number[][][][] {
-        // get size info
-        let rows: number = matrix.length;
-        let cols: number = matrix[0].length;
+        let rows: number = matrix.rows;
+        let cols: number = matrix.cols;
 
         // get smaller matrix num
         let smallerMatrixesPerRow: number = Math.floor(cols / smallerMatrixLength);
         let smallerMatrixesPerCol: number = Math.floor(rows / smallerMatrixLength);
 
         // init result
-        let smallerMatrixes: number[][][][] = [];
+        let smallerMatrixes: Matrix3D[] = [];
 
         // copy
         for (let i: number = 0; i < smallerMatrixesPerCol; i++) {
@@ -58,14 +20,15 @@ export class MatrixTool {
                 for (let m: number = 0; m < smallerMatrixLength; m++) {
                     let smallerMatrixRow: number[][] = [];
                     for (let n: number = 0; n < smallerMatrixLength; n++) {
-                        let pixel: number[] = matrix[i * smallerMatrixLength + m][j * smallerMatrixLength + n];
                         smallerMatrixRow.push([
-                            pixel[0], pixel[1], pixel[2]
+                            matrix.get(i * smallerMatrixLength + m, j * smallerMatrixLength + n, 0),
+                            matrix.get(i * smallerMatrixLength + m, j * smallerMatrixLength + n, 1),
+                            matrix.get(i * smallerMatrixLength + m, j * smallerMatrixLength + n, 2)
                         ]);
                     }
                     smallerMatrix.push(smallerMatrixRow);
                 }
-                smallerMatrixes.push(smallerMatrix);
+                smallerMatrixes.push(new Matrix3D(smallerMatrix));
             }
         }
         
@@ -73,11 +36,11 @@ export class MatrixTool {
         return smallerMatrixes;
     }
 
-    public static mergeToBiggerMatrix(matrixes: number[][][][], matrixesPerRow: number): number[][][] {
+    public static mergeToBiggerMatrix(matrixes: Matrix3D[], matrixesPerRow: number): Matrix3D {
         // get size info
         let length: number = matrixes.length;
-        let rows: number = matrixes[0].length;
-        let cols: number = matrixes[0][0].length;
+        let rows: number = matrixes[0].rows;
+        let cols: number = matrixes[0].cols;
 
         // init result
         let biggerMatrix: number[][][] = [];
@@ -90,31 +53,39 @@ export class MatrixTool {
                 for (let k: number = 0; k < cols; k++) {
                     let colIndex: number = (i % matrixesPerRow) * cols + k;
                     if (colIndex >= biggerMatrix[rowIndex].length) { biggerMatrix[rowIndex].push([]); }
-                    let pixel: number[] = matrixes[i][j][k];
-                    biggerMatrix[rowIndex][colIndex].push(pixel[0], pixel[1], pixel[2]);
+                    biggerMatrix[rowIndex][colIndex].push(
+                        matrixes[i].get(j, k, 0),
+                        matrixes[i].get(j, k, 1),
+                        matrixes[i].get(j, k, 2)
+                    );
                 }
             }
         }
 
         // return result
-        return biggerMatrix;
+        return new Matrix3D(biggerMatrix);
     }
 
-    public static deepCopy(matrix: number[][][]): number[][][] {
+    public static deepCopy(matrix: Matrix3D): Matrix3D {
         // init result
         let result: number[][][] = [];
+        let rows: number = matrix.rows;
+        let cols: number = matrix.cols;
 
         // copy
-        for (let i: number = 0; i < matrix.length; i++) {
+        for (let i: number = 0; i < rows; i++) {
             let row: number[][] = [];
-            for (let j: number = 0; j < matrix[i].length; j++) {
-                let pixel: number[] = matrix[i][j];
-                row.push([pixel[0], pixel[1], pixel[2]]);
+            for (let j: number = 0; j < cols; j++) {
+                row.push([
+                    matrix.get(i, j, 0),
+                    matrix.get(i, j, 1),
+                    matrix.get(i, j, 2)
+                ]);
             }
             result.push(row);
         }
 
         // return result
-        return result;
+        return new Matrix3D(result);
     }
 }
