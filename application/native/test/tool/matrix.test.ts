@@ -39,8 +39,7 @@ describe('MatrixTool', () => {
                         for (let l: number = 0; l < 3; l++) {
                             let row: number = Math.floor(i / 3) * 2 + j;
                             let col: number = i % 3 * 2 + k;
-
-                            expect(smallerMatrixes2[i].get(i, j, k)).to.be.eq(
+                            expect(smallerMatrixes2[i].get(j, k, l)).to.be.eq(
                                 (row * 6 + col + 1) * 10 + l + 1
                             );
                         }
