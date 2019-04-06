@@ -44,7 +44,7 @@ describe('Vector', () => {
     describe('getData()', () => {
         it('data', () => {
             for (let i: number = 0; i < 3; i++) {
-                expect(array[i + 1]).to.be.eq(i + 1);
+                expect(array[i]).to.be.eq(i + 1);
             }
         });
     });
