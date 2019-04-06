@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 describe('Vector', () => {
     let vector: Vector = new Vector([1, 2, 3]);
-    let array: number[] = vector.toArray();
+    let array: number[] = vector.getData();
 
     describe('constructor()', () => {
         it('instance test', () => {
@@ -41,7 +41,7 @@ describe('Vector', () => {
         });
     });
 
-    describe('toArray()', () => {
+    describe('getData()', () => {
         it('data', () => {
             for (let i: number = 0; i < 3; i++) {
                 expect(array[i + 1]).to.be.eq(i + 1);

@@ -15,15 +15,15 @@ export class Vector {
         return new Vector(data);
     }
 
-    public get(i: number) {
+    public get(i: number): number {
         return this.data[i];
     }
 
-    public set(i: number, item: number) {
+    public set(i: number, item: number): void {
         this.data[i] = item;
     }
 
-    public toArray() {
+    public getData(): number[] {
         return this.data;
     }
 }
