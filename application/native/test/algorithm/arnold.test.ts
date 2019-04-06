@@ -19,29 +19,29 @@ describe('Arnold', () => {
     ImageTool.writeDoubleMatrixToImageFile('test/dist/arnold-restore-6.bmp', restore6);
 
     describe('transform()', () => {
-        it('order 1 test, save to \'test/dist/arnold-order-1.bmp\' dir', () => {
+        it('order 1 test, save to \'test/dist/arnold-order-1.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
 
-        it('order 2 test, save to \'test/dist/arnold-order-2.bmp\' dir', () => {
+        it('order 2 test, save to \'test/dist/arnold-order-2.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
 
-        it('order 6 test, save to \'test/dist/arnold-order-6.bmp\' dir', () => {
+        it('order 6 test, save to \'test/dist/arnold-order-6.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
     });
 
     describe('inverseTransform()', () => {
-        it('order 1 test, save to \'test/dist/arnold-restore-1.bmp\' dir', () => {
+        it('order 1 test, save to \'test/dist/arnold-restore-1.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
 
-        it('order 2 test, save to \'test/dist/arnold-restore-1.bmp\' dir', () => {
+        it('order 2 test, save to \'test/dist/arnold-restore-1.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
 
-        it('order 6 test, save to \'test/dist/arnold-restore-1.bmp\' dir', () => {
+        it('order 6 test, save to \'test/dist/arnold-restore-1.bmp\'', () => {
             expect(1).to.be.eq(1);
         });
     });
