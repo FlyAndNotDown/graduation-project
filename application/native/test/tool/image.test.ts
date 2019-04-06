@@ -93,11 +93,11 @@ describe('ImageTool', () => {
 
         it('data range', () => {
             lena.forEach((cols: number[][]): void => {
-                if (Math.random() > 0.7) {
+                if (Math.random() > 0.9) {
                     cols.forEach((channels: number[]): void => {
-                        if (Math.random() > 0.7) {
+                        if (Math.random() > 0.9) {
                             channels.forEach((channel: number): void => {
-                                if (Math.random() > 0.7) {
+                                if (Math.random() > 0.9) {
                                     expect(channel >= 0 && channel <= 1);
                                 }
                             });
