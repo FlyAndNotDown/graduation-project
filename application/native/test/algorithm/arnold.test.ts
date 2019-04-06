@@ -1,16 +1,17 @@
+import { Matrix3D } from './../../src/model/matrix3d';
 import { Arnold } from './../../src/algorithm/arnold';
 import { ImageTool } from './../../src/tool/image';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
 describe('Arnold', () => {
-    let lena: number[][][] = ImageTool.readImageFileToDoubleMatrix('test/img/lena.bmp');
-    let order1: number[][][] = Arnold.transform(lena, 1);
-    let order2: number[][][] = Arnold.transform(lena, 2);
-    let order6: number[][][] = Arnold.transform(lena, 6);
-    let restore1: number[][][] = Arnold.inverseTransform(order1, 1);
-    let restore2: number[][][] = Arnold.inverseTransform(order2, 2);
-    let restore6: number[][][] = Arnold.inverseTransform(order6, 6);
+    let lena: Matrix3D = ImageTool.readImageFileToDoubleMatrix('test/img/lena.bmp');
+    let order1: Matrix3D = Arnold.transform(lena, 1);
+    let order2: Matrix3D = Arnold.transform(lena, 2);
+    let order6: Matrix3D = Arnold.transform(lena, 6);
+    let restore1: Matrix3D = Arnold.inverseTransform(order1, 1);
+    let restore2: Matrix3D = Arnold.inverseTransform(order2, 2);
+    let restore6: Matrix3D = Arnold.inverseTransform(order6, 6);
     ImageTool.writeDoubleMatrixToImageFile('test/dist/arnold-order-1.bmp', order1);
     ImageTool.writeDoubleMatrixToImageFile('test/dist/arnold-order-2.bmp', order2);
     ImageTool.writeDoubleMatrixToImageFile('test/dist/arnold-order-6.bmp', order6);

@@ -1,18 +1,19 @@
+import { Matrix3D } from './../model/matrix3d';
 import { MathTool } from './../tool/math';
 import { MatrixTool } from './../tool/matrix';
 
 export class Arnold {
-    public static transform(matrix: number[][][], order: number): number[][][] {
+    public static transform(matrix: Matrix3D, order: number): Matrix3D {
         // get size info
-        let rows: number = matrix.length;
-        let cols: number = matrix[0].length;
+        let rows: number = matrix.rows;
+        let cols: number = matrix.cols;
 
         // judge if rows & cols is equal
         if (rows !== cols) throw new Error('rows & cols of matrix should be equal');
 
         // init output
-        let source: number[][][] = matrix;
-        let result: number[][][] = MatrixTool.deepCopy(source);
+        let source: Matrix3D = matrix;
+        let result: Matrix3D = MatrixTool.deepCopy(source);
 
         // judge if it's normal transform or inverse transform
         if (order > 0) {
@@ -24,7 +25,9 @@ export class Arnold {
                         // let y: number = (j + 2 * k) % rows;
                         let x: number = MathTool.mod(j + k, rows);
                         let y: number = MathTool.mod(j + 2 * k, rows);
-                        result[y][x] = source[k][j];
+                        result.set(y, x, 0, source.get(k, j, 0));
+                        result.set(y, x, 1, source.get(k, j, 1));
+                        result.set(y, x, 2, source.get(k, j, 2));
                     }
                 }
                 if (i !== order - 1) { source = MatrixTool.deepCopy(result); }
@@ -39,7 +42,9 @@ export class Arnold {
                         // let y: number = (k - j) % rows;
                         let x: number = MathTool.mod(2 * j - k, rows);
                         let y: number = MathTool.mod(k - j, rows);
-                        result[y][x] = source[k][j];
+                        result.set(y, x, 0, source.get(k, j, 0));
+                        result.set(y, x, 1, source.get(k, j, 1));
+                        result.set(y, x, 2, source.get(k, j, 2));
                     }
                 }
                 if (i !== inverseOrder - 1) { source = MatrixTool.deepCopy(result); }
@@ -50,7 +55,7 @@ export class Arnold {
         return result;
     }
 
-    public static inverseTransform(matrix: number[][][], order: number): number[][][] {
+    public static inverseTransform(matrix: Matrix3D, order: number): Matrix3D {
         // return result
         return Arnold.transform(matrix, 0 - order);
     }
