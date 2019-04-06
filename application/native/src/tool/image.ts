@@ -1,3 +1,4 @@
+import { Matrix3D } from './../model/matrix3d';
 import { Mat, CV_64FC3, CV_8UC3, Vec3, imread, IMREAD_COLOR, imwrite } from 'opencv4nodejs';
 
 export class ImageTool {
@@ -11,7 +12,7 @@ export class ImageTool {
         return image.convertTo(CV_8UC3, 255);
     }
 
-    public static convertToMatrix(image: Mat): number[][][] {
+    public static convertToMatrix(image: Mat): Matrix3D {
         // get size info
         let rows: number = image.rows;
         let cols: number = image.cols;
@@ -30,13 +31,13 @@ export class ImageTool {
         }
 
         // return
-        return matrix;
+        return new Matrix3D(matrix);
     }
 
-    public static convertToImage(matrix: number[][][]): Mat {
+    public static convertToImage(matrix: Matrix3D): Mat {
         // get size info
-        let rows: number = matrix.length;
-        let cols: number = matrix[0].length;
+        let rows: number = matrix.rows;
+        let cols: number = matrix.cols;
         
         // init image mat
         let image: Mat = new Mat(rows, cols, CV_64FC3);
@@ -44,8 +45,7 @@ export class ImageTool {
         // copy
         for (let i: number = 0; i < rows; i++) {
             for (let j: number = 0; j < cols; j++) {
-                let pixel: number[] = matrix[i][j];
-                image.set(i, j, new Vec3(pixel[0], pixel[1], pixel[2]));
+                image.set(i, j, new Vec3(matrix.get(i, j, 0), matrix.get(i, j, 1), matrix.get(i, j, 2)));
             }
         }
 
@@ -53,12 +53,12 @@ export class ImageTool {
         return image;
     }
 
-    public static readImageFileToDoubleMatrix(path: string): number[][][] {
+    public static readImageFileToDoubleMatrix(path: string): Matrix3D {
         // return result
         return ImageTool.convertToMatrix(ImageTool.imageToDouble(imread(path, IMREAD_COLOR)));
     }
 
-    public static writeDoubleMatrixToImageFile(path: string, matrix: number[][][]) {
+    public static writeDoubleMatrixToImageFile(path: string, matrix: Matrix3D) {
         // do write
         return imwrite(path, ImageTool.imageToUint(ImageTool.convertToImage(matrix)));
     }
