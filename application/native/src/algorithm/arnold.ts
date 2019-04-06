@@ -1,3 +1,4 @@
+import { MathTool } from './../tool/math';
 import { MatrixTool } from './../tool/matrix';
 
 export class Arnold {
@@ -19,8 +20,10 @@ export class Arnold {
             for (let i: number = 0; i < order; i++) {
                 for (let j: number = 0; j < rows; j++) {
                     for (let k: number = 0; k < rows; k++) {
-                        let x: number = (j + k) % rows;
-                        let y: number = (j + 2 * k) % rows;
+                        // let x: number = (j + k) % rows;
+                        // let y: number = (j + 2 * k) % rows;
+                        let x: number = MathTool.mod(j + k, rows);
+                        let y: number = MathTool.mod(j + 2 * k, rows);
                         result[y][x] = source[k][j];
                     }
                 }
@@ -32,8 +35,10 @@ export class Arnold {
             for (let i: number = 0; i < inverseOrder; i++) {
                 for (let j: number = 0; j < rows; j++) {
                     for (let k: number = 0; k < rows; k++) {
-                        let x: number = (2 * j - k) % rows;
-                        let y: number = (k - j) % rows;
+                        // let x: number = (2 * j - k) % rows;
+                        // let y: number = (k - j) % rows;
+                        let x: number = MathTool.mod(2 * j - k, rows);
+                        let y: number = MathTool.mod(k - j, rows);
                         result[y][x] = source[k][j];
                     }
                 }
