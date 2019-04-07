@@ -78,4 +78,14 @@ export class Matrix2D {
         
         return result;
     }
+
+    public div(other: number): Matrix2D {
+        let result: Matrix2D = Matrix2D.zeros(this.rows, this.cols);
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                result.set(i, j, this.get(i, j) / other);
+            }
+        }
+        return result;
+    }
 }

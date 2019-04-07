@@ -141,4 +141,19 @@ describe('Matrix2D', () => {
             }
         });
     });
+
+    describe('div()', () => {
+        let source: Matrix2D = new Matrix2D([
+            [2, 4, 6],
+            [8, 10, 12],
+            [14, 16, 18]
+        ]);
+        let result: Matrix2D = source.div(2);
+
+        for (let i = 0; i < result.rows; i++) {
+            for (let j = 0; j < result.cols; j++) {
+                expect(result.get(i, j)).to.be.eq(source.get(i, j) / 2);
+            }
+        }
+    });
 });
