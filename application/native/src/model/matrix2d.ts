@@ -44,4 +44,19 @@ export class Matrix2D {
     public getData(): number[][] {
         return this.data;
     }
+
+    public add(other: Matrix2D): Matrix2D {
+        if (this.rows !== other.rows || this.cols !== other.cols) {
+            throw new Error('two matrix must have the same rows and cols');
+        }
+
+        let result: Matrix2D = Matrix2D.zeros(this.rows, this.cols);
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; i++) {
+                result.set(i, j, this.get(i, j) + other.get(i, j));
+            }
+        }
+
+        return result;
+    }
 }

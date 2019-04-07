@@ -71,4 +71,30 @@ describe('Matrix2D', () => {
             }
         });
     });
+
+    describe('add()', () => {
+        it('data', () => {
+            let matrix1: Matrix2D = new Matrix2D([
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12]
+            ]);
+            let matrix2: Matrix2D = new Matrix2D([
+                [2, 3, 4, 5],
+                [6, 7, 8, 9],
+                [10, 11, 12, 13]
+            ]);
+            let correct: Matrix2D = new Matrix2D([
+                [3, 5, 7, 9],
+                [11, 13, 15, 17],
+                [19, 21, 23, 25]
+            ]);
+            let result: Matrix2D = matrix1.add(matrix2);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    expect(result.get(i, j)).to.be.eq(correct.get(i, j));
+                }
+            }
+        });
+    });
 });
