@@ -26,4 +26,30 @@ export class Vector {
     public getData(): number[] {
         return this.data;
     }
+
+    public add(other: Vector): Vector {
+        if (this.length !== other.length) {
+            throw new Error('two vector should have the save length');
+        }
+        
+        let result: Vector = Vector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, this.get(i) + other.get(i));
+        }
+
+        return result;
+    }
+
+    public sub(other: Vector): Vector {
+        if (this.length !== other.length) {
+            throw new Error('two vector should have the save length');
+        }
+
+        let result: Vector = Vector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, this.get(i) - other.get(i));
+        }
+
+        return result;
+    }
 }
