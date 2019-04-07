@@ -89,7 +89,7 @@ describe('Matrix2D', () => {
                 [11, 13, 15, 17],
                 [19, 21, 23, 25]
             ]);
-            let result: Matrix2D = matrix1.mul(matrix2);
+            let result: Matrix2D = matrix1.add(matrix2);
             for (let i: number = 0; i < result.rows; i++) {
                 for (let j: number = 0; j < result.cols; j++) {
                     expect(result.get(i, j)).to.be.eq(correct.get(i, j));
