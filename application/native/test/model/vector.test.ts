@@ -48,4 +48,25 @@ describe('Vector', () => {
             }
         });
     });
+
+    describe('add()', () => {
+        it('data', () => {
+            let result: Vector = vector.add(vector);
+            for (let i: number = 0; i < result.length; i++) {
+                expect(result.get(i)).to.be.eq(vector.get(i) * 2);
+            }
+        });
+    });
+
+    describe('sub()', () => {
+        it('data', () => {
+            let vector1: Vector = new Vector([5, 6, 7]);
+            let vector2: Vector = new Vector([1, 2, 3]);
+            let correct: Vector = new Vector([4, 4, 4]);
+            let result: Vector = vector1.sub(vector2);
+            for (let i: number = 0; i < result.length; i++) {
+                expect(result.get(i)).to.be.eq(correct.get(i));
+            }
+        });
+    });
 });

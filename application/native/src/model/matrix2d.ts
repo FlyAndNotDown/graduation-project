@@ -1,3 +1,5 @@
+import { Vector } from './vector';
+
 export class Matrix2D {
     private data: number[][];
     public rows: number;
@@ -21,6 +23,16 @@ export class Matrix2D {
         return new Matrix2D(data);
     }
 
+    public static diagonal(elements: Vector): Matrix2D {
+        let result: Matrix2D = Matrix2D.zeros(elements.length, elements.length);
+
+        for (let i: number = 0; i < elements.length; i++) {
+            result.set(i, i, elements.get(i));
+        }
+
+        return result;
+    }
+
     public get(i: number, j: number): number {
         return this.data[i][j];
     }
@@ -31,5 +43,39 @@ export class Matrix2D {
 
     public getData(): number[][] {
         return this.data;
+    }
+
+    public add(other: Matrix2D): Matrix2D {
+        if (this.rows !== other.rows || this.cols !== other.cols) {
+            throw new Error('two matrix must have the same rows and cols');
+        }
+
+        let result: Matrix2D = Matrix2D.zeros(this.rows, this.cols);
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                result.set(i, j, this.get(i, j) + other.get(i, j));
+            }
+        }
+
+        return result;
+    }
+
+    public mul(other: Matrix2D): Matrix2D {
+        if (this.cols !== other.rows) {
+            throw new Error('cols of source matrix must be equal rows of dest matrix');
+        }
+
+        let result: Matrix2D = Matrix2D.zeros(this.rows, other.cols);
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                let sum: number = 0;
+                for (let k: number = 0; k < this.cols; k++) {
+                    sum += this.get(i, k) * other.get(k, j);
+                }
+                result.set(i, j, sum);
+            }
+        }
+        
+        return result;
     }
 }
