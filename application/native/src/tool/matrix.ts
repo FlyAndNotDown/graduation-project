@@ -1,3 +1,4 @@
+import { Matrix2D } from './../model/matrix2d';
 import { Matrix3D } from './../model/matrix3d';
 
 export class MatrixTool {
@@ -87,5 +88,15 @@ export class MatrixTool {
 
         // return result
         return new Matrix3D(result);
+    }
+
+    public static getRandomSquareMatrix(length: number): Matrix2D {
+        let result: Matrix2D = Matrix2D.zeros(length, length);
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
+                result.set(i, j, Math.random());
+            }
+        }
+        return result;
     }
 }
