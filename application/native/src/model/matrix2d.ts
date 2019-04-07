@@ -45,6 +45,16 @@ export class Matrix2D {
         return this.data;
     }
 
+    public transport(): Matrix2D {
+        let result: Matrix2D = Matrix2D.zeros(this.cols, this.rows);
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
+                result.set(i, j, this.get(j, i));
+            }
+        }
+        return result;
+    }
+
     public add(other: Matrix2D): Matrix2D {
         if (this.rows !== other.rows || this.cols !== other.cols) {
             throw new Error('two matrix must have the same rows and cols');

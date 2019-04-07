@@ -143,17 +143,40 @@ describe('Matrix2D', () => {
     });
 
     describe('div()', () => {
-        let source: Matrix2D = new Matrix2D([
-            [2, 4, 6],
-            [8, 10, 12],
-            [14, 16, 18]
-        ]);
-        let result: Matrix2D = source.div(2);
-
-        for (let i = 0; i < result.rows; i++) {
-            for (let j = 0; j < result.cols; j++) {
-                expect(result.get(i, j)).to.be.eq(source.get(i, j) / 2);
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [2, 4, 6],
+                [8, 10, 12],
+                [14, 16, 18]
+            ]);
+            let result: Matrix2D = source.div(2);
+    
+            for (let i = 0; i < result.rows; i++) {
+                for (let j = 0; j < result.cols; j++) {
+                    expect(result.get(i, j)).to.be.eq(source.get(i, j) / 2);
+                }
             }
-        }
+        });
+    });
+
+    describe('transport()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 2, 3],
+                [4, 5, 6]
+            ]);
+            let correct: Matrix2D = new Matrix2D([
+                [1, 4],
+                [2, 5],
+                [3, 6]
+            ]);
+            let result: Matrix2D = source.transport();
+    
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    expect(result.get(i, j)).to.be.eq(correct.get(i, j));
+                }
+            }
+        });
     });
 });
