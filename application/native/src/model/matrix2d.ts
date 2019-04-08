@@ -4,6 +4,10 @@ export enum ConvertToVectorArrayType {
     RowAsVector,
     ColAsVector
 };
+export enum RestoreFromVectorArrayType {
+    RowAsVector,
+    ColAsVector
+};
 
 export class Matrix2D {
     private data: number[][];
@@ -206,5 +210,31 @@ export class Matrix2D {
         }
         
         return result;
+    }
+
+    public static restoreFromVectorArray(type: RestoreFromVectorArrayType, vectors: Vector[]): Matrix2D {
+        if (type === RestoreFromVectorArrayType.RowAsVector) {
+            let result: Matrix2D = Matrix2D.zeros(vectors.length, vectors[0].length);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    result.set(i, j, vectors[i].get(j));
+                }
+            }
+            return result;
+        } else {
+            let result: Matrix2D = Matrix2D.zeros(vectors[0].length, vectors.length);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    result.set(i, j, vectors[j].get(i));
+                }
+            }
+            return result;
+        }
+    }
+
+    public orthogonal(): Matrix2D {
+        // TODO
+
+        return null;
     }
 }
