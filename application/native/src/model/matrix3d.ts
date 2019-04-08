@@ -29,6 +29,18 @@ export class Matrix3D {
         return new Matrix3D(data);
     }
 
+    public copy(): Matrix3D {
+        let result: Matrix3D = Matrix3D.zeros(this.rows, this.cols, this.channels);
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
+                for (let k: number = 0; k < result.channels; k++) {
+                    result.set(i, j, k, this.get(i, j, k));
+                }
+            }
+        }
+        return result;
+    }
+
     public get(i: number, j: number, k: number): number {
         return this.data[i][j][k];
     }

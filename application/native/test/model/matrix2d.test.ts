@@ -179,4 +179,24 @@ describe('Matrix2D', () => {
             }
         });
     });
+    
+    describe('copy()', () => {
+        let source: Matrix2D = new Matrix2D([
+            [1, 2, 3],
+            [4, 5, 6]
+        ]);
+        let copy: Matrix2D = source.copy();
+
+        it('instance', () => {
+            expect(copy).not.to.be.eq(source);
+        });
+
+        it('data', () => {
+            for (let i: number = 0; i < copy.rows; i++) {
+                for (let j: number = 0; j < copy.cols; j++) {
+                    expect(copy.get(i, j)).to.be.eq(source.get(i, j));
+                }
+            }
+        });
+    });
 });

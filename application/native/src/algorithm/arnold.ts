@@ -13,7 +13,7 @@ export class Arnold {
 
         // init output
         let source: Matrix3D = matrix;
-        let result: Matrix3D = MatrixTool.deepCopy(source);
+        let result: Matrix3D = source.copy();
 
         // judge if it's normal transform or inverse transform
         if (order > 0) {
@@ -30,7 +30,7 @@ export class Arnold {
                         result.set(y, x, 2, source.get(k, j, 2));
                     }
                 }
-                if (i !== order - 1) { source = MatrixTool.deepCopy(result); }
+                if (i !== order - 1) { source = result.copy(); }
             }
         } else if (order < 0) {
             // do inverse arnold transform to matrix
@@ -47,7 +47,7 @@ export class Arnold {
                         result.set(y, x, 2, source.get(k, j, 2));
                     }
                 }
-                if (i !== inverseOrder - 1) { source = MatrixTool.deepCopy(result); }
+                if (i !== inverseOrder - 1) { source = result.copy(); }
             }
         }
 
