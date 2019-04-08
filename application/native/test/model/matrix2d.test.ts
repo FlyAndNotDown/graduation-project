@@ -213,4 +213,8 @@ describe('Matrix2D', () => {
             expect(1).to.be.eq(1);
         });
     });
+
+    describe('convertToVectorArray()', () => {
+        // TODO
+    });
 });

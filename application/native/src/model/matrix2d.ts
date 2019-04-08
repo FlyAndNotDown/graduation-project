@@ -1,5 +1,9 @@
-import { MatrixTool } from './../tool/matrix';
 import { Vector } from './vector';
+
+export enum ConvertToVectorArrayType {
+    RowAsVector,
+    ColAsVector
+};
 
 export class Matrix2D {
     private data: number[][];
@@ -178,5 +182,29 @@ export class Matrix2D {
         // get eigValues
         // @see https://blog.csdn.net/webzhuce/article/details/85013301
         return eigVectors;
+    }
+
+    public convertToVectorArray(type: ConvertToVectorArrayType): Vector[] {
+        let result: Vector[] = [];
+        
+        if (type === ConvertToVectorArrayType.RowAsVector) {
+            for (let i: number = 0; i < this.rows; i++) {
+                let vectorSource: number[] = [];
+                for (let j: number = 0; j < this.cols; j++) {
+                    vectorSource.push(this.get(i, j));
+                }
+                result.push(new Vector(vectorSource));
+            }
+        } else {
+            for (let i: number = 0; i < this.cols; i++) {
+                let vectorSource: number[] = [];
+                for (let j: number = 0; j < this.rows; j++) {
+                    vectorSource.push(this.get(j, i));
+                }
+                result.push(new Vector(vectorSource));
+            }
+        }
+        
+        return result;
     }
 }
