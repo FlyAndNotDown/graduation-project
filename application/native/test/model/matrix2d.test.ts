@@ -199,4 +199,18 @@ describe('Matrix2D', () => {
             }
         });
     });
+
+    describe('eigenVectors()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [4, -30, 60, -35],
+                [-30, 300, -675, 420],
+                [60, -675, 1620, -1050],
+                [-35, 420, -1050, 700]
+            ]);
+            let eigVector: Matrix2D = source.eigenVectors();
+
+            expect(1).to.be.eq(1);
+        });
+    });
 });
