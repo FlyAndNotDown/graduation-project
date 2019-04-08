@@ -69,4 +69,19 @@ describe('Vector', () => {
             }
         });
     });
+    
+    describe('copy()', () => {
+        let source: Vector = new Vector([1, 2, 3, 4, 5]);
+        let copy: Vector = source.copy();
+        
+        it('instance', () => {
+            expect(copy).not.to.be.eq(source);
+        });
+
+        it('data', () => {
+            for (let i: number = 0; i < copy.length; i++) {
+                expect(copy.get(i)).to.be.eq(source.get(i));
+            }
+        });
+    });
 });

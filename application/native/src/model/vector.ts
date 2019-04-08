@@ -15,6 +15,14 @@ export class Vector {
         return new Vector(data);
     }
 
+    public copy(): Vector {
+        let result: Vector = Vector.zeros(this.length);
+        for (let i: number = 0; i < result.length; i++) {
+            result.set(i, this.get(i));
+        }
+        return result;
+    }
+
     public get(i: number): number {
         return this.data[i];
     }
