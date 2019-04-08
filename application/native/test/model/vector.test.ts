@@ -84,4 +84,11 @@ describe('Vector', () => {
             }
         });
     });
+
+    describe('mod()', () => {
+        it('data', () => {
+            let source: Vector = new Vector([3, 4, 0]);
+            expect(source.mod()).to.be.eq(5);
+        });
+    });
 });

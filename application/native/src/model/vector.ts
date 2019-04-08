@@ -60,4 +60,12 @@ export class Vector {
 
         return result;
     }
+
+    public mod(): number {
+        let sum: number = 0;
+        for (let i: number = 0; i < this.length; i++) {
+            sum += this.get(i) * this.get(i);
+        }
+        return Math.sqrt(sum);
+    }
 }

@@ -1,4 +1,4 @@
-import { Matrix2D } from './../../src/model/matrix2d';
+import { Matrix2D, ConvertToVectorArrayType } from './../../src/model/matrix2d';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { Vector } from '../../src/model/vector';
@@ -215,6 +215,30 @@ describe('Matrix2D', () => {
     });
 
     describe('convertToVectorArray()', () => {
-        // TODO
+        it('data & size', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12]
+            ]);
+            let vectors1: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.RowAsVector);
+            let vectors2: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
+            expect(vectors1.length).to.be.eq(3);
+            expect(vectors2.length).to.be.eq(4);
+
+            for (let i: number = 0; i < vectors1.length; i++) {
+                expect(vectors1[i].length).to.be.eq(4);
+                for (let j: number = 0; j < vectors1[i].length; j++) {
+                    expect(vectors1[i].get(j)).to.be.eq(i * 4 + j + 1);
+                }
+            }
+
+            for (let i: number = 0; i < vectors2.length; i++) {
+                expect(vectors2[i].length).to.be.eq(3);
+                for (let j: number = 0; j < vectors2[i].length; j++) {
+                    expect(vectors2[i].get(j)).to.be.eq(j * 4 + i + 1);
+                }
+            }
+        });
     });
 });
