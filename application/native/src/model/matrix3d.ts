@@ -1,3 +1,5 @@
+import { Matrix2D } from './matrix2d';
+
 export class Matrix3D {
     private data: number[][][];
     public rows: number;
@@ -27,6 +29,18 @@ export class Matrix3D {
         return new Matrix3D(data);
     }
 
+    public copy(): Matrix3D {
+        let result: Matrix3D = Matrix3D.zeros(this.rows, this.cols, this.channels);
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
+                for (let k: number = 0; k < result.channels; k++) {
+                    result.set(i, j, k, this.get(i, j, k));
+                }
+            }
+        }
+        return result;
+    }
+
     public get(i: number, j: number, k: number): number {
         return this.data[i][j][k];
     }
@@ -37,5 +51,21 @@ export class Matrix3D {
 
     public getData(): number[][][] {
         return this.data;
+    }
+    
+    public convertToMatrix2DArray(): Matrix2D[] {
+        let result: Matrix2D[] = [];
+        
+        for (let i: number = 0; i < this.channels; i++) {
+            let matrix: Matrix2D = Matrix2D.zeros(this.rows, this.cols);
+            for (let j: number = 0; j < this.rows; j++) {
+                for (let k: number = 0; k < this.cols; k++) {
+                    matrix.set(j, k, this.get(j, k, i));
+                }
+            }
+            result.push(matrix);
+        }
+
+        return result;
     }
 }

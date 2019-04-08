@@ -1,3 +1,4 @@
+import { Matrix2D } from './../../src/model/matrix2d';
 import { Matrix3D } from './../../src/model/matrix3d';
 import { expect } from 'chai';
 import { MatrixTool } from './../../src/tool/matrix';
@@ -18,7 +19,7 @@ describe('MatrixTool', () => {
     let smallerMatrixes2: Matrix3D[] = MatrixTool.splitToSmallerMatrix(matrix2, 2);
     let restore2: Matrix3D = MatrixTool.mergeToBiggerMatrix(smallerMatrixes2, 3);
 
-    let matrixCopy: Matrix3D = MatrixTool.deepCopy(matrix);
+    // let matrixCopy: Matrix3D = MatrixTool.deepCopy(matrix);
 
     describe('splitToSmallerMatrix()', () => {
         it('data size', () => {
@@ -67,23 +68,40 @@ describe('MatrixTool', () => {
         });
     });
 
-    describe('deepCopy()', () => {
-        it('point', () => {
-            expect(matrixCopy === matrix).to.be.false;
-        });
+    // describe('deepCopy()', () => {
+    //     it('point', () => {
+    //         expect(matrixCopy === matrix).to.be.false;
+    //     });
 
+    //     it('data size', () => {
+    //         expect(matrixCopy.rows).to.be.eq(matrix.rows);
+    //         expect(matrixCopy.cols).to.be.eq(matrix.cols);
+    //         expect(matrixCopy.channels).to.be.eq(matrix.channels);
+    //     });
+
+    //     it('data', () => {
+    //         for (let i: number = 0; i < matrixCopy.rows; i++) {
+    //             for (let j: number = 0; j < matrixCopy.cols; j++) {
+    //                 for (let k: number = 0; k < matrixCopy.channels; k++) {
+    //                     expect(matrixCopy.get(i, j, k)).to.be.eq(matrix.get(i, j, k));
+    //                 }
+    //             }
+    //         }
+    //     });
+    // });
+
+    describe('getRandomSquareMatrix()', () => {
+        let random: Matrix2D = MatrixTool.getRandomSquareMatrix(4);
+        
         it('data size', () => {
-            expect(matrixCopy.rows).to.be.eq(matrix.rows);
-            expect(matrixCopy.cols).to.be.eq(matrix.cols);
-            expect(matrixCopy.channels).to.be.eq(matrix.channels);
+            expect(random.rows).to.be.eq(4);
+            expect(random.cols).to.be.eq(4);
         });
 
-        it('data', () => {
-            for (let i: number = 0; i < matrixCopy.rows; i++) {
-                for (let j: number = 0; j < matrixCopy.cols; j++) {
-                    for (let k: number = 0; k < matrixCopy.channels; k++) {
-                        expect(matrixCopy.get(i, j, k)).to.be.eq(matrix.get(i, j, k));
-                    }
+        it('data range', () => {
+            for (let i: number = 0; i < random.rows; i++) {
+                for (let j: number = 0; j < random.cols; j++) {
+                    expect(random.get(i, j) >= 0 && random.get(i, j) <= 1).to.be.true;
                 }
             }
         });

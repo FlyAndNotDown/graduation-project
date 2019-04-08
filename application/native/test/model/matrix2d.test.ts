@@ -141,4 +141,80 @@ describe('Matrix2D', () => {
             }
         });
     });
+
+    describe('div()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [2, 4, 6],
+                [8, 10, 12],
+                [14, 16, 18]
+            ]);
+            let result: Matrix2D = source.div(2);
+    
+            for (let i = 0; i < result.rows; i++) {
+                for (let j = 0; j < result.cols; j++) {
+                    expect(result.get(i, j)).to.be.eq(source.get(i, j) / 2);
+                }
+            }
+        });
+    });
+
+    describe('transport()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 2, 3],
+                [4, 5, 6]
+            ]);
+            let correct: Matrix2D = new Matrix2D([
+                [1, 4],
+                [2, 5],
+                [3, 6]
+            ]);
+            let result: Matrix2D = source.transport();
+    
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    expect(result.get(i, j)).to.be.eq(correct.get(i, j));
+                }
+            }
+        });
+    });
+    
+    describe('copy()', () => {
+        let source: Matrix2D = new Matrix2D([
+            [1, 2, 3],
+            [4, 5, 6]
+        ]);
+        let copy: Matrix2D = source.copy();
+
+        it('instance', () => {
+            expect(copy).not.to.be.eq(source);
+        });
+
+        it('data', () => {
+            for (let i: number = 0; i < copy.rows; i++) {
+                for (let j: number = 0; j < copy.cols; j++) {
+                    expect(copy.get(i, j)).to.be.eq(source.get(i, j));
+                }
+            }
+        });
+    });
+
+    describe('eigenVectors()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [4, -30, 60, -35],
+                [-30, 300, -675, 420],
+                [60, -675, 1620, -1050],
+                [-35, 420, -1050, 700]
+            ]);
+            let eigVector: Matrix2D = source.eigenVectors();
+
+            expect(1).to.be.eq(1);
+        });
+    });
+
+    describe('convertToVectorArray()', () => {
+        // TODO
+    });
 });
