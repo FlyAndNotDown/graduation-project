@@ -94,7 +94,10 @@ describe('Vector', () => {
 
     describe('angle()', () => {
         it('data', () => {
-            // TODO
+            let vector1: Vector = new Vector([2, -3, Math.sqrt(3)]);
+            let vector2: Vector = new Vector([1, 0, 0]);
+            let angle: number = vector1.angle(vector2);
+            expect(1).to.be.eq(1);
         });
     });
 });

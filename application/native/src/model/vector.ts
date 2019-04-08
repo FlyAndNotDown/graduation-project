@@ -79,6 +79,6 @@ export class Vector {
             factor += this.get(i) * other.get(i);
         }
 
-        return factor / (this.mod() * other.mod());
+        return Math.acos(factor / (this.mod() * other.mod()));
     }
 }
