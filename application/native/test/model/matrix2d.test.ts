@@ -1,4 +1,4 @@
-import { Matrix2D } from './../../src/model/matrix2d';
+import { Matrix2D, ConvertToVectorArrayType, RestoreFromVectorArrayType } from './../../src/model/matrix2d';
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { Vector } from '../../src/model/vector';
@@ -215,6 +215,69 @@ describe('Matrix2D', () => {
     });
 
     describe('convertToVectorArray()', () => {
-        // TODO
+        it('data & size', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12]
+            ]);
+            let vectors1: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.RowAsVector);
+            let vectors2: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
+            expect(vectors1.length).to.be.eq(3);
+            expect(vectors2.length).to.be.eq(4);
+
+            for (let i: number = 0; i < vectors1.length; i++) {
+                expect(vectors1[i].length).to.be.eq(4);
+                for (let j: number = 0; j < vectors1[i].length; j++) {
+                    expect(vectors1[i].get(j)).to.be.eq(i * 4 + j + 1);
+                }
+            }
+
+            for (let i: number = 0; i < vectors2.length; i++) {
+                expect(vectors2[i].length).to.be.eq(3);
+                for (let j: number = 0; j < vectors2[i].length; j++) {
+                    expect(vectors2[i].get(j)).to.be.eq(j * 4 + i + 1);
+                }
+            }
+        });
+    });
+
+    describe('restoreFromVectorArray()', () => {
+        it('data & size', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12]
+            ]);
+            let vectors1: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.RowAsVector);
+            let vectors2: Vector[] = source.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
+            let restore1: Matrix2D = Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.RowAsVector, vectors1);
+            let restore2: Matrix2D = Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, vectors2);
+
+            expect(restore1.rows).to.be.eq(source.rows);
+            expect(restore1.cols).to.be.eq(source.cols);
+            expect(restore2.rows).to.be.eq(source.rows);
+            expect(restore2.cols).to.be.eq(source.cols);
+
+            for (let i: number = 0; i < source.rows; i++) {
+                for (let j: number = 0; j < source.cols; j++) {
+                    expect(restore1.get(i, j)).to.be.eq(source.get(i, j));
+                    expect(restore2.get(i, j)).to.be.eq(source.get(i, j));
+                }
+            }
+        });
+    });
+
+    describe('orthogonal()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 4, 7],
+                [2, 5, 11],
+                [3, 6, 9]
+            ]);
+            let orth: Matrix2D = source.orthogonal();
+            let vectors: Vector[] = orth.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
+            expect(1).to.be.eq(1);
+        });
     });
 });

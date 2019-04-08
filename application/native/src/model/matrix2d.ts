@@ -4,6 +4,10 @@ export enum ConvertToVectorArrayType {
     RowAsVector,
     ColAsVector
 };
+export enum RestoreFromVectorArrayType {
+    RowAsVector,
+    ColAsVector
+};
 
 export class Matrix2D {
     private data: number[][];
@@ -206,5 +210,51 @@ export class Matrix2D {
         }
         
         return result;
+    }
+
+    public static restoreFromVectorArray(type: RestoreFromVectorArrayType, vectors: Vector[]): Matrix2D {
+        if (type === RestoreFromVectorArrayType.RowAsVector) {
+            let result: Matrix2D = Matrix2D.zeros(vectors.length, vectors[0].length);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    result.set(i, j, vectors[i].get(j));
+                }
+            }
+            return result;
+        } else {
+            let result: Matrix2D = Matrix2D.zeros(vectors[0].length, vectors.length);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    result.set(i, j, vectors[j].get(i));
+                }
+            }
+            return result;
+        }
+    }
+
+    public orthogonal(): Matrix2D {
+        let vectors: Vector[] = this.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
+        let resultSource: Vector[] = [];
+
+        for (let i: number = 0; i < vectors.length; i++) {
+            let temp: Vector = vectors[i].copy();
+            for (let j: number = 0; j < i; j++) {
+                temp = temp.sub(resultSource[j].mul(vectors[i].mul(resultSource[j]) / resultSource[j].mul(resultSource[j])));
+            }
+            resultSource.push(temp);
+        }
+
+        for (let i: number = 0; i < resultSource.length; i++) {
+            let sum: number = 0;
+            for (let j: number = 0; j < resultSource[i].length; j++) {
+                sum += resultSource[i].get(j) * resultSource[i].get(j);
+            }
+            sum = Math.sqrt(sum);
+            for (let j: number = 0; j < resultSource[i].length; j++) {
+                resultSource[i].set(j, resultSource[i].get(j) / sum);
+            }
+        }
+
+        return Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, resultSource);
     }
 }

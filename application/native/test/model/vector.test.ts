@@ -84,4 +84,33 @@ describe('Vector', () => {
             }
         });
     });
+
+    describe('mod()', () => {
+        it('data', () => {
+            let source: Vector = new Vector([3, 4, 0]);
+            expect(source.mod()).to.be.eq(5);
+        });
+    });
+
+    describe('angle()', () => {
+        it('data', () => {
+            let vector1: Vector = new Vector([2, -3, Math.sqrt(3)]);
+            let vector2: Vector = new Vector([1, 0, 0]);
+            let angle: number = vector1.angle(vector2);
+            expect(1).to.be.eq(1);
+        });
+    });
+
+    describe('mul()', () => {
+        it('data', () => {
+            let source: Vector = new Vector([1, 2, 3, 4]);
+            let result: Vector = source.mul(3);
+            let correct: Vector = new Vector([3, 6, 9, 12]);
+            for (let i: number = 0; i < result.length; i++) {
+                expect(result.get(i)).to.be.eq(correct.get(i));
+            }
+
+            expect(source.mul(source)).to.be.eq(30);
+        });
+    });
 });
