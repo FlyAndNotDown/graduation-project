@@ -244,15 +244,17 @@ export class Matrix2D {
             resultSource.push(temp);
         }
 
-        let result: Matrix2D = Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, resultSource);
-        let sum: number = 0;
-        for (let i: number = 0; i < result.rows; i++) {
-            for (let j: number = 0; j < result.cols; j++) {
-                sum += result.get(i, j) * result.get(i, j);
+        for (let i: number = 0; i < resultSource.length; i++) {
+            let sum: number = 0;
+            for (let j: number = 0; j < resultSource[i].length; j++) {
+                sum += resultSource[i].get(j) * resultSource[i].get(j);
+            }
+            sum = Math.sqrt(sum);
+            for (let j: number = 0; j < resultSource[i].length; j++) {
+                resultSource[i].set(j, resultSource[i].get(j) / sum);
             }
         }
-        sum = Math.sqrt(sum);
 
-        return result.div(sum);
+        return Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, resultSource);
     }
 }

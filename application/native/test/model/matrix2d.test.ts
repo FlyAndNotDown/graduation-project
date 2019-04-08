@@ -271,9 +271,9 @@ describe('Matrix2D', () => {
     describe('orthogonal()', () => {
         it('data', () => {
             let source: Matrix2D = new Matrix2D([
-                [1, 0, 0],
-                [0, 1, 0],
-                [0, 0, 1]
+                [0.5, 0, 0],
+                [0, 0.5, 0],
+                [0, 0, 0.5]
             ]);
             let orth: Matrix2D = source.orthogonal();
             let vectors: Vector[] = orth.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
