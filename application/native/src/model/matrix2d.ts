@@ -111,8 +111,8 @@ export class Matrix2D {
     }
 
     public eigenVectors(): Matrix2D {
-        const precision: number = 0.00001;
-        const iterationTime: number = 100;
+        const precision: number = 0.0001;
+        const iterationTime: number = 10;
         let dimension: number = this.rows;
 
         let matrix: Matrix2D = this.copy();
@@ -122,7 +122,7 @@ export class Matrix2D {
 
         let count: number = 0;
         while (true) {
-            let max: number = matrix.get(0, 1);
+            let max: number = Math.abs(matrix.get(0, 1));
             let row: number = 0;
             let col: number = 1;
             for (let i: number = 0; i < dimension; i++) {
