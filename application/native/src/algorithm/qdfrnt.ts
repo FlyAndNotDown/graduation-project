@@ -7,9 +7,10 @@ export class QDFRNT {
         let rows: number = random.rows;
 
         // get the random symmetrical matrix
-        let randomSym: Matrix2D = random.add(random.transport()).div(2);
+        let symMatrix: Matrix2D = random.add(random.transport()).div(2);
 
         // get the random eigen matrix
+        let eigMatrix: Matrix2D = symMatrix.eigenVectors();
         // TODO
     }
 }
