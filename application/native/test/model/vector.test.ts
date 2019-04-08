@@ -100,4 +100,15 @@ describe('Vector', () => {
             expect(1).to.be.eq(1);
         });
     });
+
+    describe('mul()', () => {
+        it('data', () => {
+            let source: Vector = new Vector([1, 2, 3, 4]);
+            let result: Vector = source.mul(3);
+            let correct: Vector = new Vector([3, 6, 9, 12]);
+            for (let i: number = 0; i < result.length; i++) {
+                expect(result.get(i)).to.be.eq(correct.get(i));
+            }
+        });
+    });
 });

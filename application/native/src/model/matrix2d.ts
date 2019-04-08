@@ -233,8 +233,8 @@ export class Matrix2D {
     }
 
     public orthogonal(): Matrix2D {
+        let vectors: Vector[] = this.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
         // TODO
-
         return null;
     }
 }

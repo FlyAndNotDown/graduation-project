@@ -61,6 +61,14 @@ export class Vector {
         return result;
     }
 
+    public mul(other: number): Vector {
+        let result: Vector = Vector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, this.get(i) * other);
+        }
+        return result;
+    }
+
     public mod(): number {
         let sum: number = 0;
         for (let i: number = 0; i < this.length; i++) {
