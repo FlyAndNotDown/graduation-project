@@ -267,4 +267,17 @@ describe('Matrix2D', () => {
             }
         });
     });
+
+    describe('orthogonal()', () => {
+        it('data', () => {
+            let source: Matrix2D = new Matrix2D([
+                [1, 1, 0],
+                [0, 1, 1],
+                [1, 0, 1]
+            ]);
+            let orth: Matrix2D = source.orthogonal();
+            let temp: Matrix2D = orth.mul(orth);
+            expect(1).to.be.eq(1);
+        });
+    });
 });

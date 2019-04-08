@@ -234,16 +234,25 @@ export class Matrix2D {
 
     public orthogonal(): Matrix2D {
         let vectors: Vector[] = this.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
-        let result: Vector[] = [];
+        let resultSource: Vector[] = [];
 
         for (let i: number = 0; i < vectors.length; i++) {
             let temp: Vector = vectors[i].copy();
-            for (let j: number = 0; j < i - 1; j++) {
-                // TODO
+            for (let j: number = 0; j < i; j++) {
+                temp = temp.sub(resultSource[j].mul(vectors[i].mul(resultSource[j]) / resultSource[j].mul(resultSource[j])));
             }
-            result.push(temp);
+            resultSource.push(temp);
         }
 
-        return Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, result);
+        let result: Matrix2D = Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, resultSource);
+        let sum: number = 0;
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
+                sum += result.get(i, j) * result.get(i, j);
+            }
+        }
+        sum = Math.sqrt(sum);
+
+        return result.div(sum);
     }
 }
