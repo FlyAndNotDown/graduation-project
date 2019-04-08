@@ -1,3 +1,4 @@
+import { MatrixTool } from './../tool/matrix';
 import { Vector } from './vector';
 
 export class Matrix2D {
@@ -97,5 +98,10 @@ export class Matrix2D {
             }
         }
         return result;
+    }
+
+    public eigenVectors(): Matrix2D {
+        // TODO
+        return null;
     }
 }

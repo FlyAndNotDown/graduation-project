@@ -67,28 +67,28 @@ export class MatrixTool {
         return new Matrix3D(biggerMatrix);
     }
 
-    public static deepCopy(matrix: Matrix3D): Matrix3D {
-        // init result
-        let result: number[][][] = [];
-        let rows: number = matrix.rows;
-        let cols: number = matrix.cols;
+    // public static deepCopy(matrix: Matrix3D): Matrix3D {
+    //     // init result
+    //     let result: number[][][] = [];
+    //     let rows: number = matrix.rows;
+    //     let cols: number = matrix.cols;
 
-        // copy
-        for (let i: number = 0; i < rows; i++) {
-            let row: number[][] = [];
-            for (let j: number = 0; j < cols; j++) {
-                row.push([
-                    matrix.get(i, j, 0),
-                    matrix.get(i, j, 1),
-                    matrix.get(i, j, 2)
-                ]);
-            }
-            result.push(row);
-        }
+    //     // copy
+    //     for (let i: number = 0; i < rows; i++) {
+    //         let row: number[][] = [];
+    //         for (let j: number = 0; j < cols; j++) {
+    //             row.push([
+    //                 matrix.get(i, j, 0),
+    //                 matrix.get(i, j, 1),
+    //                 matrix.get(i, j, 2)
+    //             ]);
+    //         }
+    //         result.push(row);
+    //     }
 
-        // return result
-        return new Matrix3D(result);
-    }
+    //     // return result
+    //     return new Matrix3D(result);
+    // }
 
     public static getRandomSquareMatrix(length: number): Matrix2D {
         let result: Matrix2D = Matrix2D.zeros(length, length);
