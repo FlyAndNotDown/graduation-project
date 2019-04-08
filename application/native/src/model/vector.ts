@@ -68,4 +68,17 @@ export class Vector {
         }
         return Math.sqrt(sum);
     }
+
+    public angle(other: Vector): number {
+        if (this.length !== other.length) {
+            throw new Error('length of two vector should be equal');
+        }
+
+        let factor: number = 0;
+        for (let i: number = 0; i < this.length; i++) {
+            factor += this.get(i) * other.get(i);
+        }
+
+        return factor / (this.mod() * other.mod());
+    }
 }

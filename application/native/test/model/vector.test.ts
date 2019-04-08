@@ -91,4 +91,10 @@ describe('Vector', () => {
             expect(source.mod()).to.be.eq(5);
         });
     });
+
+    describe('angle()', () => {
+        it('data', () => {
+            // TODO
+        });
+    });
 });
