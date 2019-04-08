@@ -11,6 +11,12 @@ export class QDFRNT {
 
         // get the random eigen matrix
         let eigMatrix: Matrix2D = symMatrix.eigenVectors();
-        // TODO
+        let orthMatrix: Matrix2D = eigMatrix.orthogonal();
+
+        // get the special matrix
+        let specialMatrixSource: number[] = [];
+        for (let i: number = 0; i < rows; i++) {
+            // TODO
+        }
     }
 }
