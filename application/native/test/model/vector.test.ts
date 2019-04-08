@@ -109,6 +109,8 @@ describe('Vector', () => {
             for (let i: number = 0; i < result.length; i++) {
                 expect(result.get(i)).to.be.eq(correct.get(i));
             }
+
+            expect(source.mul(source)).to.be.eq(30);
         });
     });
 });

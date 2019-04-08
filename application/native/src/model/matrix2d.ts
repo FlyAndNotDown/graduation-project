@@ -234,7 +234,16 @@ export class Matrix2D {
 
     public orthogonal(): Matrix2D {
         let vectors: Vector[] = this.convertToVectorArray(ConvertToVectorArrayType.ColAsVector);
-        // TODO
-        return null;
+        let result: Vector[] = [];
+
+        for (let i: number = 0; i < vectors.length; i++) {
+            let temp: Vector = vectors[i].copy();
+            for (let j: number = 0; j < i - 1; j++) {
+                // TODO
+            }
+            result.push(temp);
+        }
+
+        return Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.ColAsVector, result);
     }
 }

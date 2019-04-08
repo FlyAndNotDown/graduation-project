@@ -61,12 +61,25 @@ export class Vector {
         return result;
     }
 
-    public mul(other: number): Vector {
-        let result: Vector = Vector.zeros(this.length);
-        for (let i: number = 0; i < this.length; i++) {
-            result.set(i, this.get(i) * other);
+    public mul(other: Vector): number;
+    public mul(other: number): Vector;
+    public mul(other: any): number | Vector {
+        if (typeof other === 'number') {
+            let result: Vector = Vector.zeros(this.length);
+            for (let i: number = 0; i < this.length; i++) {
+                result.set(i, this.get(i) * other);
+            }
+            return result;
+        } else {
+            if (this.length !== other.length) {
+                throw new Error('length of two vectors should be equal');
+            }
+            let result: number = 0;
+            for (let i: number = 0; i < this.length; i++) {
+                result += this.get(i) * (<Vector>other).get(i);
+            }
+            return result;
         }
-        return result;
     }
 
     public mod(): number {
