@@ -87,7 +87,7 @@ for sourceNo = 1 : sourcesLength
                             [output, kp] = qdfrntMark(source, secret, aOrders(1, aOrderNo), kernel, iKernel, intensities(1, intensityNo));
                             [ssimSource, ~] = ssim(source, output);
                             restored = qdfrntRestore(output, model, kp, aOrders(1, aOrderNo), kernel);
-                            [ssimSecret, ~] = ssim(secret, restored);
+                            [ssimSecret, ~] = ssim(im2uint8(secret), im2uint8(restored));
                             imwrite(output, ['data/', num2str(imageNo), '-output.bmp']);
                             imwrite(restored, ['data/', num2str(imageNo), '-restored.bmp']);
                             fprintf(indexFile, '%d\t\t%d\t\t%f\t\t%d\t\t%d\t\t%f\t\t%f\t\t%f\n', imageNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), intensities(1, intensityNo), ssimSource, ssimSecret);
