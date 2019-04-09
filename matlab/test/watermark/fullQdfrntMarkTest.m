@@ -22,8 +22,8 @@ fprintf(indexFile, 'imageNo\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tintensit
 load('data/model.mat', 'model');
 
 % init random matrix list
-randomMatrixes = cell(1, 10);
-for n = 1 : 5
+randomMatrixes = cell(1, 3);
+for n = 1 : 3
     randomMatrixes{1, n} = rand(8, 8);
     fprintf(randomMatrixFile, 'No.%d: \n', n);
     for n1 = 1 : 8
@@ -36,20 +36,20 @@ for n = 1 : 5
 end
 
 % init order list
-orders = zeros(1, 10);
-for n = 1 : 10
-    orders(1, n) = 0.1 * n;
+orders = zeros(1, 4);
+for n = 1 : 4
+    orders(1, n) = 0.25 * n;
 end
 
 % init cycle list
-cycles = zeros(1, 10);
-for n = 1 : 5
+cycles = zeros(1, 4);
+for n = 1 : 4
     cycles(1, n) = n;
 end
 
 % init aOrder list
-aOrders = zeros(1, 5);
-for n = 1 : 5
+aOrders = zeros(1, 4);
+for n = 1 : 4
     aOrders(1, n) = n;
 end
 
@@ -90,7 +90,7 @@ for sourceNo = 1 : sourcesLength
                             [ssimSecret, ~] = ssim(im2uint8(secret), im2uint8(restored));
                             imwrite(output, ['dist/', num2str(imageNo), '-output.bmp']);
                             imwrite(restored, ['dist/', num2str(imageNo), '-restored.bmp']);
-                            fprintf(indexFile, '%d\t\t%d\t\t%f\t\t%d\t\t%d\t\t%f\t\t%f\t\t%f\n', imageNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), intensities(1, intensityNo), ssimSource, ssimSecret);
+                            fprintf(indexFile, '%d\t\t\t%d\t\t%f\t\t%d\t\t%d\t\t%f\t\t%f\t\t%f\n', imageNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), intensities(1, intensityNo), ssimSource, ssimSecret);
                             imageNo = imageNo + 1;
                         end
                     end
