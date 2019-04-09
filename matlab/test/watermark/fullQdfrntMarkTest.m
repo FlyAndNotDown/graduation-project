@@ -1,9 +1,9 @@
 % define source list & secret list
 sources = {
-    'airplane.tiff',
-    'baboon.tiff',
-    'couple.tiff',
-    'girl.tiff',
+    % 'airplane.tiff',
+    % 'baboon.tiff',
+    % 'couple.tiff',
+    % 'girl.tiff',
     'lena.bmp',
     'peppers.tiff'
 };
