@@ -20,12 +20,11 @@ indexFile = fopen('dist/index.txt', 'w+');
 randomMatrixFile = fopen('dist/random-matrix.txt', 'w+');
 fprintf(indexFile, 'imageNo\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tintensity\t\tssim\n');
 
+% load SVM model
+load('data/model.mat', 'model');
+
 % full test
-for sourceNo = 1 : sourceNum
-    for secretNum = 1 : secretNum
-        % TODO
-    end
-end
+% TODO
 
 % close file
 fclose(indexFile);
