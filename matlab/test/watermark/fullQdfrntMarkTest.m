@@ -37,6 +37,12 @@ for n = 1 : 10
     fprintf(randomMatrixFile, '\n');
 end
 
+% init orderList
+orders = zeros(1, 10);
+for n = 1 : 20
+    orders(1, n) = 0.05 * n;
+end
+
 % full test
 % TODO
 
