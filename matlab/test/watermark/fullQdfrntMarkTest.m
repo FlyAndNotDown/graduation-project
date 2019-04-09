@@ -84,17 +84,13 @@ for sourceNo = 1 : sourcesLength
                     for aOrderNo = 1 : aOrdersLength
                         for intensityNo = 1 : intensitiesLength
                             % do watermark
-                            [output, kp] = qdfrntMark(source, secret, aOrders{1, aOrderNo}, kernel, iKernel, intensities(1, intensityNo));
+                            [output, kp] = qdfrntMark(source, secret, aOrders(1, aOrderNo), kernel, iKernel, intensities(1, intensityNo));
                             [ssimSource, ~] = ssim(source, output);
-                            restored = qdfrntRestore(output, model, kp, aOrders{1, aOrderNo}, kernel);
+                            restored = qdfrntRestore(output, model, kp, aOrders(1, aOrderNo), kernel);
                             [ssimSecret, ~] = ssim(secret, restored);
                             imwrite(output, ['data/', num2str(imageNo), '-output.bmp']);
                             imwrite(restored, ['data/', num2str(imageNo), '-restored.bmp']);
-                            fprintf(
-                                indexFile,
-                                '%d\t\t%d\t\t%f\t\t%d\t\t%d\t\t%f\t\t%f\t\t%f\n',
-                                imageNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), intensities(1, intensityNo), ssimSource, ssimSecret
-                            );
+                            fprintf(indexFile, '%d\t\t%d\t\t%f\t\t%d\t\t%d\t\t%f\t\t%f\t\t%f\n', imageNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), intensities(1, intensityNo), ssimSource, ssimSecret);
                             imageNo = imageNo + 1;
                         end
                     end
