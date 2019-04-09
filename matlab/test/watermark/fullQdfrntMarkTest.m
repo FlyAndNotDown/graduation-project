@@ -23,6 +23,20 @@ fprintf(indexFile, 'imageNo\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tintensit
 % load SVM model
 load('data/model.mat', 'model');
 
+% init random matrix
+randomMatrixes = cell(1, 10);
+for n = 1 : 10
+    randomMatrixes{1, n} = rand(8, 8);
+    fprintf(randomMatrixFile, 'No.%d: \n', n);
+    for n1 = 1 : 8
+        for n2 = 1 : 8
+            fprintf(randomMatrixFile, '%f\t', randomMatrixes{1, n}(n1, n2));
+        end
+        fprintf(randomMatrixFile, '\n');
+    end
+    fprintf(randomMatrixFile, '\n');
+end
+
 % full test
 % TODO
 
