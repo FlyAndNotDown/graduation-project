@@ -37,6 +37,16 @@ export class Complex {
             (this.imag * other.real - this.real * other.imag) / (other.real * other.real + other.imag * other.imag)
         );
     }
+
+    public exp(): Complex {
+        if (this.real !== 0) {
+            throw new Error('real part of complex should be zero');
+        }
+        return new Complex(
+            Math.cos(this.imag),
+            Math.sin(this.imag)
+        );
+    }
     
     public static add(a: Complex, b: Complex): Complex {
         return new Complex(a.real + b.real, a.imag + b.imag);
