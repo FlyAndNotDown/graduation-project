@@ -15,6 +15,7 @@ export class QDFRNT {
         // get the random eigen matrix
         let eigMatrix: Matrix2D = symMatrix.eigenVectors();
         let orthMatrix: Matrix2D = eigMatrix.orthogonal();
+        let orthComplexMatrix: ComplexMatrix2D = orthMatrix.convertToComplexMatrix2D();
 
         // get the special matrix
         let specialMatrixSource: Complex[] = [];
@@ -23,6 +24,7 @@ export class QDFRNT {
         }
         let specialMatrix: ComplexMatrix2D = ComplexMatrix2D.diagonal(new ComplexVector(specialMatrixSource));
     
-        // TODO
+        // get kernel matrix
+        return orthComplexMatrix.mul(specialMatrix).mul(orthComplexMatrix.transport());
     }
 }
