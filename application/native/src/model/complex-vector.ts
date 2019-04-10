@@ -1,3 +1,4 @@
+import { ComplexMatrix2D } from './complex-matrix2d';
 import { Complex } from './complex';
 
 export class ComplexVector {
@@ -60,6 +61,14 @@ export class ComplexVector {
             result.set(i, this.get(i).sub(other.get(i)));
         }
 
+        return result;
+    }
+
+    public convertToComplexMatrix2D(): ComplexMatrix2D {
+        let result: ComplexMatrix2D = ComplexMatrix2D.zeros(1, this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(0, i, this.get(i).copy());
+        }
         return result;
     }
 }

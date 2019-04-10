@@ -1,11 +1,11 @@
-import { ComplexMatrix2D } from './../model/complex-matrix2d';
+import { Vector } from './../model/vector';
+import { ComplexMatrix2D, ConvertToComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
 import { Matrix2D } from './../model/matrix2d';
-import { MatrixTool } from './../tool/matrix';
 import { ComplexVector } from '../model/complex-vector';
 
 export class QDFRNT {
-    public static kernel(order: number, cycle: number, random: Matrix2D) {
+    public static kernel(order: number, cycle: number, random: Matrix2D): ComplexMatrix2D {
         // get size info
         let rows: number = random.rows;
 
@@ -26,5 +26,9 @@ export class QDFRNT {
     
         // get kernel matrix
         return orthComplexMatrix.mul(specialMatrix).mul(orthComplexMatrix.transport());
+    }
+
+    public static dfrnt(source: ComplexVector, kernel: ComplexMatrix2D): ComplexVector {
+        return kernel.mul(source.convertToComplexMatrix2D().transport()).transport().convertToComplexVectorArray(ConvertToComplexVectorArrayType.RowAsVector)[0];
     }
 }

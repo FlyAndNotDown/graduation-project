@@ -1,3 +1,6 @@
+import { ComplexVector } from './complex-vector';
+import { Matrix2D } from './matrix2d';
+import { Complex } from './complex';
 export class Vector {
     private data: number[];
     public length: number;
@@ -101,5 +104,21 @@ export class Vector {
         }
 
         return Math.acos(factor / (this.mod() * other.mod()));
+    }
+
+    public convertToComplexVector(): ComplexVector {
+        let result: ComplexVector = ComplexVector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, new Complex(this.get(i), 0));
+        }
+        return result;
+    }
+
+    public convertToMatrix2D(): Matrix2D {
+        let result: Matrix2D = Matrix2D.zeros(1, this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(1, i, this.get(i));
+        }
+        return result;
     }
 }
