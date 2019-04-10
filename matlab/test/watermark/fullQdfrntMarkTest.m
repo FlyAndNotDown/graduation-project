@@ -76,6 +76,10 @@ for n = 1 : 1000
     source = im2double(imread(sources{1, sourceNo}));
     secret = imread(secrets{1, secretNo});
 
+    % get kernel
+    kernel = dfrntKernel(orders(1, orderNo), cycles(1, cycleNo), randomMatrixes{1, randomMatrixNo});
+    iKernel = dfrntKernel(0 - orders(1, orderNo), cycles(1, cycleNo), randomMatrixes{1, randomMatrixNo});
+
     % do watermark
     [output, kp] = qdfrntMark(source, secret, aOrders(1, aOrderNo), kernel, iKernel, 0.05);
     [ssimSource, ~] = ssim(source, output);
