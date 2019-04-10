@@ -17,5 +17,23 @@ export class ComplexVector {
         return new ComplexVector(data);
     }
 
-    // TODO
+    public copy(): ComplexVector {
+        let result: ComplexVector = ComplexVector.zeros(this.length);
+        for (let i: number = 0; i < result.length; i++) {
+            result.set(i, this.get(i).copy());
+        }
+        return result;
+    }
+
+    public get(i: number): Complex {
+        return this.data[i];
+    }
+
+    public set(i: number, item: Complex): void {
+        this.data[i] = item;
+    }
+
+    public getData(): Complex[] {
+        return this.data;
+    }
 }

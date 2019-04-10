@@ -6,6 +6,10 @@ export class Complex {
         this.imag = imag;
     }
 
+    public copy(): Complex {
+        return new Complex(this.real, this.imag);
+    }
+
     public add(other: Complex): Complex {
         return new Complex(this.real + other.real, this.imag + other.imag);
     }
