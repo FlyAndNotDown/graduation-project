@@ -36,4 +36,30 @@ export class ComplexVector {
     public getData(): Complex[] {
         return this.data;
     }
+
+    public add(other: ComplexVector): ComplexVector {
+        if (this.length !== other.length) {
+            throw new Error('two vector should have the save length');
+        }
+
+        let result: ComplexVector = ComplexVector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, this.get(i).add(other.get(i)));
+        }
+
+        return result;
+    }
+
+    public sub(other: ComplexVector): ComplexVector {
+        if (this.length !== other.length) {
+            throw new Error('two vector should have the save length');
+        }
+
+        let result: ComplexVector = ComplexVector.zeros(this.length);
+        for (let i: number = 0; i < this.length; i++) {
+            result.set(i, this.get(i).sub(other.get(i)));
+        }
+
+        return result;
+    }
 }
