@@ -97,8 +97,8 @@ export class Matrix2D {
         }
 
         let result: Matrix2D = Matrix2D.zeros(this.rows, other.cols);
-        for (let i: number = 0; i < this.rows; i++) {
-            for (let j: number = 0; j < this.cols; j++) {
+        for (let i: number = 0; i < result.rows; i++) {
+            for (let j: number = 0; j < result.cols; j++) {
                 let sum: number = 0;
                 for (let k: number = 0; k < this.cols; k++) {
                     sum += this.get(i, k) * other.get(k, j);
