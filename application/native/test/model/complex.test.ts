@@ -66,4 +66,13 @@ describe('Complex', () => {
             expect(result.imag).to.be.eq(0);
         });
     });
+
+    describe('copy()', () => {
+        it('data', () => {
+            let copy: Complex = a.copy();
+            expect(copy).not.to.be.eq(a);
+            expect(copy.real).to.be.eq(a.real);
+            expect(copy.imag).to.be.eq(a.imag);
+        });
+    });
 });

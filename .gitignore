@@ -6,8 +6,9 @@
 /translation/*.synctex*
 /translation/*.gz
 
-# data
-/matlab/data/*
+# matlab
+/matlab/data/*.mat
+/matlab/dist/*
 
 # native
 /application/native/node_modules

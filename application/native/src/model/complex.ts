@@ -6,6 +6,10 @@ export class Complex {
         this.imag = imag;
     }
 
+    public copy(): Complex {
+        return new Complex(this.real, this.imag);
+    }
+
     public add(other: Complex): Complex {
         return new Complex(this.real + other.real, this.imag + other.imag);
     }
@@ -31,6 +35,16 @@ export class Complex {
         return new Complex(
             (this.real * other.real + this.imag * other.imag) / (other.real * other.real + other.imag * other.imag),
             (this.imag * other.real - this.real * other.imag) / (other.real * other.real + other.imag * other.imag)
+        );
+    }
+
+    public exp(): Complex {
+        if (this.real !== 0) {
+            throw new Error('real part of complex should be zero');
+        }
+        return new Complex(
+            Math.cos(this.imag),
+            Math.sin(this.imag)
         );
     }
     
