@@ -29,6 +29,8 @@ export class QDFRNT {
     }
 
     public static dfrnt(source: ComplexVector, kernel: ComplexMatrix2D): ComplexVector {
-        return kernel.mul(source.convertToComplexMatrix2D().transport()).transport().convertToComplexVectorArray(ConvertToComplexVectorArrayType.RowAsVector)[0];
+        let sourceTransport: ComplexMatrix2D = source.convertToComplexMatrix2D().transport();
+        let result: ComplexMatrix2D = kernel.mul(sourceTransport).transport();
+        return result.convertToComplexVectorArray(ConvertToComplexVectorArrayType.RowAsVector)[0];
     }
 }
