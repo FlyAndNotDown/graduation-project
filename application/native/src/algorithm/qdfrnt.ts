@@ -78,8 +78,26 @@ export class QDFRNT {
         let outputK: ComplexVector = QDFRNT.dfrnt(sourceK, kernel);
 
         // get real part and imaginary part
-        // TODO
-        
-        return null;
+        let outputRParts: Vector[] = outputR.splitComplexParts();
+        let outputIParts: Vector[] = outputI.splitComplexParts();
+        let outputJParts: Vector[] = outputJ.splitComplexParts();
+        let outputKParts: Vector[] = outputK.splitComplexParts();
+        let outputRReal: Vector = outputRParts[0];
+        let outputRImag: Vector = outputRParts[1];
+        let outputIReal: Vector = outputIParts[0];
+        let outputIImag: Vector = outputIParts[1];
+        let outputJReal: Vector = outputJParts[0];
+        let outputJImag: Vector = outputJParts[1];
+        let outputKReal: Vector = outputKParts[0];
+        let outputKImag: Vector = outputKParts[1];
+
+        // result
+        let result: ComplexVector[] = [];
+        result.push(outputRReal.sub(outputIImag.mul(ua)).sub(outputJImag.mul(ub)).sub(outputKImag.mul(uc)).convertToComplexVector());
+        result.push(outputIReal.add(outputRImag.mul(ua)).sub(outputJImag.mul(uc)).add(outputKImag.mul(ub)).convertToComplexVector());
+        result.push(outputJReal.add(outputRImag.mul(ub)).sub(outputKImag.mul(ua)).add(outputIImag.mul(uc)).convertToComplexVector());
+        result.push(outputKReal.add(outputRImag.mul(uc)).sub(outputIImag.mul(ub)).add(outputJImag.mul(ua)).convertToComplexVector());
+
+        return ComplexVectorWithChannels.restoreFromComplexVectorArray(result);
     }
 }

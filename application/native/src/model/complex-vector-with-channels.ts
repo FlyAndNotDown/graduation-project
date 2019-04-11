@@ -57,4 +57,14 @@ export class ComplexVectorWithChannels {
         }
         return result;
     }
+
+    public static restoreFromComplexVectorArray(vectors: ComplexVector[]): ComplexVectorWithChannels {
+        let result: ComplexVectorWithChannels = ComplexVectorWithChannels.zeros(vectors[0].length, vectors.length);
+        for (let i: number = 0; i < vectors[0].length; i++) {
+            for (let j: number = 0; j < vectors.length; j++) {
+                result.set(i, j, vectors[j].get(i));
+            }
+        }
+        return result;
+    }
 }
