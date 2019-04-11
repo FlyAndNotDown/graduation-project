@@ -1,4 +1,5 @@
 import { Vector } from './../model/vector';
+import { ComplexVectorWithChannels } from './../model/complex-vector-with-channels';
 import { ComplexMatrix2D, ConvertToComplexVectorArrayType, RestoreFromComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
 import { Matrix2D } from './../model/matrix2d';
@@ -48,5 +49,37 @@ export class QDFRNT {
         }
 
         return ComplexMatrix2D.restoreFromComplexVectorArray(RestoreFromComplexVectorArrayType.ColAsVector, colOutputVectors);
+    }
+
+    public static lqdfrnt(source: ComplexVectorWithChannels, kernel: ComplexMatrix2D, unitPureQuaternion: Vector): ComplexVectorWithChannels {
+        if (source.channels !== 4) {
+            throw new Error('source\'s channels should be four');
+        }
+        if (source.length !== kernel.rows) {
+            throw new Error('source\'s length should be equal with kernel matrix\'s rows & cols');
+        }
+
+        // get channels
+        let sourceChannels: ComplexVector[] = source.convertToComplexVectorArray();
+        let sourceR: ComplexVector = sourceChannels[0];
+        let sourceI: ComplexVector = sourceChannels[1];
+        let sourceJ: ComplexVector = sourceChannels[2];
+        let sourceK: ComplexVector = sourceChannels[3];
+
+        // get unit pure quaternion 's three image part
+        let ua: number = unitPureQuaternion.get(1);
+        let ub: number = unitPureQuaternion.get(2);
+        let uc: number = unitPureQuaternion.get(3);
+
+        // do 1-d DFRNT to every child source matrix
+        let outputR: ComplexVector = QDFRNT.dfrnt(sourceR, kernel);
+        let outputI: ComplexVector = QDFRNT.dfrnt(sourceI, kernel);
+        let outputJ: ComplexVector = QDFRNT.dfrnt(sourceJ, kernel);
+        let outputK: ComplexVector = QDFRNT.dfrnt(sourceK, kernel);
+
+        // get real part and imaginary part
+        // TODO
+        
+        return null;
     }
 }
