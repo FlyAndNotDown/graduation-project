@@ -1,3 +1,4 @@
+import { Vector } from './vector';
 import { ComplexMatrix2D } from './complex-matrix2d';
 import { Complex } from './complex';
 
@@ -68,6 +69,15 @@ export class ComplexVector {
         let result: ComplexMatrix2D = ComplexMatrix2D.zeros(1, this.length);
         for (let i: number = 0; i < this.length; i++) {
             result.set(0, i, this.get(i).copy());
+        }
+        return result;
+    }
+
+    public splitComplexParts(): Vector[] {
+        let result: Vector[] = [Vector.zeros(this.length), Vector.zeros(this.length)];
+        for (let i: number = 0; i < this.length; i++) {
+            result[0].set(i, this.get(i).real);
+            result[1].set(i, this.get(i).imag);
         }
         return result;
     }
