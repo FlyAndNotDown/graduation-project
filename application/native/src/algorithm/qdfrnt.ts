@@ -1,5 +1,3 @@
-import { Vector } from './../model/vector';
-import { ComplexVectorWithChannels } from './../model/complex-vector-with-channels';
 import { ComplexMatrix2D, ConvertToComplexVectorArrayType, RestoreFromComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
 import { Matrix2D } from './../model/matrix2d';
@@ -49,55 +47,5 @@ export class QDFRNT {
         }
 
         return ComplexMatrix2D.restoreFromComplexVectorArray(RestoreFromComplexVectorArrayType.ColAsVector, colOutputVectors);
-    }
-
-    public static lqdfrnt(source: ComplexVectorWithChannels, kernel: ComplexMatrix2D, unitPureQuaternion: Vector): ComplexVectorWithChannels {
-        if (source.channels !== 4) {
-            throw new Error('source\'s channels should be four');
-        }
-        if (source.length !== kernel.rows) {
-            throw new Error('source\'s length should be equal with kernel matrix\'s rows & cols');
-        }
-
-        // get channels
-        let sourceChannels: ComplexVector[] = source.convertToComplexVectorArray();
-        let sourceR: ComplexVector = sourceChannels[0];
-        let sourceI: ComplexVector = sourceChannels[1];
-        let sourceJ: ComplexVector = sourceChannels[2];
-        let sourceK: ComplexVector = sourceChannels[3];
-
-        // get unit pure quaternion 's three image part
-        let ua: number = unitPureQuaternion.get(1);
-        let ub: number = unitPureQuaternion.get(2);
-        let uc: number = unitPureQuaternion.get(3);
-
-        // do 1-d DFRNT to every child source matrix
-        let outputR: ComplexVector = QDFRNT.dfrnt(sourceR, kernel);
-        let outputI: ComplexVector = QDFRNT.dfrnt(sourceI, kernel);
-        let outputJ: ComplexVector = QDFRNT.dfrnt(sourceJ, kernel);
-        let outputK: ComplexVector = QDFRNT.dfrnt(sourceK, kernel);
-
-        // get real part and imaginary part
-        let outputRParts: Vector[] = outputR.splitComplexParts();
-        let outputIParts: Vector[] = outputI.splitComplexParts();
-        let outputJParts: Vector[] = outputJ.splitComplexParts();
-        let outputKParts: Vector[] = outputK.splitComplexParts();
-        let outputRReal: Vector = outputRParts[0];
-        let outputRImag: Vector = outputRParts[1];
-        let outputIReal: Vector = outputIParts[0];
-        let outputIImag: Vector = outputIParts[1];
-        let outputJReal: Vector = outputJParts[0];
-        let outputJImag: Vector = outputJParts[1];
-        let outputKReal: Vector = outputKParts[0];
-        let outputKImag: Vector = outputKParts[1];
-
-        // result
-        let result: ComplexVector[] = [];
-        result.push(outputRReal.sub(outputIImag.mul(ua)).sub(outputJImag.mul(ub)).sub(outputKImag.mul(uc)).convertToComplexVector());
-        result.push(outputIReal.add(outputRImag.mul(ua)).sub(outputJImag.mul(uc)).add(outputKImag.mul(ub)).convertToComplexVector());
-        result.push(outputJReal.add(outputRImag.mul(ub)).sub(outputKImag.mul(ua)).add(outputIImag.mul(uc)).convertToComplexVector());
-        result.push(outputKReal.add(outputRImag.mul(uc)).sub(outputIImag.mul(ub)).add(outputJImag.mul(ua)).convertToComplexVector());
-
-        return ComplexVectorWithChannels.restoreFromComplexVectorArray(result);
     }
 }

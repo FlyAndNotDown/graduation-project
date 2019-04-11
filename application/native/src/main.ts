@@ -32,21 +32,4 @@ import { Complex } from './model/complex';
 // let result3: ComplexMatrix2D = QDFRNT.dfrnt2(result2, kernel, kernel);
 // let result4: ComplexMatrix2D = QDFRNT.dfrnt2(result3, kernel, kernel);
 
-let source: ComplexVectorWithChannels = new ComplexVectorWithChannels([
-    [new Complex(1, 1), new Complex(2, 2), new Complex(3, 3), new Complex(4, 4)],
-    [new Complex(5, 5), new Complex(6, 6), new Complex(7, 7), new Complex(8, 8)],
-    [new Complex(9, 9), new Complex(10, 10), new Complex(11, 11), new Complex(12, 12)],
-    [new Complex(13, 13), new Complex(14, 14), new Complex(15, 15), new Complex(16, 16)],
-    [new Complex(17, 17), new Complex(18, 18), new Complex(19, 19), new Complex(20, 20)]
-]);
-let randomMatrix: Matrix2D = MatrixTool.getRandomSquareMatrix(5);
-let kernel: ComplexMatrix2D = QDFRNT.kernel(0.25, 1, randomMatrix);
-let iKernel: ComplexMatrix2D = QDFRNT.kernel(-0.25, 1, randomMatrix);
-let quaternion: Vector = new Vector([0, 1, 0, 0]);
-let result1: ComplexVectorWithChannels = QDFRNT.lqdfrnt(source, kernel, quaternion);
-let restore: ComplexVectorWithChannels = QDFRNT.lqdfrnt(result1, iKernel, quaternion);
-let result2: ComplexVectorWithChannels = QDFRNT.lqdfrnt(result1, kernel, quaternion);
-let result3: ComplexVectorWithChannels = QDFRNT.lqdfrnt(result2, kernel, quaternion);
-let result4: ComplexVectorWithChannels = QDFRNT.lqdfrnt(result3, kernel, quaternion);
-
 console.log('over');
