@@ -1,6 +1,11 @@
 import { ComplexMatrix2D } from './complex-matrix2d';
 import { Complex } from './complex';
 
+export enum AddEmptyChannelType {
+    Front,
+    Back
+}
+
 export class ComplexMatrix3D {
     private data: Complex[][][];
     public rows: number;
@@ -65,6 +70,32 @@ export class ComplexMatrix3D {
                 }
             }
             result.push(matrix);
+        }
+
+        return result;
+    }
+
+    public addEmptyChannel(type: AddEmptyChannelType): ComplexMatrix3D {
+        let result: ComplexMatrix3D = ComplexMatrix3D.zeros(this.rows, this.cols, this.channels + 1);
+    
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                for (let k: number = 0; k < this.channels + 1; k++) {
+                    if (type === AddEmptyChannelType.Front) {
+                        if (k === 0) {
+                            result.set(i, j, k, new Complex(0, 0));
+                        } else {
+                            result.set(i, j, k, this.get(i, j, k - 1).copy());
+                        }
+                    } else {
+                        if (k === this.channels) {
+                            result.set(i, j, k, new Complex(0, 0));
+                        } else {
+                            result.set(i, j, k, this.get(i, j, k).copy());
+                        }
+                    }
+                }
+            }
         }
 
         return result;
