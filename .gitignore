@@ -17,3 +17,7 @@
 /application/cmd/build
 /application/cmd/test/dist
 /application/cmd/package-lock.json
+
+# native
+/application/native/.idea
+/application/native/cmake-build-debug
