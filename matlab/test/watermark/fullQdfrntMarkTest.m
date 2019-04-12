@@ -1,22 +1,11 @@
 % define source list & secret list
-sources = {
-    % 'airplane.tiff',
-    'lena.bmp',
-    'peppers.tiff',
-    'baboon.tiff',
-    'couple.tiff',
-    'girl.tiff',
-};
-secrets = {
-    'secret.bmp',
-    'secret2.bmp',
-    'secret3.bmp'
-};
+sources = { 'lena.bmp', 'peppers.tiff', 'baboon.tiff', 'couple.tiff', 'girl.tiff' };
+secrets = { 'secret.bmp', 'secret2.bmp', 'secret3.bmp' };
 
 % file IO
 indexFile = fopen('dist/index.txt', 'w+');
 randomMatrixFile = fopen('dist/random-matrix.txt', 'w+');
-fprintf(indexFile, 'testNo\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tssimSource\t\tssimSecret\n');
+fprintf(indexFile, 'testNo\t\timageName\t\tsecretName\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tssimSource\t\tssimSecret\n');
 
 % load SVM model
 load('data/model.mat', 'model');
@@ -87,7 +76,7 @@ for n = 1 : 1000
     [ssimSecret, ~] = ssim(im2uint8(secret), im2uint8(restored));
     imwrite(output, ['dist/', num2str(testNo), '-output.bmp']);
     imwrite(restored, ['dist/', num2str(testNo), '-restored.bmp']);
-    fprintf(indexFile, '%d\t\t\t%d\t\t\t%f\t\t%d\t\t\t%d\t\t\t%f\t\t%f\n', testNo, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), ssimSource, ssimSecret);
+    fprintf(indexFile, '%d\t\t\t%s\t\t%s\t\t%d\t\t\t%f\t\t%d\t\t\t%d\t\t\t%f\t\t%f\n', testNo, sources{1, sourceNo}, secrets{1, secretNo}, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), ssimSource, ssimSecret);
     testNo = testNo + 1;
 end
 
