@@ -59,8 +59,8 @@ export class ComplexVectorWithChannels {
     }
 
     public static restoreFromComplexVectorArray(vectors: ComplexVector[]): ComplexVectorWithChannels {
-        let length: number = vectors.length;
-        let channels: number = length === 0 ? 0 : vectors[0].length;
+        let channels: number = vectors.length;
+        let length: number = channels === 0 ? 0 : vectors[0].length;
         let result: ComplexVectorWithChannels = ComplexVectorWithChannels.zeros(length, channels);
         for (let i: number = 0; i < length; i++) {
             for (let j: number = 0; j < channels; j++) {
