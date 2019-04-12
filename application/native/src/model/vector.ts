@@ -1,6 +1,7 @@
 import { ComplexVector } from './complex-vector';
 import { Matrix2D } from './matrix2d';
 import { Complex } from './complex';
+
 export class Vector {
     private data: number[];
     public length: number;
