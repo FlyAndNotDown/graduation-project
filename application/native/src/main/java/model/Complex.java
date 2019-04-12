@@ -14,29 +14,32 @@ public class Complex {
     }
 
     public Complex add(Complex complex) {
-        this.real = this.real + complex.real;
-        this.imag = this.imag + complex.imag;
-        return this;
+        return new Complex(this.real + complex.real, this.imag + complex.imag);
     }
 
     public Complex sub(Complex complex) {
-        this.real = this.real - complex.real;
-        this.imag = this.imag - complex.imag;
-        return this;
+        return new Complex(this.real - complex.real, this.imag - complex.imag);
+    }
+
+    public Complex mul(double number) {
+        return new Complex(this.real * number, this.imag * number);
     }
 
     public Complex mul(Complex complex) {
-        // TODO
-        return null;
+        return new Complex(
+                this.real * complex.real - this.imag * complex.imag,
+                this.imag * complex.real + this.real * complex.imag
+        );
     }
 
     public Complex div(Complex complex) {
-        // TODO
-        return null;
+        return new Complex(
+                (this.real * complex.real + this.imag * complex.imag) / (complex.real * complex.real + complex.imag * complex.imag),
+                (this.imag * complex.real - this.real * complex.imag) / (complex.real * complex.real + complex.imag * complex.imag)
+        );
     }
 
     public Complex exp() {
-        // TODO
-        return null;
+        return new Complex(Math.cos(this.imag), Math.sin(this.imag));
     }
 }

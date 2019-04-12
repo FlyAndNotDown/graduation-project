@@ -38,24 +38,27 @@ public class Vector {
     }
 
     public Vector add(Vector vector) {
+        Vector result = Vector.zeros(this.length);
         for (int i = 0; i < this.length; i++) {
-            this.set(i, this.get(i) + vector.get(i));
+            result.set(i, this.get(i) + vector.get(i));
         }
-        return this;
+        return result;
     }
 
     public Vector sub(Vector vector) {
+        Vector result = Vector.zeros(this.length);
         for (int i = 0; i < this.length; i++) {
-            this.set(i, this.get(i) - vector.get(i));
+            result.set(i, this.get(i) - vector.get(i));
         }
-        return this;
+        return result;
     }
 
     public Vector mul(double number) {
+        Vector result = Vector.zeros(this.length);
         for (int i = 0; i < this.length; i++) {
-            this.set(i, this.get(i) * number);
+            result.set(i, this.get(i) * number);
         }
-        return this;
+        return result;
     }
 
     public double mul(Vector vector) {
