@@ -19,11 +19,11 @@ describe('QDFRNT', () => {
     let result2: Matrix3D = QDFRNT.lqdfrnt2(result1, kernel, kernel, quaternion);
     let result3: Matrix3D = QDFRNT.lqdfrnt2(result2, kernel, kernel, quaternion);
     let result4: Matrix3D = QDFRNT.lqdfrnt2(result3, kernel, kernel, quaternion);
-    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-1', result1.removeChannel(RemoveChannelType.Front));
-    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-2', result2.removeChannel(RemoveChannelType.Front));
-    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-3', result3.removeChannel(RemoveChannelType.Front));
-    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-4', result4.removeChannel(RemoveChannelType.Front));
-    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-restored', restored.removeChannel(RemoveChannelType.Front));
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-1.bmp', result1.removeChannel(RemoveChannelType.Front));
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-2.bmp', result2.removeChannel(RemoveChannelType.Front));
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-3.bmp', result3.removeChannel(RemoveChannelType.Front));
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-result-4.bmp', result4.removeChannel(RemoveChannelType.Front));
+    ImageTool.writeDoubleMatrixToImageFile('test/dist/lqdfrnt2-restored.bmp', restored.removeChannel(RemoveChannelType.Front));
 
     describe('lqdfrnt2', () => {
         it('data', () => {
