@@ -52,6 +52,50 @@ export class QDFRNT {
     }
 
     public static lqdfrnt(source: VectorWithChannels, kernel: ComplexMatrix2D, unitPureQuaternion: Vector): VectorWithChannels {
-        return null;
+        if (unitPureQuaternion.length !== 4) {
+            throw new Error('quaternion vector\'s length should be equal 4');
+        }
+        if (source.channels !== 4) {
+            throw new Error('source vector\'s channels should be equal 4');
+        }
+        if (source.length !== kernel.rows) {
+            throw new Error('source vector\s length should be equal kernel matrix\'s rows');
+        }
+        
+        let sourceChannels: Vector[] = source.convertToVectorArray();
+        let sourceR: ComplexVector = sourceChannels[0].convertToComplexVector();
+        let sourceI: ComplexVector = sourceChannels[1].convertToComplexVector();
+        let sourceJ: ComplexVector = sourceChannels[2].convertToComplexVector();
+        let sourceK: ComplexVector = sourceChannels[3].convertToComplexVector();
+
+        let ua: number = unitPureQuaternion.get(1);
+        let ub: number = unitPureQuaternion.get(2);
+        let uc: number = unitPureQuaternion.get(3);
+
+        let outputR: ComplexVector = QDFRNT.dfrnt(sourceR, kernel);
+        let outputI: ComplexVector = QDFRNT.dfrnt(sourceI, kernel);
+        let outputJ: ComplexVector = QDFRNT.dfrnt(sourceJ, kernel);
+        let outputK: ComplexVector = QDFRNT.dfrnt(sourceK, kernel);
+
+        let outputRParts: Vector[] = outputR.splitComplexParts();
+        let outputIParts: Vector[] = outputI.splitComplexParts();
+        let outputJParts: Vector[] = outputJ.splitComplexParts();
+        let outputKParts: Vector[] = outputK.splitComplexParts();
+        let outputRReal: Vector = outputRParts[0];
+        let outputRImag: Vector = outputRParts[1];
+        let outputIReal: Vector = outputIParts[0];
+        let outputIImag: Vector = outputIParts[1];
+        let outputJReal: Vector = outputJParts[0];
+        let outputJImag: Vector = outputJParts[1];
+        let outputKReal: Vector = outputKParts[0];
+        let outputKImag: Vector = outputKParts[1];
+
+        let result: Vector[] = [];
+        result.push(outputRReal.sub(outputIImag.mul(ua)).sub(outputJImag.mul(ub)).sub(outputKImag.mul(uc)));
+        result.push(outputIReal.add(outputRImag.mul(ua)).sub(outputJImag.mul(uc)).add(outputKImag.mul(ub)));
+        result.push(outputJReal.add(outputRImag.mul(ub)).sub(outputKImag.mul(ua)).add(outputIImag.mul(uc)));
+        result.push(outputKReal.add(outputRImag.mul(uc)).sub(outputIImag.mul(ub)).add(outputJImag.mul(ua)));
+
+        return VectorWithChannels.restoreFromVectorArray(result);
     }
 }
