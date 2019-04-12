@@ -9,6 +9,14 @@ export enum RestoreFromVectorWithChannelsArrayType {
     RowAsVector,
     ColAsVector
 }
+export enum AddEmptyChannelType {
+    Front,
+    Back
+}
+export enum RemoveChannelType {
+    Front,
+    Back
+}
 
 export class Matrix3D {
     private data: number[][][];
@@ -133,5 +141,49 @@ export class Matrix3D {
             }
             return result;
         }
+    }
+
+    public addEmptyChannel(type: AddEmptyChannelType): Matrix3D {
+        let result: Matrix3D = Matrix3D.zeros(this.rows, this.cols, this.channels + 1);
+
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                for (let k: number = 0; k < this.channels + 1; k++) {
+                    if (type === AddEmptyChannelType.Front) {
+                        if (k === 0) {
+                            result.set(i, j, k, 0);
+                        } else {
+                            result.set(i, j, k, this.get(i, j, k - 1));
+                        }
+                    } else {
+                        if (k === this.channels) {
+                            result.set(i, j, k, 0);
+                        } else {
+                            result.set(i, j, k, this.get(i, j, k));
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public removeChannel(type: RemoveChannelType): Matrix3D {
+        let result: Matrix3D = Matrix3D.zeros(this.rows, this.cols, this.channels - 1);
+
+        for (let i: number = 0; i < this.rows; i++) {
+            for (let j: number = 0; j < this.cols; j++) {
+                for (let k: number = 0; k < this.channels - 1; k++) {
+                    if (type === RemoveChannelType.Front) {
+                        result.set(i, j, k, this.get(i, j, k + 1));
+                    } else {
+                        result.set(i, j, k, this.get(i, j, k));
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }
