@@ -1,4 +1,5 @@
 import { Vector } from './vector';
+
 export class VectorWithChannels {
     private data: number[][];
     public length: number;
