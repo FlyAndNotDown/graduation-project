@@ -52,7 +52,7 @@ import { ImageTool } from './tool/image';
 // let result3: VectorWithChannels = QDFRNT.lqdfrnt(result2, kernel, quaternion);
 // let result4: VectorWithChannels = QDFRNT.lqdfrnt(result3, kernel, quaternion);
 
-let source: Matrix3D = ImageTool.readImageFileToDoubleMatrix('./img/lena.bmp').addEmptyChannel(AddEmptyChannelType.Front);
+let source: Matrix3D = ImageTool.readImageFileToDoubleMatrix('../test/img/lena.bmp').addEmptyChannel(AddEmptyChannelType.Front);
 let randomMatrix: Matrix2D = MatrixTool.getRandomSquareMatrix(512);
 let kernel: ComplexMatrix2D = QDFRNT.kernel(0.25, 1, randomMatrix);
 let iKernel: ComplexMatrix2D = QDFRNT.kernel(-0.25, 1, randomMatrix);
