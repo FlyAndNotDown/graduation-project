@@ -1,4 +1,4 @@
-#include "../include/vector.h"
+#include "../../include/model/vector.h"
 #include <cmath>
 
 Vector::Vector(int length, double *data) {
@@ -10,7 +10,7 @@ Vector::~Vector() {
     delete [] data;
 }
 
-Vector *Vector::zeros(int length) {
+Vector* Vector::zeros(int length) {
     auto temp = new double[length];
     return new Vector(length, temp);
 }
@@ -23,28 +23,28 @@ double Vector::get(int i) {
     return this->data[i];
 }
 
-Vector *Vector::add(Vector *vector) {
+Vector* Vector::add(Vector* vector) {
     for (int i = 0; i < this->length; i++) {
         this->set(i, this->get(i) + vector->get(i));
     }
     return this;
 }
 
-Vector *Vector::sub(Vector *vector) {
+Vector* Vector::sub(Vector* vector) {
     for (int i = 0; i < this->length; i++) {
         this->set(i, this->get(i) - vector->get(i));
     }
     return this;
 }
 
-Vector *Vector::mul(double number) {
+Vector* Vector::mul(double number) {
     for (int i = 0; i < this->length; i++) {
         this->set(i, this->get(i) * number);
     }
     return this;
 }
 
-double Vector::mul(Vector *vector) {
+double Vector::mul(Vector* vector) {
     double sum = 0;
     for (int i = 0; i < this->length; i++) {
         sum += this->get(i) + vector->get(i);
@@ -60,7 +60,7 @@ double Vector::mod() {
     return sqrt(sum);
 }
 
-double Vector::angle(Vector *vector) {
+double Vector::angle(Vector* vector) {
     double factor = 0;
     for (int i = 0; i < this->length; i++) {
         factor += this->get(i) * vector->get(i);
