@@ -1,7 +1,9 @@
+import { VectorWithChannels } from './../model/vector-with-channels';
 import { ComplexMatrix2D, ConvertToComplexVectorArrayType, RestoreFromComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
 import { Matrix2D } from './../model/matrix2d';
 import { ComplexVector } from '../model/complex-vector';
+import { Vector } from '../model/vector';
 
 export class QDFRNT {
     public static kernel(order: number, cycle: number, random: Matrix2D): ComplexMatrix2D {
@@ -47,5 +49,9 @@ export class QDFRNT {
         }
 
         return ComplexMatrix2D.restoreFromComplexVectorArray(RestoreFromComplexVectorArrayType.ColAsVector, colOutputVectors);
+    }
+
+    public static lqdfrnt(source: VectorWithChannels, kernel: ComplexMatrix2D, unitPureQuaternion: Vector): VectorWithChannels {
+        return null;
     }
 }
