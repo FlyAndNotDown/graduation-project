@@ -20,4 +20,7 @@
 
 # native
 /application/native/.idea
-/application/native/cmake-build-debug
+/application/native/.gradle
+/application/native/build
+/application/native/gradlew
+/application/native/gradlew.bat
