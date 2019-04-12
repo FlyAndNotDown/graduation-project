@@ -10,9 +10,17 @@
 /matlab/data/*.mat
 /matlab/dist/*
 
+# cmd
+/application/cmd/node_modules
+/application/cmd/yarn.lock
+/application/cmd/dist
+/application/cmd/build
+/application/cmd/test/dist
+/application/cmd/package-lock.json
+
 # native
-/application/native/node_modules
-/application/native/yarn.lock
-/application/native/dist
-/application/native/test/dist
-/application/native/package-lock.json
+/application/native/.idea
+/application/native/.gradle
+/application/native/build
+/application/native/gradlew
+/application/native/gradlew.bat

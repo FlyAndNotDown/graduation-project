@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dev.js",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "start": "node build/main.js",
+    "test": "mocha -r ts-node/register test/**/*.ts",
+    "build": "tsc",
+    "dev": "node dev.js"
   },
   "author": "",
   "license": "ISC",
