@@ -10,10 +10,10 @@
 /matlab/data/*.mat
 /matlab/dist/*
 
-# native
-/application/native/node_modules
-/application/native/yarn.lock
-/application/native/dist
-/application/native/build
-/application/native/test/dist
-/application/native/package-lock.json
+# cmd
+/application/cmd/node_modules
+/application/cmd/yarn.lock
+/application/cmd/dist
+/application/cmd/build
+/application/cmd/test/dist
+/application/cmd/package-lock.json
