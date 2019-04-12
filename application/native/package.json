@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dev.js",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "start": "node build/main.js",
+    "test": "mocha -r ts-node/register test/**/*.ts",
+    "build": "tsc",
+    "dev": "node dev.js",
+    "cpp": "node-gyp configure build"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +23,7 @@
     "@types/node": "^11.13.0",
     "chai": "^4.2.0",
     "mocha": "^6.0.2",
+    "node-gyp": "^3.8.0",
     "ts-node": "^8.0.3",
     "typescript": "^3.4.1"
   }

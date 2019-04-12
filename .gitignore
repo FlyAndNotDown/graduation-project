@@ -14,5 +14,6 @@
 /application/native/node_modules
 /application/native/yarn.lock
 /application/native/dist
+/application/native/build
 /application/native/test/dist
 /application/native/package-lock.json
