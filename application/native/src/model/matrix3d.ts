@@ -5,6 +5,10 @@ export enum ConvertToVectorWithChannelsArrayType {
     RowAsVector,
     ColAsVector
 }
+export enum RestoreFromVectorWithChannelsArrayType {
+    RowAsVector,
+    ColAsVector
+}
 
 export class Matrix3D {
     private data: number[][][];
@@ -105,5 +109,29 @@ export class Matrix3D {
         }
 
         return result;
+    }
+
+    public static restoreFromVectorWithChannelsArray(type: RestoreFromVectorWithChannelsArrayType, vectors: VectorWithChannels[]) {
+        if (type === RestoreFromVectorWithChannelsArrayType.RowAsVector) {
+            let result: Matrix3D = Matrix3D.zeros(vectors.length, vectors[0].length, vectors[0].channels);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    for (let k: number = 0; k < result.channels; k++) {
+                        result.set(i, j, k, vectors[i].get(j, k));
+                    }
+                }
+            }
+            return result;
+        } else {
+            let result: Matrix3D = Matrix3D.zeros(vectors[0].length, vectors.length, vectors[0].channels);
+            for (let i: number = 0; i < result.rows; i++) {
+                for (let j: number = 0; j < result.cols; j++) {
+                    for (let k: number = 0; k < result.channels; k++) {
+                        result.set(i, j, k, vectors[j].get(i, k));
+                    }
+                }
+            }
+            return result;
+        }
     }
 }

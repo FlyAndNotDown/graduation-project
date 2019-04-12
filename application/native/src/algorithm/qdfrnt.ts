@@ -1,5 +1,4 @@
-import { ComplexMatrix3D } from './../model/complex-matrix3d';
-import { Matrix3D } from './../model/matrix3d';
+import { Matrix3D, ConvertToVectorWithChannelsArrayType, RestoreFromVectorWithChannelsArrayType } from './../model/matrix3d';
 import { VectorWithChannels } from './../model/vector-with-channels';
 import { ComplexMatrix2D, ConvertToComplexVectorArrayType, RestoreFromComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
@@ -43,6 +42,7 @@ export class QDFRNT {
         for (let i: number = 0; i < rowVectors.length; i++) {
             rowOutputVectors.push(QDFRNT.dfrnt(rowVectors[i], kernelRow));
         }
+
         let output: ComplexMatrix2D = ComplexMatrix2D.restoreFromComplexVectorArray(RestoreFromComplexVectorArrayType.RowAsVector, rowOutputVectors);
         let colVectors: ComplexVector[] = output.convertToComplexVectorArray(ConvertToComplexVectorArrayType.ColAsVector);
         let colOutputVectors: ComplexVector[] = [];
@@ -101,7 +101,20 @@ export class QDFRNT {
         return VectorWithChannels.restoreFromVectorArray(result);
     }
 
-    public static lqdfrnt2(source: Matrix3D, kernelRow: ComplexMatrix2D, kernelCol: ComplexMatrix3D, unitPureQuaternion: Vector): Matrix3D {
-        return null;
+    public static lqdfrnt2(source: Matrix3D, kernelRow: ComplexMatrix2D, kernelCol: ComplexMatrix2D, unitPureQuaternion: Vector): Matrix3D {
+        let rowVectors: VectorWithChannels[] = source.convertToVectorWithChannelsArray(ConvertToVectorWithChannelsArrayType.RowAsVector);
+        let rowOutputVectors: VectorWithChannels[] = [];
+        for (let i: number = 0; i < rowVectors.length; i++) {
+            rowOutputVectors.push(QDFRNT.lqdfrnt(rowVectors[i], kernelRow, unitPureQuaternion));
+        }
+
+        let output: Matrix3D = Matrix3D.restoreFromVectorWithChannelsArray(RestoreFromVectorWithChannelsArrayType.RowAsVector, rowOutputVectors);
+        let colVectors: VectorWithChannels[] = output.convertToVectorWithChannelsArray(ConvertToVectorWithChannelsArrayType.ColAsVector);
+        let colOutputsVectors: VectorWithChannels[] = [];
+        for (let i: number = 0; i < colVectors.length; i++) {
+            colOutputsVectors.push(QDFRNT.lqdfrnt(colVectors[i], kernelCol, unitPureQuaternion));
+        }
+
+        return Matrix3D.restoreFromVectorWithChannelsArray(RestoreFromVectorWithChannelsArrayType.ColAsVector, colOutputsVectors);
     }
 }
