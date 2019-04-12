@@ -1,4 +1,10 @@
 import { Matrix2D } from './matrix2d';
+import { VectorWithChannels } from './vector-with-channels';
+
+export enum ConvertToVectorWithChannelsArrayType {
+    RowAsVector,
+    ColAsVector
+}
 
 export class Matrix3D {
     private data: number[][][];
@@ -64,6 +70,38 @@ export class Matrix3D {
                 }
             }
             result.push(matrix);
+        }
+
+        return result;
+    }
+
+    public convertToVectorWithChannelsArray(type: ConvertToVectorWithChannelsArrayType): VectorWithChannels[] {
+        let result: VectorWithChannels[] = [];
+
+        if (type === ConvertToVectorWithChannelsArrayType.RowAsVector) {
+            for (let i: number = 0; i < this.rows; i++) {
+                let vectorSource: number[][] = [];
+                for (let j: number = 0; j < this.cols; j++) {
+                    let pixel: number[] = [];
+                    for (let k: number = 0; k < this.channels; k++) {
+                        pixel.push(this.get(i, j, k));
+                    }
+                    vectorSource.push(pixel);
+                }
+                result.push(new VectorWithChannels(vectorSource));
+            }
+        } else {
+            for (let i: number = 0; i < this.cols; i++) {
+                let vectorSource: number[][] = [];
+                for (let j: number = 0; j < this.rows; j++) {
+                    let pixel: number[] = [];
+                    for (let k: number = 0; k < this.channels; k++) {
+                        pixel.push(this.get(j, i, k));
+                    }
+                    vectorSource.push(pixel);
+                }
+                result.push(new VectorWithChannels(vectorSource));
+            }
         }
 
         return result;

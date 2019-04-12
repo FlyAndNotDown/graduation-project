@@ -1,3 +1,5 @@
+import { ComplexMatrix3D } from './../model/complex-matrix3d';
+import { Matrix3D } from './../model/matrix3d';
 import { VectorWithChannels } from './../model/vector-with-channels';
 import { ComplexMatrix2D, ConvertToComplexVectorArrayType, RestoreFromComplexVectorArrayType } from './../model/complex-matrix2d';
 import { Complex } from './../model/complex';
@@ -97,5 +99,9 @@ export class QDFRNT {
         result.push(outputKReal.add(outputRImag.mul(uc)).sub(outputIImag.mul(ub)).add(outputJImag.mul(ua)));
 
         return VectorWithChannels.restoreFromVectorArray(result);
+    }
+
+    public static lqdfrnt2(source: Matrix3D, kernelRow: ComplexMatrix2D, kernelCol: ComplexMatrix3D, unitPureQuaternion: Vector): Matrix3D {
+        return null;
     }
 }
