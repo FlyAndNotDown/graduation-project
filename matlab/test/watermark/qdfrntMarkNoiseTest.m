@@ -11,7 +11,12 @@ ir = dfrntKernel(-0.75, 1, p);
 [output, kp] = qdfrntMark(source, secret, 3, r, ir, 0.05);
 
 % calculate ssim
-[ssimVal, ~] = ssim(source, output);
+[sourceSsimVal, ~] = ssim(source, output);
+[secretSsimVal, ~] = ssim(im2uint8(secret), im2uint8(secretRestored));
+ber = 1 - secretSsimVal;
+
+% add some noise
+output = imnoise(output, 'gaussian', 0, 0.005);
 
 % restore
 load('data/model.mat', 'model');
