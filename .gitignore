@@ -18,3 +18,7 @@
 /cmd/build
 /cmd/test/dist
 /cmd/package-lock.json
+
+# cpp
+/cpp/.idea
+/cpp/cmake-build-debug
