@@ -9,6 +9,7 @@
 # matlab
 /matlab/data/*.mat
 /matlab/dist/*
+/matlab/program
 
 # cmd
 /application/cmd/node_modules
