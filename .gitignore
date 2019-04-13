@@ -24,3 +24,5 @@
 /application/native/build
 /application/native/gradlew
 /application/native/gradlew.bat
+/application/native/.settings
+/application/native/bin
