@@ -1,5 +1,5 @@
 % init source matrix
-source = [1, 2, 3, 4];
+source = [1, 2, 3, 4]';
 
 % get a random matrix
 p = rand(4, 4);

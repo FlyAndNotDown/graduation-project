@@ -21,17 +21,17 @@ imshow(source);
 
 % show the image after one time DFRNT
 subplot(2, 2, 2);
-output = dfrnt2(source, rr, rc);
+output = dfrnt2(source, 512, 512, rr, rc);
 imshow(output);
 
 % show the image restored from output image
 subplot(2, 2, 3);
-reSource = dfrnt2(output, rri, rci);
+reSource = dfrnt2(output, 512, 512, rri, rci);
 imshow(reSource);
 
 % show the image after four time DFRNT
 subplot(2, 2, 4);
-output4 = dfrnt2(output, rr, rc);
-output4 = dfrnt2(output4, rr, rc);
-output4 = dfrnt2(output4, rr, rc);
+output4 = dfrnt2(output, 512, 512, rr, rc);
+output4 = dfrnt2(output4, 512, 512, rr, rc);
+output4 = dfrnt2(output4, 512, 512, rr, rc);
 imshow(output4);
