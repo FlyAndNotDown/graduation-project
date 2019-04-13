@@ -1,6 +1,15 @@
 package model;
 
 public class Matrix2D {
+    public enum ConvertToVectorArrayType {
+        ROW_AS_VECTOR,
+        COL_AS_VECTOR
+    }
+    public enum RestoreFromVectorArrayType {
+        ROW_AS_VECTOR,
+        COL_AS_VECTOR
+    }
+
     private double[][] data;
     public int rows;
     public int cols;
@@ -155,8 +164,78 @@ public class Matrix2D {
         return eigVectors;
     }
 
+    public Vector[] convertToVectorArray(ConvertToVectorArrayType type) {
+        Vector[] result;
+        switch (type) {
+            case ROW_AS_VECTOR:
+                result = new Vector[this.rows];
+                for (int i = 0; i < this.rows; i++) {
+                    result[i] = Vector.zeros(this.cols);
+                    for (int j = 0; j < this.cols; j++) {
+                        result[i].set(j, this.get(i, j));
+                    }
+                }
+                return result;
+            case COL_AS_VECTOR:
+                result = new Vector[this.cols];
+                for (int i = 0; i < this.cols; i++) {
+                    result[i] = Vector.zeros(this.rows);
+                    for (int j = 0; j < this.rows; j++) {
+                        result[i].set(j, this.get(j, i));
+                    }
+                }
+                return result;
+            default:
+                return new Vector[0];
+        }
+    }
+
+    public static Matrix2D restoreFromVectorArray(RestoreFromVectorArrayType type, Vector[] vectors) {
+        Matrix2D result;
+        switch (type) {
+            case ROW_AS_VECTOR:
+                result = Matrix2D.zeros(vectors.length, vectors[0].length);
+                for (int i = 0; i < result.rows; i++) {
+                    for (int j = 0; j < result.cols; j++) {
+                        result.set(i, j, vectors[i].get(j));
+                    }
+                }
+                return result;
+            case COL_AS_VECTOR:
+                result = Matrix2D.zeros(vectors[0].length, vectors.length);
+                for (int i = 0; i < result.rows; i++) {
+                    for (int j = 0; j < result.cols; j++) {
+                        result.set(i, j, vectors[j].get(i));
+                    }
+                }
+            default:
+                return Matrix2D.zeros(0, 0);
+        }
+    }
+
     public Matrix2D orthogonal() {
-        // TODO
-        return null;
+        Vector[] vectors = this.convertToVectorArray(ConvertToVectorArrayType.COL_AS_VECTOR);
+        Vector[] resultSource = new Vector[vectors.length];
+
+        for (int i = 0; i < vectors.length; i++) {
+            Vector temp = vectors[i].copy();
+            for (int j = 0; j < i; j++) {
+                temp = temp.sub(resultSource[j].mul(vectors[i].mul(resultSource[j]) / resultSource[j].mul(resultSource[j])));
+            }
+            resultSource[i] = temp;
+        }
+
+        for (int i = 0; i < resultSource.length; i++) {
+            double sum = 0;
+            for (int j = 0; j < resultSource[i].length; j++) {
+                sum += resultSource[i].get(j) * resultSource[i].get(j);
+            }
+            sum = Math.sqrt(sum);
+            for (int j = 0; j < resultSource[i].length; j++) {
+                resultSource[i].set(j, resultSource[i].get(j) / sum);
+            }
+        }
+
+        return Matrix2D.restoreFromVectorArray(RestoreFromVectorArrayType.COL_AS_VECTOR, resultSource);
     }
 }
