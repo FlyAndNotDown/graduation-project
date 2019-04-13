@@ -12,18 +12,9 @@
 /matlab/program
 
 # cmd
-/application/cmd/node_modules
-/application/cmd/yarn.lock
-/application/cmd/dist
-/application/cmd/build
-/application/cmd/test/dist
-/application/cmd/package-lock.json
-
-# native
-/application/native/.idea
-/application/native/.gradle
-/application/native/build
-/application/native/gradlew
-/application/native/gradlew.bat
-/application/native/.settings
-/application/native/bin
+/cmd/node_modules
+/cmd/yarn.lock
+/cmd/dist
+/cmd/build
+/cmd/test/dist
+/cmd/package-lock.json
