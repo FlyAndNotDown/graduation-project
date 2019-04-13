@@ -50,7 +50,7 @@ end
 [~, secretsLength] = size(secrets);
 
 % load source
-source = im2double(imread('lena.bmp'));
+source = im2double(imread('peppers.tiff'));
 
 maxTestNo = 0;
 maxSsvim = 0;
