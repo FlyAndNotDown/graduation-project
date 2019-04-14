@@ -14,7 +14,7 @@ ir = dfrntKernel(-0.75, 1, p);
 [sourceSsimVal, ~] = ssim(source, output);
 
 % add some noise
-output = imnoise(output, 'gaussian', 0, 0.005);
+output = imnoise(output, 'gaussian', 0, 0.02);
 
 % restore
 load('data/model.mat', 'model');
