@@ -39,7 +39,7 @@ blocks = splitBlock(source, 8);
 u = [0, 1, 0, 0];
 
 % get adaptive factors of every blocks
-adaptiveFactors = adaptiveFactor(blocks, 1, 0.25);
+adaptiveFactors = adaptiveFactor(source, 1, 0.25);
 
 % do QDFRNT to every blocks
 encodedBlocks = cell(1, blocksLength);
@@ -50,7 +50,7 @@ for n = 1 : blocksLength
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
+    encodedBlocks{1, n} = lqdfrnt2(t, 8, 8, kt, kt, u);
 end
 
 % % add some info
@@ -153,7 +153,7 @@ end
 
 % do ILQDFRNT to every blocks
 for n = 1 : blocksLength
-    encodedBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, ikt, ikt, u);
+    encodedBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, 8, 8, ikt, ikt, u);
     encodedBlocks{1, n} = encodedBlocks{1, n}(:, :, [2, 3, 4]);
 end
 

@@ -1,9 +1,9 @@
 % init source matrix
-source = zeros(1, 4, 4);
-source(:, :, 1) = [0, 0, 0, 0];
-source(:, :, 2) = [1, 2, 3, 4];
-source(:, :, 3) = [2, 3, 4, 5];
-source(:, :, 4) = [3, 4, 5, 6];
+source = zeros(4, 1, 4);
+source(:, :, 1) = [0, 0, 0, 0]';
+source(:, :, 2) = [1, 2, 3, 4]';
+source(:, :, 3) = [2, 3, 4, 5]';
+source(:, :, 4) = [3, 4, 5, 6]';
 
 % get a random matrix
 p = rand(4, 4);

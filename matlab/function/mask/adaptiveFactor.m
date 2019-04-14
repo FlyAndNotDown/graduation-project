@@ -1,16 +1,23 @@
-function factors = adaptiveFactor(blocks, l, s)
+function factors = adaptiveFactor(source, l, s)
 %adaptiveFactor - get adaptive factor of every blocks in image
 %
 % - Description:
 %       get adaptive factor of every blocks in image
 %
 % - Arguments:
-%       - blocks [1xn cell array {mxnx3 matrix}] smaller block splited from origin image matrix
+%       - source [nxnx3 matrix] source iamge matrix
 %       - l [integer] window length, use when get texture mask value
 %       - s [double from 0 to 1] a factor used when get color mask value
 %
 % - Returns:
 %       - factor [1xn double matrix] adaptive factor of every blocks
+
+% change color space from RGB to CIELab
+sourceLab = rgb2lab(source);
+
+% split blocks
+blocks = splitBlock(source, 8);
+blocksLab = splitBlock(sourceLab, 8);
 
 % get num of blocks
 [~, blockNum] = size(blocks);
@@ -18,15 +25,9 @@ function factors = adaptiveFactor(blocks, l, s)
 % get size info of every block
 [blockRow, blockCol, ~] = size(blocks{1, 1});
 
-% change color space from RGB to CIELab
-blocksLab = cell(1, blockNum);
-for n = 1 : blockNum
-    blocksLab{1, n} = rgb2lab(blocks{1, n});
-end
-
 % do normalization
-channelAMax = blocksLab{1, n}(1, 1, 2);
-channelBMax = blocksLab{1, n}(1, 1, 3);
+channelAMax = blocksLab{1, 1}(1, 1, 2);
+channelBMax = blocksLab{1, 1}(1, 1, 3);
 for n = 1 : blockNum
     for n1 = 1 : blockRow
         for n2 = 1 : blockCol

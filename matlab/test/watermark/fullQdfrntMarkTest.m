@@ -4,6 +4,7 @@ secrets = { 'secret.bmp', 'secret2.bmp', 'secret3.bmp' };
 % file IO
 indexFile = fopen('dist/index.txt', 'w+');
 randomMatrixFile = fopen('dist/random-matrix.txt', 'w+');
+maxFile = fopen('dist/max.txt', 'w+');
 fprintf(indexFile, 'testNo\t\tsecretName\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tssimSource\t\tssimSecret\n');
 
 % load SVM model
@@ -46,17 +47,18 @@ end
 [~, ordersLength] = size(orders);
 [~, cyclesLength] = size(cycles);
 [~, aOrdersLength] = size(aOrders);
-[~, sourcesLength] = size(sources);
 [~, secretsLength] = size(secrets);
 
 % load source
-source = im2double(imread('lena.bmp'));
+source = im2double(imread('peppers.tiff'));
+
+maxTestNo = 0;
+maxSsvim = 0;
 
 % full test
 testNo = 1;
 for n = 1 : 1000
     % get random params set
-    sourceNo = floor(rand() * sourcesLength + 1);
     secretNo = floor(rand() * secretsLength + 1);
     randomMatrixNo = floor(rand() * randomMatrixesLength + 1);
     orderNo = floor(rand() * ordersLength + 1);
@@ -78,9 +80,16 @@ for n = 1 : 1000
     imwrite(output, ['dist/', num2str(testNo), '-output.bmp']);
     imwrite(restored, ['dist/', num2str(testNo), '-restored.bmp']);
     fprintf(indexFile, '%d\t\t\t%s\t\t%d\t\t\t%f\t\t%d\t\t\t%d\t\t\t%f\t\t%f\n', testNo, secrets{1, secretNo}, randomMatrixNo, orders(1, orderNo), cycles(1, cycleNo), aOrders(1, aOrderNo), ssimSource, ssimSecret);
+    if ssimSource > maxSsvim
+        maxSsvim = ssimSource;
+        maxTestNo = testNo;
+    end
     testNo = testNo + 1;
 end
+
+fprintf(maxFile, '%d\t%f\n', maxTestNo, maxSsvim);
 
 % close file
 fclose(indexFile);
 fclose(randomMatrixFile);
+fclose(maxFile);

@@ -28,17 +28,17 @@ imshow(img);
 
 % show image after one time QDFRNT
 subplot(2, 2, 2);
-output = lqdfrnt2(source, rr, rc, u);
+output = lqdfrnt2(source, 512, 512, rr, rc, u);
 imshow(output(:, :, [2, 3, 4]));
 
 % show image restored from output image
 subplot(2, 2, 3);
-reSource = lqdfrnt2(output, rri, rci, u);
+reSource = lqdfrnt2(output, 512, 512, rri, rci, u);
 imshow(reSource(:, :, [2, 3, 4]));
 
 % show image after four time QDFRNT
 subplot(2, 2, 4);
-output4 = lqdfrnt2(output, rr, rc, u);
-output4 = lqdfrnt2(output4, rr, rc, u);
-output4 = lqdfrnt2(output4, rr, rc, u);
+output4 = lqdfrnt2(output, 512, 512, rr, rc, u);
+output4 = lqdfrnt2(output4, 512, 512, rr, rc, u);
+output4 = lqdfrnt2(output4, 512, 512, rr, rc, u);
 imshow(output4(:, :, [2, 3, 4]));
