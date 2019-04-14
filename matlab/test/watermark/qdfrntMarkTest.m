@@ -16,6 +16,7 @@ ir = dfrntKernel(-0.75, 1, p);
 % restore
 load('data/model.mat', 'model');
 secretRestored = qdfrntRestore(output, model, kp, 3, r);
+secretBer = ber(secret, secretRestored);
 
 % show result
 figure();
