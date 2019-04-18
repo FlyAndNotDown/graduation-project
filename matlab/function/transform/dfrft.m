@@ -1,4 +1,4 @@
-function y = dfrft(f,a,p)
+function y = dfrft(f,N,a,p)
 %
 % Computes discrete fractional Fourier transform
 % of order a of vector x
@@ -6,10 +6,11 @@ function y = dfrft(f,a,p)
 %
 %
 
-N = length(f); even = ~rem(N,2);
+% N = length(f);
+even = ~rem(N,2);
 shft = rem((0:N-1) + fix(N/2),N)+1;
 f = f(:);
-if (nargin == 2), p = N/2; end;
+if (nargin == 3), p = N/2; end;
 p = min(max(2,p),N-1);
 E = dFRFT(N,p);
 y(shft,1) = E*(exp(-j*pi/2*a*([0:N-2 N-1+even])).' .*(E'*f(shft)));

@@ -25,7 +25,7 @@ for n = 1 : rows
     output(n, :) = dfrnt(output(n, :)', rr)';
 end
 
-% do the DFRNT to eveny col
+% do the DFRNT to every col
 for n = 1 : cols
     output(:, n) = dfrnt(output(:, n), rc);
 end
