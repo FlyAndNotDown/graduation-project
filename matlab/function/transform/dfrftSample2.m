@@ -1,4 +1,4 @@
-function output = dfrft2(source, len, a)
+function output = dfrftSample2(source, len, a)
 %DFRFT2 - two-dimension discrete fractional fourier transform
 %
 % - Arguments:
@@ -14,11 +14,11 @@ output = source;
 
 % do transform
 for n = 1 : len
-    output(n, :) = dfrft(output(n, :)', len, a)';
+    output(n, :) = dfrftSample(output(n, :)', len, a)';
 end
 
 for n = 1 : len
-    output(:, n) = dfrft(output(:, n), len, a);
+    output(:, n) = dfrftSample(output(:, n), len, a);
 end
 
 end

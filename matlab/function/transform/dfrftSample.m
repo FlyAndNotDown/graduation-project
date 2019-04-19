@@ -1,4 +1,4 @@
-function y = dfrft(f,N,a,p)
+function y = dfrftSample(f,N,a,p)
 %
 % Computes discrete fractional Fourier transform
 % of order a of vector x
