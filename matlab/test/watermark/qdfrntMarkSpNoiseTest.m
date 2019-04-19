@@ -18,7 +18,7 @@ ssimValues = zeros(1, 20);
 secretBers = zeros(1, 20);
 x = zeros(1, 20);
 
-fprintf(indexFile, 'testNo\t\tgaussianNoiseVariancet\t\tber\n');
+fprintf(indexFile, 'testNo\t\tspNoiseVariancet\t\tber\n');
 for n = 1 : 20
     % x location
     x(1, n) = 0.001 * n;
@@ -31,7 +31,7 @@ for n = 1 : 20
     ssimValues(1, n) = sourceSsimVal;
 
     % add some noise
-    output = imnoise(output, 'gaussian', 0, x(1, n));
+    output = imnoise(output, 'salt & pepper', x(1, n));
 
     % restore
     secretRestored = qdfrntRestore(output, model, kp, 3, r);
