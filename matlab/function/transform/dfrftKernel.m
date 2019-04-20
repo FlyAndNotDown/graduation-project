@@ -1,8 +1,40 @@
-function output = dfrftKernel(len)
+function output = dfrftKernel(a, len)
 
-sample = hermiteSample(3, 5);
+even = ~rem(len, 2);
+
+dftEigens = getDftEigens(len);
+
+matrixU = zeros(len, len);
+for n1 = 1 : len
+    u = hermiteSample(n1 - 1, len);
+    temp = zeros(len, 1);
+    for n2 = 1 : len
+        if (mod(n1 - n2, 4) == 0)
+            v = dftEigens(:, n2);
+            temp = temp + u * dot(u, v) / (norm(u) * norm(v));
+        end
+    end
+    matrixU(:, n1) = temp;
+end
+if even
+    matrixU(:, len - 1) = [];
+end
+matrixU = orth(matrixU);
+
+matrixD = zeros(len, len);
+for n = 1 : len
+    matrixD(n, n) = exp(-1i * a * (n - 1));
+end
+if even
+    matrixD(:, n - 1) = [];
+    matrixD(n - 1, :) = [];
+end
+
+output = matrixU * matrixD * matrixU';
 
 end
+
+
 
 function output = hermiteSample(nth, len)
 
@@ -29,5 +61,25 @@ end
 
 vectorMod = norm(output);
 output = output / vectorMod;
+
+end
+
+
+
+function output = getDftEigens(len)
+
+s = zeros(len, len);
+s(1, len) = 1;
+s(len, 1) = 1;
+w = 2 * pi / len;
+for n = 1 : len
+    s(n, n) = 2 * cos((n - 1) * w);
+end
+for n = 1 : len - 1
+    s(n, n + 1) = 1;
+    s(n + 1, n) = 1;
+end
+
+[output, ~] = eig(s);
 
 end
