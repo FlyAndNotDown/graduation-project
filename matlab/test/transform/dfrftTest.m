@@ -1,7 +1,13 @@
-source = 0:0.05:1;
+source = zeros(1, 31);
+for n = 1 : length(source)
+    if rem(n, 2) == 0
+        source(1, n) = 1;
+    end
+end
+x = 1:1:length(source);
 
-kernel = dfrftKernel(0.5, length(source));
-iKernel = dfrftKernel(-0.5, length(source));
+kernel = dfrftKernel(3 * pi / 7, length(source));
+iKernel = dfrftKernel(-3 * pi / 7, length(source));
 
 source = source';
 
@@ -10,6 +16,6 @@ restored = dfrft(output, iKernel);
 
 figure(1);
 subplot(2, 2, 1);
-plot(source, real(output));
+plot(x, real(output));
 subplot(2, 2, 2);
-plot(source, imag(output));
+plot(x, imag(output));
