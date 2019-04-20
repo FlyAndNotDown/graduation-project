@@ -17,7 +17,15 @@ for n1 = 1 : len
     matrixU(:, n1) = temp;
 end
 if even
-    matrixU(:, len - 1) = [];
+    u = hermiteSample(len, len);
+    temp = zeros(len, 1);
+    for n2 = 1 : len
+        if (mod(len - n2, 4) == 0)
+            v = dftEigens(:, n2);
+            temp = temp + u * dot(u, v) / (norm(u) * norm(v));
+        end
+    end
+    matrixU(:, len) = temp;
 end
 matrixU = orth(matrixU);
 
@@ -26,8 +34,7 @@ for n = 1 : len
     matrixD(n, n) = exp(-1i * a * (n - 1));
 end
 if even
-    matrixD(:, n - 1) = [];
-    matrixD(n - 1, :) = [];
+    matrixD(n, n) = exp(-1i * a * (len));
 end
 
 output = matrixU * matrixD * matrixU';
