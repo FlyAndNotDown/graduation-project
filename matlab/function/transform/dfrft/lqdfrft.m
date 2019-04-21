@@ -21,10 +21,10 @@ ub = u(1, 3);
 uc = u(1, 4);
 
 % do the 1-d DFrFT to every child source matrix
-outputR = DFpei(sourceR, a);
-outputI = DFpei(sourceI, a);
-outputJ = DFpei(sourceJ, a);
-outputK = DFpei(sourceK, a);
+outputR = dfrft(sourceR, a);
+outputI = dfrft(sourceI, a);
+outputJ = dfrft(sourceJ, a);
+outputK = dfrft(sourceK, a);
 
 % get real part and imaginary part
 outputRealR = real(outputR);

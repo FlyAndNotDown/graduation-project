@@ -10,11 +10,11 @@ function output = dfrft2(source, sRows, sCols, a)
 output = source;
 
 for n = 1 : sRows
-    output(n, :) = DFpei(output(n, :)', a)';
+    output(n, :) = dfrft(output(n, :)', a)';
 end
 
 for n = 1 : sCols
-    output(:, n) = DFpei(output(:, n), a);
+    output(:, n) = dfrft(output(:, n), a);
 end
 
 end
