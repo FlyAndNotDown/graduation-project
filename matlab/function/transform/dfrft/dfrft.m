@@ -65,62 +65,55 @@ function E = make_E(N,p)
 
 %Construct matrix H, use approx order ord
 
-% diagSource = zeros(1, N);
-% for n = 1 : N
-%   diagSource(1, n) = 2 * cos((n - 1) * 2 * pi / N);
-% end
-% matrixS = diag(diagSource) + diag(ones(1, N - 1), 1) + diag(ones(1, N - 1), -1);
-% matrixS(1, N) = 1;
-% matrixS(N, 1) = 1;
+diagSource = zeros(1, N);
+for n = 1 : N
+  diagSource(1, n) = 2 * cos((n - 1) * 2 * pi / N);
+end
+matrixS = diag(diagSource) + diag(ones(1, N - 1), 1) + diag(ones(1, N - 1), -1);
+matrixS(1, N) = 1;
+matrixS(N, 1) = 1;
 
-% [E, D] = eig(matrixS);
-% [d, indt] = sort(diag(D));
-% E = E(:, indt);
+[E, ~] = eig(matrixS);
+E = fliplr(E);
 
-% r = floor(N/2)
+
+% d2 = [1 -2 1]; d_p = 1; s = 0; st = zeros(1,N);
+% for k = 1:p/2,
+%     d_p = conv(d2,d_p);
+%     st([N-k+1:N,1:k+1]) = d_p; st(1) = 0;
+%     %s = s + (-1)^(k-1)*prod(1:(k-1))^2/prod(1:2*k)*2*st; 
+%     ppp = prod(k:2*k)*2;
+%     % if (ppp == Inf ) break, end
+%     s = s + (-1)^(k-1)/ppp*st;
+% end;
+% % H = circulant + diagonal
+% col = (0:N-1)'; row = (N:-1:1);
+% idx = col(:,ones(N,1)) + row(ones(N,1),:);
+% st = [s(N:-1:2).';s(:)];
+% H = st(idx)+diag(real(fft(s)));
+
+% %Construct transformation matrix V
+
+% r = floor(N/2);
 % even = ~rem(N,2);
+% V1 = (eye(N-1)+flipud(eye(N-1)))/sqrt(2);
+% V1(N-r:end,N-r:end) = -V1(N-r:end,N-r:end);
+% if (even) V1(r,r)=1; end
+% V = eye(N); V(2:N,2:N) = V1;
+
+% % Compute eigenvectors
+
+% VHV = V*H*V';
+% E = zeros(N);
+% Ev = VHV(1:r+1,1:r+1);           Od = VHV(r+2:N,r+2:N);
+% [ve,ee]=eig(Ev);                 [vo,eo]=eig(Od); 
+% %malab eig returns sorted eigenvalues
+% %if different routine gives unsorted eigvals, then sort first
+% %[d,inde] = sort(diag(ee));      [d,indo] = sort(diag(eo));
+% %ve = ve(:,inde');               vo = vo(:,indo');
+% E(1:r+1,1:r+1) = fliplr(ve);     E(r+2:N,r+2:N) = fliplr(vo);
+% E = V*E;
+% % shuffle eigenvectors
 % ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
-% if (even), ind([N,N+2])=[]; else ind(N+1)=[]; end
+% if (even) ind([N,N+2])=[]; else ind(N+1)=[]; end
 % E = E(:,ind');
-
-
-d2 = [1 -2 1]; d_p = 1; s = 0; st = zeros(1,N);
-for k = 1:p/2,
-    d_p = conv(d2,d_p);
-    st([N-k+1:N,1:k+1]) = d_p; st(1) = 0;
-    %s = s + (-1)^(k-1)*prod(1:(k-1))^2/prod(1:2*k)*2*st; 
-    ppp = prod(k:2*k)*2;
-    % if (ppp == Inf ) break, end
-    s = s + (-1)^(k-1)/ppp*st;
-end;
-% H = circulant + diagonal
-col = (0:N-1)'; row = (N:-1:1);
-idx = col(:,ones(N,1)) + row(ones(N,1),:);
-st = [s(N:-1:2).';s(:)];
-H = st(idx)+diag(real(fft(s)));
-
-%Construct transformation matrix V
-
-r = floor(N/2);
-even = ~rem(N,2);
-V1 = (eye(N-1)+flipud(eye(N-1)))/sqrt(2);
-V1(N-r:end,N-r:end) = -V1(N-r:end,N-r:end);
-if (even) V1(r,r)=1; end
-V = eye(N); V(2:N,2:N) = V1;
-
-% Compute eigenvectors
-
-VHV = V*H*V';
-E = zeros(N);
-Ev = VHV(1:r+1,1:r+1);           Od = VHV(r+2:N,r+2:N);
-[ve,ee]=eig(Ev);                 [vo,eo]=eig(Od); 
-%malab eig returns sorted eigenvalues
-%if different routine gives unsorted eigvals, then sort first
-%[d,inde] = sort(diag(ee));      [d,indo] = sort(diag(eo));
-%ve = ve(:,inde');               vo = vo(:,indo');
-E(1:r+1,1:r+1) = fliplr(ve);     E(r+2:N,r+2:N) = fliplr(vo);
-E = V*E;
-% shuffle eigenvectors
-ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
-if (even) ind([N,N+2])=[]; else ind(N+1)=[]; end
-E = E(:,ind');
