@@ -1,12 +1,11 @@
-function output = dfrft2(source, sRows, sCols, a)
+function output = dfrft2(source, a)
 %dfrft2 - two-dimension DFrFT
 %
 % - Arguments:
 %       - source [nxn matrix] source signal matrix
-%       - sRows [int] sRows count
-%       - sCols [int] sCols count
 %       - a [double] fractional order of DFrFT
 
+[sRows, sCols, ~] = size(source);
 output = source;
 
 for n = 1 : sRows

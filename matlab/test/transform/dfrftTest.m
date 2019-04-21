@@ -1,12 +1,6 @@
-source = zeros(1, 31);
-for n = 1 : length(source)
-    if rem(n, 2) == 0
-        source(1, n) = 1;
-    end
-end
-x = 1:1:length(source);
-
+source = 1:0.01:2;
 source = source';
+x = 1:1:length(source);
 
 output = dfrft(source, 0.5);
 restored = dfrft(output, -0.5);
