@@ -1,4 +1,7 @@
-source = 1:0.01:2;
+source = zeros(1, 201);
+for n = 6 : 12
+    source(1, n) = 1;
+end
 source = source';
 x = 1:1:length(source);
 

@@ -65,6 +65,24 @@ function E = make_E(N,p)
 
 %Construct matrix H, use approx order ord
 
+% diagSource = zeros(1, N);
+% for n = 1 : N
+%   diagSource(1, n) = 2 * cos((n - 1) * 2 * pi / N);
+% end
+% matrixS = diag(diagSource) + diag(ones(1, N - 1), 1) + diag(ones(1, N - 1), -1);
+% matrixS(1, N) = 1;
+% matrixS(N, 1) = 1;
+
+% [E, ~] = eig(matrixS);
+
+% r = floor(N/2)
+% even = ~rem(N,2);
+% ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
+% if (even), ind([N,N+2])=[]; else ind(N+1)=[]; end
+% E = E(:,ind');
+
+
+
 d2 = [1 -2 1]; d_p = 1; s = 0; st = zeros(1,N);
 for k = 1:p/2,
     d_p = conv(d2,d_p);
@@ -101,7 +119,7 @@ Ev = VHV(1:r+1,1:r+1);           Od = VHV(r+2:N,r+2:N);
 %ve = ve(:,inde');               vo = vo(:,indo');
 E(1:r+1,1:r+1) = fliplr(ve);     E(r+2:N,r+2:N) = fliplr(vo);
 E = V*E;
-%shuffle eigenvectors
+% shuffle eigenvectors
 ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
 if (even), ind([N,N+2])=[]; else ind(N+1)=[]; end
 E = E(:,ind');
