@@ -73,14 +73,15 @@ function E = make_E(N,p)
 % matrixS(1, N) = 1;
 % matrixS(N, 1) = 1;
 
-% [E, ~] = eig(matrixS);
+% [E, D] = eig(matrixS);
+% [d, indt] = sort(diag(D));
+% E = E(:, indt);
 
 % r = floor(N/2)
 % even = ~rem(N,2);
 % ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
 % if (even), ind([N,N+2])=[]; else ind(N+1)=[]; end
 % E = E(:,ind');
-
 
 
 d2 = [1 -2 1]; d_p = 1; s = 0; st = zeros(1,N);
