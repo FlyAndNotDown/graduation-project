@@ -20,5 +20,5 @@ imshow(output(:, :, [2, 3, 4]));
 
 % show image restored from output image
 subplot(2, 2, 3);
-reSource = lqdfrft2(output, 512, 0.5, u, u);
-imshow(reSource(:, :, [2, 3, 4]));
+restored = lqdfrft2(output, 512, -0.5, u, u);
+imshow(restored(:, :, [2, 3, 4]));
