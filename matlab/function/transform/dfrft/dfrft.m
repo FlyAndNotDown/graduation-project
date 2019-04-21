@@ -90,7 +90,7 @@ for k = 1:p/2,
     st([N-k+1:N,1:k+1]) = d_p; st(1) = 0;
     %s = s + (-1)^(k-1)*prod(1:(k-1))^2/prod(1:2*k)*2*st; 
     ppp = prod(k:2*k)*2;
-    if (ppp == Inf ) break, end
+    % if (ppp == Inf ) break, end
     s = s + (-1)^(k-1)/ppp*st;
 end;
 % H = circulant + diagonal
@@ -105,7 +105,7 @@ r = floor(N/2);
 even = ~rem(N,2);
 V1 = (eye(N-1)+flipud(eye(N-1)))/sqrt(2);
 V1(N-r:end,N-r:end) = -V1(N-r:end,N-r:end);
-if (even), V1(r,r)=1; end
+if (even) V1(r,r)=1; end
 V = eye(N); V(2:N,2:N) = V1;
 
 % Compute eigenvectors
@@ -122,5 +122,5 @@ E(1:r+1,1:r+1) = fliplr(ve);     E(r+2:N,r+2:N) = fliplr(vo);
 E = V*E;
 % shuffle eigenvectors
 ind = [1:r+1;r+2:2*r+2]; ind = ind(:);
-if (even), ind([N,N+2])=[]; else ind(N+1)=[]; end
+if (even) ind([N,N+2])=[]; else ind(N+1)=[]; end
 E = E(:,ind');
