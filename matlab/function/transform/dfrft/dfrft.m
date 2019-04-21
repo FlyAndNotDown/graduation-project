@@ -74,7 +74,7 @@ matrixS(1, N) = 1;
 matrixS(N, 1) = 1;
 
 [E, ~] = eig(matrixS);
-E = fliplr(E);
+% E = fliplr(E);
 
 
 % d2 = [1 -2 1]; d_p = 1; s = 0; st = zeros(1,N);
