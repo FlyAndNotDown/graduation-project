@@ -1,4 +1,4 @@
-source = zeros(1, 201);
+source = zeros(1, 200);
 for n = 94 : 106
     source(1, n) = 1;
 end
