@@ -42,7 +42,7 @@ s = diag(2 * cos((0 : nth - 1) * 2 * pi / nth)) + diag(ones(1, nth - 1), 1) + di
 s(1, nth) = 1;
 s(nth, 1) = 1;
 [evs, ~] = eig(s);
-% evs = orth(evs);
+evs = orth(evs);
 
 % do project from hermite space to DFT space
 for n = 1 : 4

@@ -6,8 +6,8 @@ source = zeros(imgRows, imgCols, imgHeight + 1);
 for n = 2 : 4
     source(:, :, n) = img(:, :, n - 1);
 end
-source(imgRows, :, :) = [];
-source(:, imgCols, :) = [];
+% source(imgRows, :, :) = [];
+% source(:, imgCols, :) = [];
 
 u = [0, 1, 0, 0];
 kernel = dfrftKernel(size(source, 1), 0.5);
