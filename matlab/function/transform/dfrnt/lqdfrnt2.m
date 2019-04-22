@@ -6,6 +6,8 @@ function output = lqdfrnt2(source, rows, cols, rr, rc, u)
 %
 % - Arguments:
 %       - source [mxnx4 double matrix] mxnx4 source signal matrix
+%       - rows [int] rows of source matrix
+%       - cols [int] cols of source matrix
 %       - rr [nxn double matrix] a kernel matrix, it will be used when doing LQDFRNT to every row
 %       - pc [mxm double matrix] a kernel matrix, it will be used when doing LQDFRNT to every col
 %       - u [1x4 vector] a unit pure quaternion vector

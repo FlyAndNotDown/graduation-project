@@ -1,55 +1,82 @@
-function output = dfrftKernel(a, len)
-%dfrftKernel - get kernel matrix of DFrFT with GSA/OPA method
+function tKernel = dfrftKernel(nth, a)
+%dfrftKernel - get kernel matrix of DFrFT
 %
 % - Arguments:
-%       - a [double] fractional order of transform
-%       - len [int] length of matrix
-%
-% - Returns:
-%       - output [nxn matrix] kernel matrix of DFrFT
+%       - nth [int] length of kernel matrix
+%       - a [double] fractional order
 
-% judge if it is even number
-even = ~rem(len, 2);
+% even status
+even = ~rem(nth, 2);
+shift = rem((0 : nth - 1) + fix(nth / 2), nth) + 1;
 
-% get DFT eigen vectors
-dftEigens = dftEigenVectors(len);
-
-% calculate matrix U
-matrixU = zeros(len, len);
-for n1 = 1 : len
-    u = hermiteSample(n1 - 1, len);
-    temp = zeros(len, 1);
-    for n2 = 1 : len
-        if (mod(n1 - n2, 4) == 0)
-            v = dftEigens(:, n2);
-            temp = temp + u * dot(u, v) / (norm(u) * norm(v));
-        end
-    end
-    matrixU(:, n1) = temp;
+% get hermite sample matrix
+% if even
+%     x = (-fix(nth / 2) : fix(nth / 2) - 1);
+% else
+%     x = (-fix(nth / 2) : fix(nth / 2));
+% end
+xf = (- nth / 2 : (nth / 2) - 1)' / sqrt(nth / (2 * pi));
+ef = exp(-xf .^ 2 / 2);
+u(:, 1) = ef;
+m1 = norm(u(:, 1));
+u(:, 1) = u(:, 1) / m1;
+u(:, 2) = 2 * xf .* ef;
+m2 = norm(u(:, 2));
+u(:, 2) = u(:, 2) / m2;
+m1 = m2 / m1;
+for n = 3 : nth + 1
+    u(:, n) = 2 * m1 * xf .* u(:, n - 1) - 2 * (n - 2) * u(:, n - 2);
+    m2 = norm(u(:, n));
+    u(:, n) = u(:, n) / m2;
+    m1 = m2 / m1;
 end
 if even
-    u = hermiteSample(len, len);
-    temp = zeros(len, 1);
-    for n2 = 1 : len
-        if (mod(len - n2, 4) == 0)
-            v = dftEigens(:, n2);
-            temp = temp + u * dot(u, v) / (norm(u) * norm(v));
-        end
-    end
-    matrixU(:, len) = temp;
+    u(:, nth) = [];
+else
+    u(:, nth + 1) = [];
 end
-matrixU = orth(matrixU);
+u(shift, :) = u;
 
-% calculate matrix D
-matrixD = zeros(len, len);
-for n = 1 : len
-    matrixD(n, n) = exp(-1i * a * (n - 1));
+% get DFT eigenvectors
+s = diag(2 * cos((0 : nth - 1) * 2 * pi / nth)) + diag(ones(1, nth - 1), 1) + diag(ones(1, nth - 1), -1);
+s(1, nth) = 1;
+s(nth, 1) = 1;
+[evs, ~] = eig(s);
+evs = orth(evs);
+
+% do project from hermite space to DFT space
+for n = 1 : 4
+    if even
+        % switch n
+        %     case {1, 3}
+        %         ind = n : 4 : nth + 1;
+        %         if (rem(nth, 4) ~= 0 && n == 3) || (rem(nth, 4) == 0 && n == 1)
+        %             ind(end) = ind(end) - 1;
+        %         end
+        %     case {2, 4}
+        %         ind = n : 4 : nth - 1;
+        % end
+        ind = n : 4 : nth;
+    else
+        ind = n : 4 : nth;
+    end
+    uOrth = orth(evs(:, ind) * evs(:, ind)' * u(:, ind));
+    dis = length(ind) - size(uOrth, 2);
+    uOrth = [uOrth zeros(size(u, 1), dis)];
+    % uOrth = [uOrth repmat(uOrth(:, 1), dis)];
+    u(:, ind) = uOrth;
 end
+
+% get matrix d
+d = exp(-1i * a * (0 : nth));
 if even
-    matrixD(n, n) = exp(-1i * a * (len));
+    d(:, nth) = [];
+else
+    d(:, nth + 1) = [];
 end
+d = diag(d);
 
 % get kernel matrix
-output = matrixU * matrixD * matrixU';
+tKernel = u * d * u';
 
 end

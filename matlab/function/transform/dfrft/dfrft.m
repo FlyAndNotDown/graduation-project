@@ -1,14 +1,13 @@
-function output = dfrft(source, kernel)
-%dfrft - discrete fractional fourier transform with GSA/OPA method
+function output = dfrft(source, tKernel)
+%dfrft - DFrFT transform
 %
 % - Arguments:
-%       - source [nx1 vector] source vector
-%       - kernel [nxn matrix] kernel matrix, can get it by dfrftKernel()
-%
-% - Returns:
-%       - output [nx1 vector] output vector
+%       - source [nx1 matrix] source signal matrix
+%       - tKernel [nxn matrix] kernel matrix of DFrFT
 
-% do transform
-output = kernel * source;
+nth = length(source);
+shift = rem((0 : nth - 1) + fix(nth / 2), nth) + 1;
+output = tKernel * source(shift);
+output(shift, 1) = output;
 
 end
