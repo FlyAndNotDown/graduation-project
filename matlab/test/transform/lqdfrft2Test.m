@@ -10,8 +10,8 @@ source(imgRows, :, :) = [];
 source(:, imgCols, :) = [];
 
 u = [0, 1, 0, 0];
-kernel = dfrftKernel(imgRows - 1, 0.5);
-iKernel = dfrftKernel(imgRows - 1, -0.5);
+kernel = dfrftKernel(size(source, 1), 0.5);
+iKernel = dfrftKernel(size(source, 1), -0.5);
 
 figure(1);
 subplot(2, 2, 1);
