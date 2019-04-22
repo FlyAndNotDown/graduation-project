@@ -1,5 +1,5 @@
-source = zeros(1, 100);
-for n = 40 : 60
+source = zeros(1, 8);
+for n = 2 : 6
     source(1, n) = 1;
 end
 source = source';

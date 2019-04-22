@@ -63,15 +63,6 @@ for n = 1 : 4
     uOrth = [uOrth zeros(size(u, 1), dis)];
     u(:, n : 4 : nth) = uOrth;
 end
-% for n = 1 : nth
-%     s = zeros(nth, 1);
-%     for k = 1 : nth
-%         if mod(n - k, 4) == 0
-%             s = s + u(:, n) * dot(u(:, n), evs(:, k)) / (norm(u(:, n) * norm(evs(:, k))));
-%         end
-%     end
-%     u(:, n) = s;
-% end
 
 % get matrix d
 d = exp(-1i * a * (0 : nth));
