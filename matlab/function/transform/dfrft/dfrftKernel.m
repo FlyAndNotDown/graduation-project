@@ -10,12 +10,12 @@ even = ~rem(nth, 2);
 shift = rem((0 : nth - 1) + fix(nth / 2), nth) + 1;
 
 % get hermite sample matrix
-if even
-    x = (-fix(nth / 2) : fix(nth / 2) - 1);
-else
-    x = (-fix(nth / 2) : fix(nth / 2));
-end
-xf = x' / sqrt(nth / (2 * pi));
+% if even
+%     x = (-fix(nth / 2) : fix(nth / 2) - 1);
+% else
+%     x = (-fix(nth / 2) : fix(nth / 2));
+% end
+xf = (- nth / 2 : (nth / 2) - 1)' / sqrt(nth / (2 * pi));
 ef = exp(-xf .^ 2 / 2);
 u(:, 1) = ef;
 m1 = norm(u(:, 1));
