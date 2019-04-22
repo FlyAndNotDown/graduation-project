@@ -42,6 +42,7 @@ s = diag(2 * cos((0 : nth - 1) * 2 * pi / nth)) + diag(ones(1, nth - 1), 1) + di
 s(1, nth) = 1;
 s(nth, 1) = 1;
 [evs, ~] = eig(s);
+% evs = orth(evs);
 
 % do project from hermite space to DFT space
 for n = 1 : 4
@@ -62,6 +63,7 @@ for n = 1 : 4
     uOrth = orth(evs(:, ind) * evs(:, ind)' * u(:, ind));
     dis = length(ind) - size(uOrth, 2);
     uOrth = [uOrth zeros(size(u, 1), dis)];
+    % uOrth = [uOrth repmat(uOrth(:, 1), dis)];
     u(:, ind) = uOrth;
 end
 
