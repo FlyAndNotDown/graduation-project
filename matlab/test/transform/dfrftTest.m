@@ -1,5 +1,5 @@
-source = zeros(1, 201);
-for n = 94 : 106
+source = zeros(1, 100);
+for n = 40 : 60
     source(1, n) = 1;
 end
 source = source';
@@ -12,7 +12,7 @@ output = dfrft(source, kernel);
 restored = dfrft(output, iKernel);
 
 output2 = DFpei(source, 0.5);
-restored = DFpei(output, -0.5);
+restored2 = DFpei(output, -0.5);
 
 figure(1);
 subplot(2, 2, 1);
