@@ -11,8 +11,15 @@ iKernel = dfrftKernel(length(source), -0.5);
 output = dfrft(source, kernel);
 restored = dfrft(output, iKernel);
 
+output2 = DFpei(source, 0.5);
+restored = DFpei(output, -0.5);
+
 figure(1);
-subplot(1, 2, 1);
+subplot(2, 2, 1);
 plot(x, real(output));
-subplot(1, 2, 2);
+subplot(2, 2, 2);
 plot(x, imag(output));
+subplot(2, 2, 3);
+plot(x, real(output2));
+subplot(2, 2, 4);
+plot(x, imag(output2));
