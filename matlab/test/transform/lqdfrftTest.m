@@ -6,5 +6,8 @@ source(:, :, 4) = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]';
 
 u = [0, 1, 0, 0];
 
-output = lqdfrft(source, 0.5, u);
-restored = lqdfrft(output, -0.5, u);
+kernel = dfrftKernel(11, 0.5);
+iKernel = dfrftKernel(11, -0.5);
+
+output = lqdfrft(source, kernel, u);
+restored = lqdfrft(output, iKernel, u);

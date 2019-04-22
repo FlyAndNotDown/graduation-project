@@ -1,9 +1,9 @@
-function output = lqdfrft(source, a, u)
+function output = lqdfrft(source, kernel, u)
 %lqdfrft - one-dimension LQDFrFT
 %
 % - Arguments:
 %       - source [nx1x4 double matrix] source quaternion signal vector
-%       - a [double] frational order of transform
+%       - kernel [nxnx4] kernel of transform
 %       - [1x4 vector] a unit pure quaternion vector
 %
 % - Returns:
@@ -21,10 +21,10 @@ ub = u(1, 3);
 uc = u(1, 4);
 
 % do the 1-d DFrFT to every child source matrix
-outputR = dfrft(sourceR, a);
-outputI = dfrft(sourceI, a);
-outputJ = dfrft(sourceJ, a);
-outputK = dfrft(sourceK, a);
+outputR = dfrft(sourceR, kernel);
+outputI = dfrft(sourceI, kernel);
+outputJ = dfrft(sourceJ, kernel);
+outputK = dfrft(sourceK, kernel);
 
 % get real part and imaginary part
 outputRealR = real(outputR);
