@@ -46,22 +46,23 @@ s(nth, 1) = 1;
 % do project from hermite space to DFT space
 for n = 1 : 4
     if even
-        switch n
-            case {1, 3}
-                ind = n : 4 : nth + 1;
-                if (rem(nth, 4) ~= 0 && n == 3) || (rem(nth, 4) == 0 && n == 1)
-                    ind(end) = ind(end) - 1;
-                end
-            case {2, 4}
-                ind = n : 4 : nth - 1;
-        end
+        % switch n
+        %     case {1, 3}
+        %         ind = n : 4 : nth + 1;
+        %         if (rem(nth, 4) ~= 0 && n == 3) || (rem(nth, 4) == 0 && n == 1)
+        %             ind(end) = ind(end) - 1;
+        %         end
+        %     case {2, 4}
+        %         ind = n : 4 : nth - 1;
+        % end
+        ind = n : 4 : nth;
     else
         ind = n : 4 : nth;
     end
     uOrth = orth(evs(:, ind) * evs(:, ind)' * u(:, ind));
-    dis = length(n : 4 : nth) - size(uOrth, 2);
+    dis = length(ind) - size(uOrth, 2);
     uOrth = [uOrth zeros(size(u, 1), dis)];
-    u(:, n : 4 : nth) = uOrth;
+    u(:, ind) = uOrth;
 end
 
 % get matrix d
