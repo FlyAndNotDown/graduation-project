@@ -38,7 +38,7 @@ end
 u(shift, :) = u;
 
 % get DFT eigenvectors
-s = diag(2 * cos((0 : n - 1) * 2 * pi / nth)) + diag(ones(1, nth - 1), 1) + diag(ones(1, nth - 1), -1);
+s = diag(2 * cos((0 : nth - 1) * 2 * pi / nth)) + diag(ones(1, nth - 1), 1) + diag(ones(1, nth - 1), -1);
 s(1, nth) = 1;
 s(nth, 1) = 1;
 [evs, ~] = eig(s);
@@ -49,14 +49,14 @@ for n = 1 : 4
         switch n
             case {1, 3}
                 ind = n : 4 : nth + 1;
-                if (rem(nth, 4) != 0 && n == 3) || (rem(nth, 4) == 0 && n == 1)
+                if (rem(nth, 4) ~= 0 && n == 3) || (rem(nth, 4) == 0 && n == 1)
                     ind(end) = ind(end) - 1;
                 end
             case {2, 4}
                 ind = n : 4 : nth - 1;
         end
     else
-        ind = n : 4 : nth
+        ind = n : 4 : nth;
     end
     uOrth = orth(evs(:, ind) * evs(:, ind)' * u(:, ind));
     dis = length(n : 4 : nth) - size(uOrth, 2);
@@ -67,9 +67,9 @@ end
 % get matrix d
 d = exp(-1i * a * (0 : nth));
 if even
-    d(1, nth) = [];
+    d(:, nth) = [];
 else
-    d(1, nth + 1) = [];
+    d(:, nth + 1) = [];
 end
 d = diag(d);
 

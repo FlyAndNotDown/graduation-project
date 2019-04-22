@@ -5,8 +5,11 @@ end
 source = source';
 x = 1:1:length(source);
 
-output = dfrft(source, 0.5);
-restored = dfrft(output, -0.5);
+kernel = dfrftKernel(length(source), 0.5);
+iKernel = dfrftKernel(length(source), -0.5);
+
+output = dfrft(source, kernel);
+restored = dfrft(output, iKernel);
 
 figure(1);
 subplot(1, 2, 1);
