@@ -139,7 +139,17 @@ for channel = 3 : 4
             % encodedBlocks{1, n}(row, col, channel) = average + (2 * secretSequence(1, x) - 1) * adaptiveFactors(1, n) * intensity;
             % x = x + 1;
 
-            % TODO
+            % get intensity
+            intensity = richard(gaKeys, adaptiveFactors(1, n));
+            
+            % watermark
+            markTemp = round(encodedBlocks{1, n}(row, col, channel) * 255 / intensity);
+            if secretSequence(1, x) == mod(markTemp, 2)
+                encodedBlocks{1, n}(row, col, channel) = (markTemp - 0.5) * intensity;
+            else
+                encodedBlocks{1, n}(row, col, channel) = (markTemp + 0.5) * intensity;
+            end
+            x = x + 1;
         end
     end
 end
