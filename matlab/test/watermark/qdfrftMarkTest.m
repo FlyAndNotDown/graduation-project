@@ -14,7 +14,7 @@ iKernel = dfrftKernel(8, -0.5);
 
 % restore
 load('data/qdfrftModel.mat', 'model');
-secretRestored = qdfrftRestore(output, model, kp, 3, r);
+secretRestored = qdfrftRestore(output, model, kp, 3, kernel);
 secretBer = ber(secret, secretRestored);
 
 % show result
