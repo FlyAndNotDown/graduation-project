@@ -2,20 +2,19 @@
 source = im2double(imread('lena.bmp'));
 secret = imread('secret.bmp');
 
-% calculate the kernel of DFRNT
-p = rand(8, 8);
-r = dfrntKernel(0.75, 1, p);
-ir = dfrntKernel(-0.75, 1, p);
+% calculate the kernel DFrFT
+kernel = dfrftKernel(8, 0.5);
+iKernel = dfrftKernel(8, -0.5);
 
 % watermarking
-[output, kp] = qdfrntMark(source, secret, 3, r, ir, 0.05);
+[output, kp] = qdfrftMark(source, secret, 3, kernel, iKernel, 0.05);
 
 % calculate ssim
 [ssimVal, ~] = ssim(source, output);
 
 % restore
-load('data/qdfrntModel.mat', 'model');
-secretRestored = qdfrntRestore(output, model, kp, 3, r);
+load('data/qdfrftModel.mat', 'model');
+secretRestored = qdfrftRestore(output, model, kp, 3, kernel);
 secretBer = ber(secret, secretRestored);
 
 % show result

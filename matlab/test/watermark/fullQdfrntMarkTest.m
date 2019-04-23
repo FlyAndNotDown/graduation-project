@@ -8,7 +8,7 @@ maxFile = fopen('dist/max.txt', 'w+');
 fprintf(indexFile, 'testNo\t\tsecretName\t\trMatrixNo\t\torder\t\tcycle\t\taOrder\t\tssimSource\t\tssimSecret\n');
 
 % load SVM model
-load('data/model.mat', 'model');
+load('data/qdfrntModel.mat', 'model');
 
 % init random matrix list
 randomMatrixes = cell(1, 1000);

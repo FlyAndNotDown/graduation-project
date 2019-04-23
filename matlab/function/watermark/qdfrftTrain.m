@@ -1,5 +1,5 @@
-function model = qdfrntTrain(source, secret, kt, intensity)
-%qdfrntTrain - train svm model to restore secret watermark
+function model = qdfrftTrain(source, secret, kt, intensity)
+%qdfrftTrain - tran svm model to restore secret watermark with QDFrFT
 %
 % - Arguments:
 %       - source [nxnx3 double matrix] matrix of colorful source image
@@ -37,7 +37,7 @@ for n = 1 : blocksLength
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrnt2(t, kt, kt, u);
+    encodedBlocks{1, n} = lqdfrft2(t, kt, u);
 end
 
 % start watermarking

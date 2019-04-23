@@ -1,5 +1,5 @@
 function [output, kp] = qdfrntMark(source, secret, ks, kt, ikt, intensity)
-%qdfrntMark - add watermark to a picture
+%qdfrntMark - add watermark to a picture with QDFRNT
 %
 % - Description:
 %       add a watermark to picture, with QDFRNT function

@@ -10,4 +10,4 @@ r = dfrntKernel(0.75, 1, p);
 
 % start train
 model = qdfrntTrain(source, secret, r, 0.05);
-save('data/model.mat', 'model');
+save('data/qdfrntModel.mat', 'model');
