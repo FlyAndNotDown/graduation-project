@@ -47,7 +47,7 @@ for n = 1 : blocksLength
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrft2(t, kernel, u);
+    encodedBlocks{1, n} = lqdfrft2(t, kt, u);
 end
 
 % % add some info
