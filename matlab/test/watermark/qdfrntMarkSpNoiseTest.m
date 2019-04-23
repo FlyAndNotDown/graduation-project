@@ -11,7 +11,7 @@ r = dfrntKernel(0.75, 1, p);
 ir = dfrntKernel(-0.75, 1, p);
 
 % load SVM model
-load('data/model.mat', 'model');
+load('data/qdfrntModel.mat', 'model');
 
 % init ssim & ber values
 ssimValues = zeros(1, 20);
