@@ -7,7 +7,7 @@ kernel = dfrftKernel(8, 0.5);
 iKernel = dfrftKernel(8, -0.5);
 
 % watermarking
-[output, kp] = qdfrftMark(source, secret, 3, kernel, iKernel, 15);
+[output, kp] = qdfrftMark(source, secret, 3, kernel, iKernel, 13);
 
 % calculate ssim
 [ssimVal, ~] = ssim(source, output);

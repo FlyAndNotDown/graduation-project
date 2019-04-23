@@ -8,5 +8,5 @@ secret = floor(rand(1, 2000) + 0.5);
 kernel = dfrftKernel(8, 0.5);
 
 % start train
-model = qdfrftTrain(source, secret, kernel, 15);
+model = qdfrftTrain(source, secret, kernel, 13);
 save('data/qdfrftModel.mat', 'model');
