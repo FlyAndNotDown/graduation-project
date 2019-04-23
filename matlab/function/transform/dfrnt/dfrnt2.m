@@ -20,12 +20,12 @@ output = source;
 
 % do the DFRNT to every row
 for n = 1 : len
-    output(n, :) = dfrnt(output(n, :)', rr)';
+    output(n, :) = dfrnt(output(n, :)', tKernel)';
 end
 
 % do the DFRNT to every col
 for n = 1 : len
-    output(:, n) = dfrnt(output(:, n), rc);
+    output(:, n) = dfrnt(output(:, n), tKernel);
 end
 
 end

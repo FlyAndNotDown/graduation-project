@@ -5,12 +5,11 @@ source = rgb2gray(im2double(imread('lena.bmp')));
 [sourceRows, sourceCols] = size(source);
 
 % get two random matrix
-pr = rand(sourceCols, sourceCols);
-pc = rand(sourceRows, sourceRows);
+p = rand(sourceCols, sourceCols);
 
 % calculate kernel matrix of DFRNT
-kernel = dfrntKernel(0.25, 1, pr);
-iKernel = dfrntKernel(-0.25, 1, pr);
+kernel = dfrntKernel(0.25, 1, p);
+iKernel = dfrntKernel(-0.25, 1, p);
 
 % show the source image
 figure(1);

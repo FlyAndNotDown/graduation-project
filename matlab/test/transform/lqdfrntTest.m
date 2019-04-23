@@ -12,16 +12,16 @@ p = rand(4, 4);
 u = [0, 1, 0, 0];
 
 % calculate kernel matrix of QDFRNT
-r = dfrntKernel(0.25, 1, p);
-ir = dfrntKernel(-0.25, 1, p);
+kernel = dfrntKernel(0.25, 1, p);
+iKernel = dfrntKernel(-0.25, 1, p);
 
 % matrix after one time QDFRNT
-output = lqdfrnt(source, 4, r, u);
+output = lqdfrnt(source, kernel, u);
 
 % matrix restored from output matrix
-reSource = lqdfrnt(output, 4, ir, u);
+reSource = lqdfrnt(output, iKernel, u);
 
 % matrix after four time QDFRNT
-output4 = lqdfrnt(output, 4, r, u);
-output4 = lqdfrnt(output4, 4, r, u);
-output4 = lqdfrnt(output4, 4, r, u);
+output4 = lqdfrnt(output, kernel, u);
+output4 = lqdfrnt(output4, kernel, u);
+output4 = lqdfrnt(output4, kernel, u);
