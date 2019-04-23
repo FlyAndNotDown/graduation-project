@@ -10,6 +10,9 @@ function model = qdfrftTrain(source, secret, kt, intensity)
 % - Returns:
 %       - model [SVM model] train result model
 
+% intensity normalize
+intensity = intensity / 255;
+
 % init train data set
 trainDataSet = [];
 trainResponse = [];
