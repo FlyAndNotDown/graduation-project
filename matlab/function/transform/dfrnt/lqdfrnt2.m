@@ -1,4 +1,4 @@
-function output = lqdfrnt2(source, rows, cols, rr, rc, u)
+function output = lqdfrnt2(source, len, tKernel, u)
 %lqdfrnt2 - two-dimension LQDFRNT
 %
 % - Description:
@@ -6,10 +6,8 @@ function output = lqdfrnt2(source, rows, cols, rr, rc, u)
 %
 % - Arguments:
 %       - source [mxnx4 double matrix] mxnx4 source signal matrix
-%       - rows [int] rows of source matrix
-%       - cols [int] cols of source matrix
-%       - rr [nxn double matrix] a kernel matrix, it will be used when doing LQDFRNT to every row
-%       - pc [mxm double matrix] a kernel matrix, it will be used when doing LQDFRNT to every col
+%       - len [int] length of source matrix
+%       - tKernel [mxm double matrix] kernel matrix of transform
 %       - u [1x4 vector] a unit pure quaternion vector
 %
 % - Returns:
@@ -28,16 +26,16 @@ function output = lqdfrnt2(source, rows, cols, rr, rc, u)
 output = source;
 
 % do the LQDFRNT to every row
-for n = 1 : rows
-    output(n, :, :) = permute(lqdfrnt(permute(output(n, :, :), [2, 1, 3]), rr, u), [2, 1, 3]);
+for n = 1 : len
+    output(n, :, :) = permute(lqdfrnt(permute(output(n, :, :), [2, 1, 3]), tKernel, u), [2, 1, 3]);
     % output(n, :, :) = lqdfrnt(output(n, :, :), rr, u);
 end
 
 % to the LQDFRNT to every col
-for n = 1 : cols
+for n = 1 : len
     % t = lqdfrnt(permute(output(:, n, :), [2, 1, 3]), rc, u);
     % output(:, n, :) = permute(t, [2, 1, 3]);
-    output(:, n, :) = lqdfrnt(output(:, n, :), rc, u);
+    output(:, n, :) = lqdfrnt(output(:, n, :), tKernel, u);
 end
 
 end

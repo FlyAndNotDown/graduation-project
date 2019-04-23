@@ -1,19 +1,19 @@
-function output = dfrft2(source, kernel)
+function output = dfrft2(source, len, tKernel)
 %dfrft2 - two-dimension DFrFT
 %
 % - Arguments:
 %       - source [nxn matrix] source signal matrix
-%       - kernel [nxn matrix] kernel of dfrft
+%       - len [int] length of source matrix
+%       - tKernel [nxn matrix] tKernel of dfrft
 
-[sRows, sCols, ~] = size(source);
 output = source;
 
-for n = 1 : sRows
-    output(n, :) = dfrft(output(n, :)', kernel)';
+for n = 1 : len
+    output(n, :) = dfrft(output(n, :)', len, tKernel)';
 end
 
-for n = 1 : sCols
-    output(:, n) = dfrft(output(:, n), kernel);
+for n = 1 : len
+    output(:, n) = dfrft(output(:, n), len, tKernel);
 end
 
 end
