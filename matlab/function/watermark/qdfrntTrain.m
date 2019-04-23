@@ -28,7 +28,7 @@ blocks = splitBlock(source, 8);
 u = [0, 1, 0, 0];
 
 % get adaptive factors of every blocks
-adaptiveFactors = adaptiveFactor(blocks, 1, 0.25);
+adaptiveFactors = adaptiveFactor(source, 1, 0.25);
 
 % do QDFRNT to every blocks
 encodedBlocks = cell(1, blocksLength);
