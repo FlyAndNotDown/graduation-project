@@ -27,7 +27,7 @@ blocks = splitBlock(source, 8);
 % set a pure unit quaternion
 u = [0, 1, 0, 0];
 
-% do QDFRNT to every blocks
+% do QDFrFT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
     t = zeros(blockRow, blockRow, 4);
