@@ -16,12 +16,12 @@ r = dfrntKernel(0.25, 1, p);
 ir = dfrntKernel(-0.25, 1, p);
 
 % matrix after one time QDFRNT
-output = lqdfrnt(source, r, u);
+output = lqdfrnt(source, 4, r, u);
 
 % matrix restored from output matrix
-reSource = lqdfrnt(output, ir, u);
+reSource = lqdfrnt(output, 4, ir, u);
 
 % matrix after four time QDFRNT
-output4 = lqdfrnt(output, r, u);
-output4 = lqdfrnt(output4, r, u);
-output4 = lqdfrnt(output4, r, u);
+output4 = lqdfrnt(output, 4, r, u);
+output4 = lqdfrnt(output4, 4, r, u);
+output4 = lqdfrnt(output4, 4, r, u);
