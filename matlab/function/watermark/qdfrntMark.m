@@ -50,7 +50,7 @@ for n = 1 : blocksLength
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrnt2(t, 8, 8, kt, kt, u);
+    encodedBlocks{1, n} = lqdfrnt2(t, 8, kt, u);
 end
 
 % % add some info
@@ -153,7 +153,7 @@ end
 
 % do ILQDFRNT to every blocks
 for n = 1 : blocksLength
-    encodedBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, 8, 8, ikt, ikt, u);
+    encodedBlocks{1, n} = lqdfrnt2(encodedBlocks{1, n}, 8, ikt, u);
     encodedBlocks{1, n} = encodedBlocks{1, n}(:, :, [2, 3, 4]);
 end
 
