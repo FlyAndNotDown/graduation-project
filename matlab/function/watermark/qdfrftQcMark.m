@@ -1,4 +1,4 @@
-function output = qdfrftGaMark(source, secret, ks, kt, ikt, gaKeys)
+function [output, kp] = qdfrftGaMark(source, secret, ks, kt, ikt, gaKeys)
 %qdfrftGaMark - add watermark to a picture with QDFrFT, using quantization coding
 %
 % - Arguments:
