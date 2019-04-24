@@ -1,6 +1,6 @@
 #include "qdfrnt.h"
 
-static cx_mat QDFRNT::dfrntKernel(double order, double cycle, mat randomMatrix) {
+cx_mat qdfrnt::kernel(double order, double cycle, mat randomMatrix) {
 	// get size info
 	auto rows = randomMatrix.n_rows;
 	auto cols = randomMatrix.n_cols;
@@ -22,9 +22,7 @@ static cx_mat QDFRNT::dfrntKernel(double order, double cycle, mat randomMatrix) 
 	// get center matrix
 	cx_vec diagVector(rows);
 	for (int i = 0; i < rows; i++) {
-		complex<double> cx;
-		cx.real = 0;
-		cx.imag = -2 * PI * (i - 1) * order / cycle;
+		complex<double> cx(0, -2 * PI * (i - 1) * order / cycle);
 		diagVector(i) = exp(cx);
 	}
 	cx_mat centerMatrix(rows, rows, fill::zeros);
@@ -32,4 +30,9 @@ static cx_mat QDFRNT::dfrntKernel(double order, double cycle, mat randomMatrix) 
 
 	// reutrn result
 	return orthVectors * centerMatrix * orthVectors.t();
+}
+
+cx_vec qdfrnt::dfrnt(cx_vec vector, cx_mat kernel) {
+	// return result
+	return kernel * vector;
 }

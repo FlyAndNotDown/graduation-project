@@ -1,8 +1,27 @@
-#include "define.h"
+#include "tool.h"
+#include "qdfrnt.h"
 
 int main() {
-	mat randomMatrix = randn(8, 8);
-	cx_mat a = dfrntKernel(0.5, 0.5, randomMatrix);
+	// // dfrnt test
+	// cx_vec source(4);
+	// for (int i = 0; i < 4; i++) {
+	// 	complex<double> cx(i + 1, 0);
+	// 	source(i) = cx;
+	// }
+
+	// mat randomMatrix = randn(4, 4);
+	// cx_mat kernel = qdfrnt::kernel(0.25, 1, randomMatrix);
+	// cx_mat iKernel = qdfrnt::kernel(-0.25, 1, randomMatrix);
+
+	// cx_vec output = qdfrnt::dfrnt(source, kernel);
+	// cx_vec restored = qdfrnt::dfrnt(output, iKernel);
+	// output = qdfrnt::dfrnt(output, kernel);
+	// output = qdfrnt::dfrnt(output, kernel);
+	// output = qdfrnt::dfrnt(output, kernel);
+
+	// tool::print_cx_mat_data(source);
+	// tool::print_cx_mat_data(output);
+	// tool::print_cx_mat_data(restored);
 
 	return 0;
 }
