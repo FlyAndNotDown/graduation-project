@@ -1,8 +1,8 @@
 #include "define.h"
 
 int main() {
-	cx_mat matrix(5, 5, fill::zeros);
-	auto output = dfrntKernel(matrix);
+	mat randomMatrix = randn(8, 8);
+	cx_mat a = dfrntKernel(0.5, 0.5, randomMatrix);
 
 	return 0;
 }

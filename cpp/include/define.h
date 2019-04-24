@@ -1,4 +1,7 @@
 #include <armadillo>
 using namespace arma;
+using namespace std;
 
-Mat<cx_double> dfrntKernel(Mat<cx_double>);
+#define PI 3.1415926535
+
+cx_mat dfrntKernel(double order, double cycle, mat randomMatrix);
