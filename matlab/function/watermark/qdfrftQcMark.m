@@ -158,4 +158,13 @@ for channel = 3 : 4
     end
 end
 
+% do ILQDFrFT to every blocks
+for n = 1 : blocksLength
+    encodedBlocks{1, n} = lqdfrft2(encodedBlocks{1, n}, 8, ikt, u);
+    encodedBlocks{1, n} = encodedBlocks{1, n}(:, :, [2, 3, 4]);
+end
+
+% merge
+output = mergeBlock(encodedBlocks, fix(sourceRow / blockRow));
+
 end
