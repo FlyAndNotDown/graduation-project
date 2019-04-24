@@ -7,7 +7,7 @@ include_directories ($ENV{ARMADILLO_INCLUDE_DIR})
 
 if (WIN32)
     link_directories ($ENV{ARMADILLO_LIB_DIR})
-    add_executable (${PROJECT_NAME} src/cpp.cpp)
+    add_executable (${PROJECT_NAME} src/main.cpp)
     target_link_libraries(${PROJECT_NAME} blas_win64_MT.lib lapack_win64_MT.lib)
 elseif (UNIX)
 endif ()
