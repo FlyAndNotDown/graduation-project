@@ -13,3 +13,6 @@
 
 # cpp
 /cpp/.vs
+
+# build
+/build
