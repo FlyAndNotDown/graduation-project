@@ -36,3 +36,21 @@ cx_vec qdfrnt::dfrnt(cx_vec vector, cx_mat kernel) {
 	// return result
 	return kernel * vector;
 }
+
+cx_mat qdfrnt::dfrnt2(cx_mat matrix, int length, cx_mat kernel) {
+	// init output
+	cx_mat output(length, length, fill::zeros);
+
+	// for every row
+	for (int i = 0; i < length; i++) {
+		output.row(i) = qdfrnt::dfrnt(output.row(i).t(), kernel).t();
+	}
+
+	// for every col
+	for (int i = 0; i < length; i++) {
+		output.col(i) = qdfrnt::dfrnt(output.col(i), kernel);
+	}
+
+	// return result
+	return output;
+}
