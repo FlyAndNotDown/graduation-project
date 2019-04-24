@@ -11,14 +11,5 @@
 /matlab/dist/*
 /matlab/program
 
-# cmd
-/cmd/node_modules
-/cmd/yarn.lock
-/cmd/dist
-/cmd/build
-/cmd/test/dist
-/cmd/package-lock.json
-
 # cpp
-/cpp/.idea
-/cpp/cmake-build-debug
+/cpp/.vs
