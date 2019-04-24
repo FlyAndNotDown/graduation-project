@@ -1,4 +1,4 @@
-function [output, kp] = qdfrftGaMark(source, secret, ks, kt, ikt, gaKeys)
+function [output, kp, kl] = qdfrftQcMark(source, secret, ks, kt, ikt, gaKeys)
 %qdfrftGaMark - add watermark to a picture with QDFrFT, using quantization coding
 %
 % - Arguments:
@@ -14,9 +14,11 @@ function [output, kp] = qdfrftGaMark(source, secret, ks, kt, ikt, gaKeys)
 %       - output [nxnx3 double matrix] output matrix
 %       - kp [kx4 int matrix] mark location key
 
-% init mark location key
+% init mark location key and step length key
 kp = [];
 kpCount = 1;
+kl = [];
+klCount = 1;
 
 % get size info
 [sourceRow, ~, ~] = size(source);
@@ -141,13 +143,15 @@ for channel = 3 : 4
 
             % get intensity
             intensity = richard(gaKeys, adaptiveFactors(1, n));
+            kl(1, klCount) = intensity;
+            klCount = klCount + 1;
             
             % watermark
             markTemp = round(encodedBlocks{1, n}(row, col, channel) * 255 / intensity);
             if secretSequence(1, x) == mod(markTemp, 2)
-                encodedBlocks{1, n}(row, col, channel) = (markTemp - 0.5) * intensity;
+                encodedBlocks{1, n}(row, col, channel) = (markTemp - 0.5) * intensity / 255;
             else
-                encodedBlocks{1, n}(row, col, channel) = (markTemp + 0.5) * intensity;
+                encodedBlocks{1, n}(row, col, channel) = (markTemp + 0.5) * intensity / 255;
             end
             x = x + 1;
         end
