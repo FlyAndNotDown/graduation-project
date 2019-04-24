@@ -1,6 +1,6 @@
-#include "define.h"
+#include "qdfrnt.h"
 
-cx_mat dfrntKernel(double order, double cycle, mat randomMatrix) {
+static cx_mat QDFRNT::dfrntKernel(double order, double cycle, mat randomMatrix) {
 	// get size info
 	auto rows = randomMatrix.n_rows;
 	auto cols = randomMatrix.n_cols;
