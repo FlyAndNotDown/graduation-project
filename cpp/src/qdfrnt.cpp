@@ -41,6 +41,9 @@ cx_mat qdfrnt::dfrnt2(cx_mat matrix, int length, cx_mat kernel) {
 	// init output
 	cx_mat output(length, length, fill::zeros);
 
+	// copy
+	output = matrix;
+
 	// for every row
 	for (int i = 0; i < length; i++) {
 		output.row(i) = qdfrnt::dfrnt(output.row(i).t(), kernel).t();
