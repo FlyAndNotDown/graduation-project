@@ -1,6 +1,7 @@
 #ifndef WATERMARK_DFRNT_CLAN_H
 #define WATERMARK_DFRNT_CLAN_H
 
+#include "define.h"
 #include <armadillo>
 using namespace arma;
 

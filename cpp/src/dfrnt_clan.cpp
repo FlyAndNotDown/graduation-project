@@ -1,5 +1,4 @@
 #include "dfrnt_clan.h"
-#include "define.h"
 using namespace watermark;
 
 cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
