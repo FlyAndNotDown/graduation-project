@@ -17,7 +17,7 @@ iKernel = dfrftKernel(8, -0.5);
 % attack
 berSum = 0;
 % gaussian noise
-noiseMarked = imnoise(output, 'gaussian', 0, 0.01);
+noiseMarked = imnoise(sourceMarked, 'gaussian', 0, 0.01);
 noiseRestored = qdfrftQcRestore(noiseMarked, kp, kl, 3, kernel);
 berSum = berSum + ber(secret, noiseRestored);
 
