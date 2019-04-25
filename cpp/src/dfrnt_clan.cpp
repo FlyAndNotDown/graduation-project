@@ -1,4 +1,5 @@
 #include "dfrnt_clan.h"
+#include "define.h"
 using namespace watermark;
 
 cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
@@ -20,6 +21,10 @@ cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
     // get center matrix
     cx_mat center_matrix(rows, rows, fill::zeros);
     for (auto i = 0; i < rows; i++) {
-        // TODO
+        cx_double cx(0, -2.0 * PI * i * order / cycle);
+        center_matrix(i, i) = cx;
     }
+
+    // get kernel matrix
+    return orth_vectors * center_matrix * orth_vectors.t();
 }
