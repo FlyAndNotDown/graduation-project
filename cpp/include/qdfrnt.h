@@ -1,4 +1,5 @@
 #include "define.h"
+#include "tool.h"
 #include <armadillo>
 using namespace std;
 using namespace arma;

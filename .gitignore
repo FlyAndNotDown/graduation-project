@@ -13,6 +13,5 @@
 
 # cpp
 /cpp/.vs
-
-# build
-/build
+/cpp/cmake-build-debug
+/cpp/.idea
