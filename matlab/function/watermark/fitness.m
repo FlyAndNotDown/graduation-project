@@ -21,6 +21,7 @@ noiseMarked = imnoise(sourceMarked, 'gaussian', 0, 0.01);
 noiseRestored = qdfrftQcRestore(noiseMarked, kp, kl, 3, kernel);
 berSum = berSum + ber(secret, noiseRestored);
 
-output = 50 * abs(ssimVal - 1) + berSum;
+% output = 50 * abs(ssimVal - 1) + berSum;
+output = 5 * abs(ssimVal - 1) + berSum;
 
 end
