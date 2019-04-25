@@ -1,13 +1,16 @@
 function output = richard(keys, t)
 %richard - richard logical curve
 
+% deal t
+t = t / 5;
+
 % get params
 key1 = keys(1, 1 : 6);
 key2 = keys(1, 7 : 12);
 key3 = keys(1, 13 : 18);
-if t <= 1.5
+if t <= 0.3
     key = key1;
-elseif t > 3.5
+elseif t > 0.7
     key = key3;
 else
     key = key2;
