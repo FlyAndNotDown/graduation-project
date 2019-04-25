@@ -10,6 +10,9 @@ function model = qdfrftTrain(source, secret, kt, intensity)
 % - Returns:
 %       - model [SVM model] train result model
 
+% intensity normalize
+intensity = intensity / 255;
+
 % init train data set
 trainDataSet = [];
 trainResponse = [];
@@ -30,14 +33,14 @@ u = [0, 1, 0, 0];
 % get adaptive factors of every blocks
 adaptiveFactors = adaptiveFactor(source, 1, 0.25);
 
-% do QDFRNT to every blocks
+% do QDFrFT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
     t = zeros(blockRow, blockRow, 4);
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrft2(t, kt, u);
+    encodedBlocks{1, n} = lqdfrft2(t, 8, kt, u);
 end
 
 % start watermarking

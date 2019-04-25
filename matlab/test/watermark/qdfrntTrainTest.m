@@ -9,5 +9,5 @@ p = rand(8, 8);
 r = dfrntKernel(0.75, 1, p);
 
 % start train
-model = qdfrntTrain(source, secret, r, 0.05);
+model = qdfrntTrain(source, secret, r, 13);
 save('data/qdfrntModel.mat', 'model');

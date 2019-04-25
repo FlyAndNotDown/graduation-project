@@ -13,6 +13,9 @@ function [output, kp] = qdfrftMark(source, secret, ks, kt, ikt, intensity)
 %       - output [nxnx3 double matrix] output matrix
 %       - kp [kx4 int matrix] mark location key
 
+% intensity normalize
+intensity = intensity / 255;
+
 % init mark location key
 kp = [];
 kpCount = 1;
@@ -38,7 +41,7 @@ u = [0, 1, 0, 0];
 % get adaptive factors of every blocks
 adaptiveFactors = adaptiveFactor(source, 1, 0.25);
 
-% do QDFRNT to every blocks
+% do QDFrFT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
     % [blockRow, blockCol, blockHeight] = size(blocks{1, n});
@@ -47,7 +50,7 @@ for n = 1 : blocksLength
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrft2(t, kt, u);
+    encodedBlocks{1, n} = lqdfrft2(t, 8, kt, u);
 end
 
 % % add some info
@@ -148,9 +151,9 @@ for channel = 3 : 4
     end
 end
 
-% do ILQDFRNT to every blocks
+% do ILQDFrFT to every blocks
 for n = 1 : blocksLength
-    encodedBlocks{1, n} = lqdfrft2(encodedBlocks{1, n}, ikt, u);
+    encodedBlocks{1, n} = lqdfrft2(encodedBlocks{1, n}, 8, ikt, u);
     encodedBlocks{1, n} = encodedBlocks{1, n}(:, :, [2, 3, 4]);
 end
 

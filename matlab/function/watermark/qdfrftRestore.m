@@ -27,14 +27,14 @@ blocks = splitBlock(source, 8);
 % set a pure unit quaternion
 u = [0, 1, 0, 0];
 
-% do QDFRNT to every blocks
+% do QDFrFT to every blocks
 encodedBlocks = cell(1, blocksLength);
 for n = 1 : blocksLength
     t = zeros(blockRow, blockRow, 4);
     for n1 = 2 : 4
         t(:, :, n1) = blocks{1, n}(:, :, n1 - 1);
     end
-    encodedBlocks{1, n} = lqdfrft2(t, kt, u);
+    encodedBlocks{1, n} = lqdfrft2(t, 8, kt, u);
 end
 
 % for every position, do some thing

@@ -9,5 +9,5 @@ u = [0, 1, 0, 0];
 kernel = dfrftKernel(11, 0.5);
 iKernel = dfrftKernel(11, -0.5);
 
-output = lqdfrft(source, kernel, u);
-restored = lqdfrft(output, iKernel, u);
+output = lqdfrft(source, 11, kernel, u);
+restored = lqdfrft(output, 11, iKernel, u);

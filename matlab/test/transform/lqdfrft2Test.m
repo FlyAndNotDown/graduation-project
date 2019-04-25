@@ -19,10 +19,10 @@ imshow(img);
 
 % show image after one time QDFRNT
 subplot(2, 2, 2);
-output = lqdfrft2(source, kernel, u);
+output = lqdfrft2(source, 512, kernel, u);
 imshow(output(:, :, [2, 3, 4]));
 
 % show image restored from output image
 subplot(2, 2, 3);
-restored = lqdfrft2(output, iKernel, u);
+restored = lqdfrft2(output, 512, iKernel, u);
 imshow(restored(:, :, [2, 3, 4]));

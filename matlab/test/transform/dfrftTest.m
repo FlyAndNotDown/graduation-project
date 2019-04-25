@@ -8,8 +8,8 @@ x = 1:1:length(source);
 kernel = dfrftKernel(length(source), 0.5);
 iKernel = dfrftKernel(length(source), -0.5);
 
-output = dfrft(source, kernel);
-restored = dfrft(output, iKernel);
+output = dfrft(source, length(source), kernel);
+restored = dfrft(output, length(source), iKernel);
 
 % output2 = DFpei(source, 0.5);
 % restored2 = DFpei(output, -0.5);
