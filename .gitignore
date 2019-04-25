@@ -15,3 +15,5 @@
 /cpp/.vs
 /cpp/cmake-build-debug
 /cpp/.idea
+/cpp/CMakeFiles
+/cpp/CMakeCache.txt
