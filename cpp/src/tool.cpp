@@ -1,5 +1,6 @@
 #include "tool.h"
 using namespace watermark;
+using namespace std;
 
 void tool::print_mat(char *name, mat matrix) {
     uword rows = matrix.n_rows;

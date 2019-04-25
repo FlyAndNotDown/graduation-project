@@ -2,7 +2,6 @@
 #define WATERMARK_TOOL_H
 
 #include <armadillo>
-using namespace std;
 using namespace arma;
 
 namespace watermark {
