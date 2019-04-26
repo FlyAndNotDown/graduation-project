@@ -76,3 +76,9 @@ cx_mat tool::mat_to_cx_mat(mat matrix) {
     cx_mat output(matrix, imag_mat);
     return output;
 }
+
+cx_cube tool::cube_to_cx_cube(cube matrix) {
+	cube imag_cube(matrix.n_rows, matrix.n_cols, matrix.n_slices, fill::zeros);
+	cx_cube output(matrix, imag_cube);
+	return output;
+}

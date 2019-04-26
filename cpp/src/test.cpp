@@ -62,7 +62,36 @@ void test::tool_print_cube() {
 }
 
 void test::tool_print_cx_cube() {
-	
+	cx_cube matrix(5, 5, 4);
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
+	uword channels = matrix.n_slices;
+	for (uword i = 0; i < channels; i++) {
+		for (uword j = 0; j < rows; j++) {
+			for (uword k = 0; k < cols; k++) {
+				cx_double temp(i * 100 + j * cols + k, i * 100 + j * cols + k);
+				matrix(j, k, i) = temp;
+			}
+		}
+	}
+
+	tool::print_cx_cube("source", matrix);
+}
+
+void test::tool_cube_to_cx_cube() {
+	cube matrix(5, 5, 4);
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
+	uword channels = matrix.n_slices;
+	for (uword i = 0; i < channels; i++) {
+		for (uword j = 0; j < rows; j++) {
+			for (uword k = 0; k < cols; k++) {
+				matrix(j, k, i) = i * 100 + j * cols + k;
+			}
+		}
+	}
+
+	tool::print_cx_cube("source", tool::cube_to_cx_cube(matrix));
 }
 
 void test::dfrnt_clan_kernel() {
