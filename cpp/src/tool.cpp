@@ -1,7 +1,9 @@
 #include "tool.h"
 #include <iostream>
+#include <opencv2/opencv.hpp>
 using namespace watermark;
 using namespace std;
+using namespace cv;
 
 void tool::print_mat(char *name, mat matrix) {
     uword rows = matrix.n_rows;
@@ -81,4 +83,30 @@ cx_cube tool::cube_to_cx_cube(cube matrix) {
 	cube imag_cube(matrix.n_rows, matrix.n_cols, matrix.n_slices, fill::zeros);
 	cx_cube output(matrix, imag_cube);
 	return output;
+}
+
+mat tool::read_image_to_mat(char *path) {
+	cv::Mat image = imread(path, IMREAD_GRAYSCALE);
+	uword rows = image.rows;
+	uword cols = image.cols;
+	mat output(rows, cols, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output(i, j) = image.at<uchar>(i, j) * 1.0 / 255;
+		}
+	}
+	return output;
+}
+
+void tool::save_mat_to_image(char *path, mat source) {
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	cv::Mat image(rows, cols, CV_8U);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			image.at<uchar>(i, j) = (unsigned char)(source.at(i, j) * 255);
+		}
+	}
+
+	imwrite(path, image);
 }

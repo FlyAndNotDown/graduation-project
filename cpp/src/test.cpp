@@ -236,3 +236,8 @@ void test::dfrnt_clan_qdfrnt2() {
 	tool::print_cube("restored", restored);
 	tool::print_cube("cycle", cycle);
 }
+
+void test::tool_read_write_image(char *path, char *output_path) {
+	mat matrix = tool::read_image_to_mat(path);
+	tool::save_mat_to_image(output_path, matrix);
+}

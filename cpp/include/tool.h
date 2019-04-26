@@ -11,8 +11,12 @@ namespace watermark {
             static void print_cx_mat(char *name, cx_mat matrix);
 			static void print_cube(char *name, cube matrix);
 			static void print_cx_cube(char *name, cx_cube matrix);
+
             static cx_mat mat_to_cx_mat(mat matrix);
 			static cx_cube cube_to_cx_cube(cube matrix);
+
+			static mat read_image_to_mat(char *path);
+			static void save_mat_to_image(char *path, mat source);
     };
 };
 
