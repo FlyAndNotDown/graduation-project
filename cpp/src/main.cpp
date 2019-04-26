@@ -2,12 +2,11 @@
 using namespace watermark;
 
 int main(int argc, char *argv[]) {
-	test::image_qdfrnt(
+	test::image_qdfrnt2(
 		"C:/Users/Administrator/Desktop/lena.bmp",
 		"C:/Users/Administrator/Desktop/lena-output.bmp",
 		"C:/Users/Administrator/Desktop/lena-restored.bmp",
 		"C:/Users/Administrator/Desktop/lena-cycle.bmp"
 	);
-
     return 0;
 }

@@ -144,3 +144,34 @@ void tool::save_cube_to_image(char *path, cube source) {
 
 	imwrite(path, image);
 }
+
+
+cube *tool::split_cube_to_smaller_blocks(cube source, int length) {
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+	uword source_channels = source.n_slices;
+
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
+
+	uword output_array_length = block_num_per_row * block_num_per_col;
+	cube *output = new cube[output_array_length];
+	for (uword i = 0; i < output_array_length; i++) {
+		output[i].zeros(length, length, source_channels);
+	}
+
+	// do copy
+	for (uword i = 0; i < block_num_per_col; i++) {
+		for (uword j = 0; j < block_num_per_row; j++) {
+			for (uword m = 0; m < length; m++) {
+				for (uword n = 0; n < length; n++) {
+					for (uword v = 0; v < source_channels; v++) {
+						output[i * block_num_per_row + j](m, n, v) = source(i * length + m, j * length + n, v);
+					}
+				}
+			}
+		}
+	}
+
+	return output;
+}

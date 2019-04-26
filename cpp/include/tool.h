@@ -19,7 +19,9 @@ namespace watermark {
 			static cube read_image_to_cube(char *path);
 			static void save_mat_to_image(char *path, mat source);
 			static void save_cube_to_image(char *path, cube source);
-    };
+    
+			static cube *split_cube_to_smaller_blocks(cube source, int length);
+	};
 };
 
 #endif
