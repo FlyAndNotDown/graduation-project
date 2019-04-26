@@ -15,7 +15,7 @@ cx_mat dfrnt_clan::kernel(double order, double cycle, uword length, mat random_m
     cx_mat cx_eig_vectors;
     mat eig_vectors;
     eig_gen(cx_eig_values, cx_eig_vectors, symmetrical_matrix);
-    eig_vectors = real(eig_vectors);
+    eig_vectors = real(cx_eig_vectors);
 
     // get orthogonal matrix
     mat orthogonal_matrix = orth(eig_vectors);
