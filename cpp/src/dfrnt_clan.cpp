@@ -23,7 +23,7 @@ cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
     eig_vectors = real(cx_eig_vectors);
 
     // get orthogonal matrix
-    mat orthogonal_matrix = orth(eig_vectors);
+	mat orthogonal_matrix = arma::orth(eig_vectors);
 
     // get the center matrix
     cx_mat center_matrix(length, length, fill::zeros);

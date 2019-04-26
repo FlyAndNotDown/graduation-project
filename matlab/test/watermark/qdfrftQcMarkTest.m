@@ -10,7 +10,7 @@ iKernel = dfrftKernel(8, -0.5);
 % load('data/qdfrftGaKeys.mat', 'gaKeys');
 
 % watermarking
-[output, kp, kl] = qdfrftQcMark(source, secret, 3, kernel, iKernel, 4);
+[output, kp, kl] = qdfrftQcMark(source, secret, 3, kernel, iKernel, 0.9376303840996769);
 
 % ssim
 [ssimVal, ~] = ssim(source, output);
