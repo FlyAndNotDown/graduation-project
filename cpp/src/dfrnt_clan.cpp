@@ -30,3 +30,21 @@ cx_mat dfrnt_clan::kernel(double order, double cycle, uword length, mat random_m
     // get result
     return orthogonal_matrix * center_matrix * orthogonal_matrix.t();
 }
+
+cx_mat dfrnt_clan::dfrnt(cx_mat source, cx_mat kernel) {
+	// judge size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// switch via vector type
+	if (cols == 1) {
+		// if it's a col vector, just do transform
+		return kernel * source;
+	} else if (rows == 1) {
+		// if it's a row vector, transport it and do transform
+		return (kernel * source.t()).t();
+	} else {
+		// return nothing
+		return nullptr;
+	}
+}
