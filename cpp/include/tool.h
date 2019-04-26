@@ -16,7 +16,9 @@ namespace watermark {
 			static cx_cube cube_to_cx_cube(cube matrix);
 
 			static mat read_image_to_mat(char *path);
+			static cube read_image_to_cube(char *path);
 			static void save_mat_to_image(char *path, mat source);
+			static void save_cube_to_image(char *path, cube source);
     };
 };
 

@@ -104,7 +104,41 @@ void tool::save_mat_to_image(char *path, mat source) {
 	cv::Mat image(rows, cols, CV_8U);
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
-			image.at<uchar>(i, j) = (unsigned char)(source.at(i, j) * 255);
+			image.at<uchar>(i, j) = (uchar) (source.at(i, j) * 255);
+		}
+	}
+
+	imwrite(path, image);
+}
+
+cube tool::read_image_to_cube(char *path) {
+	cv::Mat image = imread(path, IMREAD_COLOR);
+	uword rows = image.rows;
+	uword cols = image.cols;
+	cube output(rows, cols, 4, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel = image.at<Vec3b>(i, j);
+			output(i, j, 1) = pixel[0] * 1.0 / 255;
+			output(i, j, 2) = pixel[1] * 1.0 / 255;
+			output(i, j, 3) = pixel[2] * 1.0 / 255;
+		}
+	}
+	return output;
+}
+
+void tool::save_cube_to_image(char *path, cube source) {
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	cv::Mat image(rows, cols, CV_8UC3);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel(
+				(uchar) (source(i, j, 1) * 255),
+				(uchar) (source(i, j, 2) * 255),
+				(uchar) (source(i, j, 3) * 255)
+			);
+			image.at<Vec3b>(i, j) = pixel;
 		}
 	}
 

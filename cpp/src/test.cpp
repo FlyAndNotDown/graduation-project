@@ -241,3 +241,8 @@ void test::tool_read_write_image(char *path, char *output_path) {
 	mat matrix = tool::read_image_to_mat(path);
 	tool::save_mat_to_image(output_path, matrix);
 }
+
+void test::tool_read_write_color_image(char *path, char *output_path) {
+	cube matrix = tool::read_image_to_cube(path);
+	tool::save_cube_to_image(output_path, matrix);
+}
