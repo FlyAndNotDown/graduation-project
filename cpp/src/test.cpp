@@ -205,3 +205,34 @@ void test::dfrnt_clan_qdfrnt() {
 	tool::print_cube("cycle1", cycle1);
 	tool::print_cube("cycle2", cycle2);
 }
+
+void test::dfrnt_clan_qdfrnt2() {
+	uword length = 5;
+	uword channels = 4;
+	cube source(length, length, channels, fill::zeros);
+	for (uword i = 1; i < channels; i++) {
+		for (uword j = 0; j < length; j++) {
+			for (uword k = 0; k < length; k++) {
+				source(j, k, i) = i * 100 + j * length + k;
+			}
+		}
+	}
+
+	tool::print_cube("source", source);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(length, length);
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, random_matrix);
+	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.25, 1, random_matrix);
+
+	cube output = dfrnt_clan::qdfrnt2(source, kernel, unit_pure_quaternion);
+	cube restored = dfrnt_clan::qdfrnt2(output, inverse_kernel, unit_pure_quaternion);
+	cube cycle = dfrnt_clan::qdfrnt2(output, kernel, unit_pure_quaternion);
+	cycle = dfrnt_clan::qdfrnt2(cycle, kernel, unit_pure_quaternion);
+	cycle = dfrnt_clan::qdfrnt2(cycle, kernel, unit_pure_quaternion);
+
+	tool::print_cube("output", output);
+	tool::print_cube("restored", restored);
+	tool::print_cube("cycle", cycle);
+}

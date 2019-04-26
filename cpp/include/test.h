@@ -17,6 +17,7 @@ namespace watermark {
 			static void dfrnt_clan_dfrnt();
 			static void dfrnt_clan_dfrnt2();
 			static void dfrnt_clan_qdfrnt();
+			static void dfrnt_clan_qdfrnt2();
     };
 };
 
