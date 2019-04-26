@@ -46,7 +46,7 @@ void test::tool_mat_to_cx_mat() {
 }
 
 void test::dfrnt_clan_kernel() {
-    cx_mat kernel = dfrnt_clan::kernel(0.5, 1, 4, randn(4, 4));
+    cx_mat kernel = dfrnt_clan::kernel(0.25, 1, 4, randn(4, 4));
 
     tool::print_cx_mat("kernel", kernel);
 }
