@@ -78,7 +78,7 @@ for n = 1 : kpRow
     % secretCount = secretCount + 1;
 
     % get result
-    secretSequence(1, secretCount) = mod(fix(encodedBlocks{1, blockIndex}(row, col, channel) / kl(1, n)), 2);
+    secretSequence(1, secretCount) = mod(round(encodedBlocks{1, blockIndex}(row, col, channel) * 255 / kl(1, n)), 2);
     secretCount = secretCount + 1;
 end
 

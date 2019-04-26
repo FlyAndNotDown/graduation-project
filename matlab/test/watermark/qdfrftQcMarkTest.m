@@ -6,11 +6,11 @@ secret = imread('secret.bmp');
 kernel = dfrftKernel(8, 0.5);
 iKernel = dfrftKernel(8, -0.5);
 
-% laod ga keys
-load('data/qdfrftGaKeys.mat', 'gaKeys');
+% % laod ga keys
+% load('data/qdfrftGaKeys.mat', 'gaKeys');
 
 % watermarking
-[output, kp, kl] = qdfrftQcMark(source, secret, 3, kernel, iKernel, gaKeys);
+[output, kp, kl] = qdfrftQcMark(source, secret, 3, kernel, iKernel, 4);
 
 % ssim
 [ssimVal, ~] = ssim(source, output);

@@ -10,18 +10,20 @@ kernel = dfrftKernel(8, 0.5);
 iKernel = dfrftKernel(8, -0.5);
 
 [sourceMarked, kp, kl] = qdfrftQcMark(source, secret, 3, kernel, iKernel, keys);
-% secretRestored = qdfrftQcRestore(sourceMarked, kp, kl, 3, kernel);
+secretRestored = qdfrftQcRestore(sourceMarked, kp, kl, 3, kernel);
 [ssimVal, ~] = ssim(source, sourceMarked);
-% secretBers = ber(secret, secretRestored);
+secretBers = ber(secret, secretRestored);
 
 % attack
 berSum = 0;
-% gaussian noise
-noiseMarked = imnoise(sourceMarked, 'gaussian', 0, 0.01);
-noiseRestored = qdfrftQcRestore(noiseMarked, kp, kl, 3, kernel);
-berSum = berSum + ber(secret, noiseRestored);
+berSum = berSum + secretBers;
+% % gaussian noise
+% noiseMarked = imnoise(sourceMarked, 'gaussian', 0, 0.01);
+% noiseRestored = qdfrftQcRestore(noiseMarked, kp, kl, 3, kernel);
+% berSum = berSum + ber(secret, noiseRestored);
 
 % output = 50 * abs(ssimVal - 1) + berSum;
-output = 5 * abs(ssimVal - 1) + berSum;
+% output = 5 * abs(ssimVal - 1) + berSum;
+output = berSum;
 
 end
