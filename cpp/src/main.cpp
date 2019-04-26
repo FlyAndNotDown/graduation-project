@@ -2,7 +2,7 @@
 using namespace watermark;
 
 int main(int argc, char *argv[]) {
-	test::dfrnt_clan_dfrnt2();
+	test::tool_print_cube();
     
     return 0;
 }

@@ -10,6 +10,7 @@ namespace watermark {
             static cx_mat kernel(double order, double cycle, mat randomMatrix);
 			static cx_mat dfrnt(cx_mat source, cx_mat kernel);
 			static cx_mat dfrnt2(cx_mat source, cx_mat kernel);
+			// static cx_cube qdfrnt(cx_cube source, cx_mat kernel, vec unit_pure_quaternion);
 	};
 };
 

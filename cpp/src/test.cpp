@@ -7,11 +7,11 @@ using namespace watermark;
 
 void test::tool_print_mat() {
     mat matrix(5, 5);
-    auto rows = matrix.n_rows;
-    auto cols = matrix.n_cols;
+    uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
     for (uword i = 0; i < rows; i++) {
         for (uword j = 0; j < cols; j++) {
-            matrix(i, j) = i * rows + j;
+            matrix(i, j) = i * cols + j;
         }
     }
     
@@ -20,11 +20,11 @@ void test::tool_print_mat() {
 
 void test::tool_print_cx_mat() {
     cx_mat matrix(5, 5);
-    auto rows = matrix.n_rows;
-    auto cols = matrix.n_cols;
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
     for (uword i = 0; i < rows; i++) {
         for (uword j = 0; j < cols; j++) {
-            cx_double temp(i * rows + j, i * rows + j);
+            cx_double temp(i * cols + j, i * cols + j);
             matrix(i, j) = temp;
         }
     }
@@ -34,15 +34,35 @@ void test::tool_print_cx_mat() {
 
 void test::tool_mat_to_cx_mat() {
     mat matrix(5, 5);
-    auto rows = matrix.n_rows;
-    auto cols = matrix.n_cols;
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
     for (uword i = 0; i < rows; i++) {
         for (uword j = 0; j < cols; j++) {
-            matrix(i, j) = i * rows + j;
+            matrix(i, j) = i * cols + j;
         }
     }
 
     tool::print_cx_mat("source", tool::mat_to_cx_mat(matrix));
+}
+
+void test::tool_print_cube() {
+	cube matrix(5, 5, 4);
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
+	uword channels = matrix.n_slices;
+	for (uword i = 0; i < channels; i++) {
+		for (uword j = 0; j < rows; j++) {
+			for (uword k = 0; k < cols; k++) {
+				matrix(j, k, i) = i * 100 + j * cols + k;
+			}
+		}
+	}
+
+	tool::print_cube("source", matrix);
+}
+
+void test::tool_print_cx_cube() {
+	
 }
 
 void test::dfrnt_clan_kernel() {

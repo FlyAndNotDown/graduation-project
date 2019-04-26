@@ -7,6 +7,8 @@ namespace watermark {
 			// tool
             static void tool_print_mat();
             static void tool_print_cx_mat();
+			static void tool_print_cube();
+			static void tool_print_cx_cube();
             static void tool_mat_to_cx_mat();
             
 			// dfrnt_clan
