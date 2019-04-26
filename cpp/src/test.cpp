@@ -1,5 +1,6 @@
 #include "test.h"
 #include "tool.h"
+#include "dfrnt_clan.h"
 #include <armadillo>
 using namespace arma;
 using namespace watermark;
@@ -31,7 +32,7 @@ void test::tool_print_cx_mat() {
     tool::print_cx_mat("source", matrix);
 }
 
-void test:: tool_mat_to_cx_mat() {
+void test::tool_mat_to_cx_mat() {
     mat matrix(5, 5);
     auto rows = matrix.n_rows;
     auto cols = matrix.n_cols;
@@ -42,4 +43,10 @@ void test:: tool_mat_to_cx_mat() {
     }
 
     tool::print_cx_mat("source", tool::mat_to_cx_mat(matrix));
+}
+
+void test::dfrnt_clan_kernel() {
+    cx_mat kernel = dfrnt_clan::kernel(0.5, 1, 4, randn(4, 4));
+
+    tool::print_cx_mat("kernel", kernel);
 }

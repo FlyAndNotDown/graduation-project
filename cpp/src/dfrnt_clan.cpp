@@ -1,29 +1,32 @@
 #include "dfrnt_clan.h"
+#include "tool.h"
+#include "define.h"
+#include <armadillo>
+using namespace arma;
 using namespace watermark;
+using namespace std;
 
-cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
-    // get size info
-    auto rows = random_matrix.n_rows;
+cx_mat dfrnt_clan::kernel(double order, double cycle, uword length, mat random_matrix) {
+    // calculate the random symmetrical matrix
+    mat symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
 
-    // get symmetrical matrix
-    auto symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
+    // get eig vectors
+    cx_vec cx_eig_values;
+    cx_mat cx_eig_vectors;
+    mat eig_vectors;
+    eig_gen(cx_eig_values, cx_eig_vectors, symmetrical_matrix);
+    eig_vectors = real(eig_vectors);
 
-    // get random eigen matrix
-    cx_vec cx_eigen_values;
-    cx_mat cx_eigen_vectors;
-    eig_gen(cx_eigen_values, cx_eigen_vectors, symmetrical_matrix);
-    auto eigen_vectors = real(cx_eigen_vectors);
+    // get orthogonal matrix
+    mat orthogonal_matrix = orth(eig_vectors);
 
-    // orth it
-    auto orth_vectors = orth(eigen_vectors);
-
-    // get center matrix
-    cx_mat center_matrix(rows, rows, fill::zeros);
-    for (auto i = 0; i < rows; i++) {
-        cx_double cx(0, -2.0 * PI * i * order / cycle);
-        center_matrix(i, i) = cx;
+    // get the center matrix
+    cx_mat center_matrix(length, length, fill::zeros);
+    for (uword i = 0; i < length; i++) {
+        cx_double temp(0, -2 * PI * i * order / cycle);
+        center_matrix(i, i) = exp(temp);
     }
 
-    // get kernel matrix
-    return orth_vectors * center_matrix * orth_vectors.t();
+    // get result
+    return orthogonal_matrix * center_matrix * orthogonal_matrix.t();
 }

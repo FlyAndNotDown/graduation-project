@@ -1,4 +1,5 @@
 #include "tool.h"
+#include <iostream>
 using namespace watermark;
 using namespace std;
 
@@ -9,7 +10,7 @@ void tool::print_mat(char *name, mat matrix) {
     cout << name << ":" << endl;
     for (uword i = 0; i < rows; i++) {
         for (uword j = 0; j < cols; j++) {
-            cout << matrix.at(i, j) << "\t";
+            cout << matrix.at(i, j) << "    ";
         }
         cout << endl;
     }
@@ -24,7 +25,7 @@ void tool::print_cx_mat(char *name, cx_mat matrix) {
     for (uword i = 0; i < rows; i++) {
         for (uword j = 0; j < cols; j++) {
             auto temp = matrix.at(i, j);
-            cout << temp.real() << ", " << temp.imag() << "\t";
+            cout << temp.real() << ", " << temp.imag() << "    ";
         }
         cout << endl;
     }

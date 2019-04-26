@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
+project (WATERMARK)
+
 include_directories (include)
 aux_source_directory (src SRC_DIR)
 add_library (SRC_LIB ${SRC_DIR})
