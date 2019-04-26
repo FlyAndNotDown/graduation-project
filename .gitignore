@@ -10,6 +10,7 @@
 /matlab/data/*.mat
 /matlab/dist/*
 /matlab/program
+/matlab/lib
 
 # cpp
 /cpp/.vs

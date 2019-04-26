@@ -1,92 +1,168 @@
 #include "dfrnt_clan.h"
+#include "tool.h"
 #include "define.h"
+#include <armadillo>
+using namespace arma;
 using namespace watermark;
+using namespace std;
 
 cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
-    // get size info
-    auto rows = random_matrix.n_rows;
+	uword length = random_matrix.n_rows;
+	if (length != random_matrix.n_cols) {
+		return nullptr;
+	}
+	
+	// calculate the random symmetrical matrix
+    mat symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
 
-    // get symmetrical matrix
-    auto symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
+    // get eig vectors
+    cx_vec cx_eig_values;
+    cx_mat cx_eig_vectors;
+    mat eig_vectors;
+    eig_gen(cx_eig_values, cx_eig_vectors, symmetrical_matrix);
+    eig_vectors = real(cx_eig_vectors);
 
-    // get random eigen matrix
-    cx_vec cx_eigen_values;
-    cx_mat cx_eigen_vectors;
-    eig_gen(cx_eigen_values, cx_eigen_vectors, symmetrical_matrix);
-    auto eigen_vectors = real(cx_eigen_vectors);
+    // get orthogonal matrix
+	mat orthogonal_matrix = arma::orth(eig_vectors);
 
-    // orth it
-    auto orth_vectors = orth(eigen_vectors);
-
-    // get center matrix
-    cx_mat center_matrix(rows, rows, fill::zeros);
-    for (auto i = 0; i < rows; i++) {
-        cx_double cx(0, -2.0 * PI * i * order / cycle);
-        center_matrix(i, i) = cx;
+    // get the center matrix
+    cx_mat center_matrix(length, length, fill::zeros);
+    for (uword i = 0; i < length; i++) {
+        cx_double temp(0, -2 * PI * i * order / cycle);
+        center_matrix(i, i) = exp(temp);
     }
 
-    // get kernel matrix
-    return orth_vectors * center_matrix * orth_vectors.t();
+    // get result
+    return orthogonal_matrix * center_matrix * orthogonal_matrix.t();
 }
 
-cx_vec dfrnt_clan::dfrnt(cx_vec source, cx_mat kernel) {
-    // return result
-    return kernel * source;
+cx_mat dfrnt_clan::dfrnt(cx_mat source, cx_mat kernel) {
+	// judge size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// switch via vector type
+	if (cols == 1) {
+		// if it's a col vector, just do transform
+		return kernel * source;
+	} else if (rows == 1) {
+		// if it's a row vector, transport it and do transform
+		return (kernel * source.t()).t();
+	} else {
+		// return nothing
+		cx_mat output(rows, cols, fill::zeros);
+		return output;
+	}
 }
 
-cx_mat dfrnt_clan::dfrnt2(cx_mat source, unsigned int length, cx_mat kernel) {
-    // init output
-    cx_mat output = source;
+cx_mat dfrnt_clan::dfrnt2(cx_mat source, cx_mat kernel) {
+	// get size info
+	uword length = source.n_rows;
+	if (length != source.n_cols) {
+		return nullptr;
+	}
 
-    // do dfrnt to every row
-    for (unsigned int i = 0; i < length; i++) {
-        output.row(i) = dfrnt_clan::dfrnt(output.row(i).t(), kernel).t();
-    }
+	// init output
+	cx_mat output(source);
 
-    // do dfrnt to every col
-    for (unsigned int i = 0; i < length; i++) {
-        output.col(i) = dfrnt_clan::dfrnt(output.col(i), kernel);
-    }
+	// do DFRNT to every row
+	for (uword i = 0; i < length; i++) {
+		output.row(i) = dfrnt_clan::dfrnt(output.row(i), kernel);
+	}
 
-    // return result
-    return output;
+	// do DFRNT to every col
+	for (uword i = 0; i < length; i++) {
+		output.col(i) = dfrnt_clan::dfrnt(output.col(i), kernel);
+	}
+
+	// return result
+	return output;
 }
 
-cube dfrnt_clan::lqdfrnt(cube source, cx_mat kernel, vec unit_pure_quaternion) {
-    // get every channel of vector
-    auto source_r = source.slice(0);
-    auto source_i = source.slice(1);
-    auto source_j = source.slice(2);
-    auto source_k = source.slice(3);
+cube dfrnt_clan::qdfrnt(cube source, cx_mat kernel, vec unit_pure_quaternion) {
+	if (source.n_slices != 4) {
+		cube t(source.n_rows, source.n_cols, source.n_slices, fill::zeros);
+		return t;
+	}
+	
+	// split source matrix to 4 channels
+	mat source_r = source.slice(0);
+	mat source_i = source.slice(1);
+	mat source_j = source.slice(2);
+	mat source_k = source.slice(3);
 
-    // get three imag part of unit pure quaternion
-    auto ua = unit_pure_quaternion.at(1);
-    auto ub = unit_pure_quaternion.at(2);
-    auto uc = unit_pure_quaternion.at(3);
+	// get three imag part of unit pure quaternion
+	double ua = unit_pure_quaternion.at(1);
+	double ub = unit_pure_quaternion.at(2);
+	double uc = unit_pure_quaternion.at(3);
 
-    // do the 1-d dfrnt to every channel
-    auto output_r = dfrnt_clan::dfrnt(source_r, kernel);
-    auto output_i = dfrnt_clan::dfrnt(source_i, kernel);
-    auto output_j = dfrnt_clan::dfrnt(source_j, kernel);
-    auto output_k = dfrnt_clan::dfrnt(source_k, kernel);
-    
-    // get real part and imag part
-    mat output_real_r = real(output_r);
-    mat output_real_i = real(output_i);
-    mat output_real_j = real(output_j);
-    mat output_real_k = real(output_k);
-    mat output_imag_r = imag(output_r);
-    mat output_imag_i = imag(output_i);
-    mat output_imag_j = imag(output_j);
-    mat output_imag_k = imag(output_k);
+	// // do DFRNT to every channel
+	cx_mat output_r = dfrnt_clan::dfrnt(tool::mat_to_cx_mat(source_r), kernel);
+	cx_mat output_i = dfrnt_clan::dfrnt(tool::mat_to_cx_mat(source_i), kernel);
+	cx_mat output_j = dfrnt_clan::dfrnt(tool::mat_to_cx_mat(source_j), kernel);
+	cx_mat output_k = dfrnt_clan::dfrnt(tool::mat_to_cx_mat(source_k), kernel);
 
-    // init output
-    auto output = source;
-    output.slice(0) = output_real_r - output_imag_i * ua - output_imag_j * ub - output_imag_k * uc;
-    output.slice(1) = output_real_i + output_imag_r * ua - output_imag_j * uc + output_imag_k * ub;
-    output.slice(2) = output_real_j + output_imag_r * ub - output_imag_k * ua + output_imag_i * uc;
-    output.slice(3) = output_real_k + output_imag_r * uc - output_imag_i * ub + output_imag_j * ua;
+	// get real part and imag part of output
+	mat output_r_real = real(output_r);
+	mat output_r_imag = imag(output_r);
+	mat output_i_real = real(output_i);
+	mat output_i_imag = imag(output_i);
+	mat output_j_real = real(output_j);
+	mat output_j_imag = imag(output_j);
+	mat output_k_real = real(output_k);
+	mat output_k_imag = imag(output_k);
 
-    // return result
-    return output;
+	// get output
+	cube output(source);
+	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
+	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
+	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+
+	// return it
+	return output;
+}
+
+cube dfrnt_clan::qdfrnt2(cube source, cx_mat kernel, vec unit_pure_quaternion) {
+	if (source.n_slices != 4 || source.n_rows != source.n_cols) {
+		cube t(source.n_rows, source.n_cols, source.n_slices, fill::zeros);
+		return t;
+	}
+
+	// split source matrix to 4 channels
+	mat source_r = source.slice(0);
+	mat source_i = source.slice(1);
+	mat source_j = source.slice(2);
+	mat source_k = source.slice(3);
+
+	// get three imag part of unit pure quaternion
+	double ua = unit_pure_quaternion.at(1);
+	double ub = unit_pure_quaternion.at(2);
+	double uc = unit_pure_quaternion.at(3);
+
+	// // do DFRNT to every channel
+	cx_mat output_r = dfrnt_clan::dfrnt2(tool::mat_to_cx_mat(source_r), kernel);
+	cx_mat output_i = dfrnt_clan::dfrnt2(tool::mat_to_cx_mat(source_i), kernel);
+	cx_mat output_j = dfrnt_clan::dfrnt2(tool::mat_to_cx_mat(source_j), kernel);
+	cx_mat output_k = dfrnt_clan::dfrnt2(tool::mat_to_cx_mat(source_k), kernel);
+
+	// get real part and imag part of output
+	mat output_r_real = real(output_r);
+	mat output_r_imag = imag(output_r);
+	mat output_i_real = real(output_i);
+	mat output_i_imag = imag(output_i);
+	mat output_j_real = real(output_j);
+	mat output_j_imag = imag(output_j);
+	mat output_k_real = real(output_k);
+	mat output_k_imag = imag(output_k);
+
+	// get output
+	cube output(source);
+	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
+	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
+	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+
+	// return it
+	return output;
 }
