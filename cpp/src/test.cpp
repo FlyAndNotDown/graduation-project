@@ -46,7 +46,7 @@ void test::tool_mat_to_cx_mat() {
 }
 
 void test::dfrnt_clan_kernel() {
-    cx_mat kernel = dfrnt_clan::kernel(0.25, 1, 4, randn(4, 4));
+    cx_mat kernel = dfrnt_clan::kernel(0.25, 1, randn(4, 4));
 
     tool::print_cx_mat("kernel", kernel);
 }
@@ -66,8 +66,8 @@ void test::dfrnt_clan_dfrnt() {
 	tool::print_cx_mat("source2", source2);
 
 	mat random_matrix = randn(length, length);
-	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, length, random_matrix);
-	cx_mat i_kernel = dfrnt_clan::kernel(-0.25, 1, length, random_matrix);
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, random_matrix);
+	cx_mat i_kernel = dfrnt_clan::kernel(-0.25, 1, random_matrix);
 	cx_mat output1 = dfrnt_clan::dfrnt(source1, kernel);
 	cx_mat output2 = dfrnt_clan::dfrnt(source2, kernel);
 
@@ -89,4 +89,30 @@ void test::dfrnt_clan_dfrnt() {
 
 	tool::print_cx_mat("restored1", restored1);
 	tool::print_cx_mat("restored2", restored2);
+}
+
+void test::dfrnt_clan_dfrnt2() {
+	uword length = 5;
+	mat source_real(length, length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		for (uword j = 0; j < length; j++) {
+			source_real(i, j) = i * length + j;
+		}
+	}
+	cx_mat source = tool::mat_to_cx_mat(source_real);
+
+	mat random_matrix = randn(length, length);
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, random_matrix);
+	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.25, 1, random_matrix);
+	cx_mat output = dfrnt_clan::dfrnt2(source, kernel);
+	cx_mat restored = dfrnt_clan::dfrnt2(output, inverse_kernel);
+	cx_mat cycle = dfrnt_clan::dfrnt2(output, kernel);
+	cycle = dfrnt_clan::dfrnt2(cycle, kernel);
+	cycle = dfrnt_clan::dfrnt2(cycle, kernel);
+
+	tool::print_cx_mat("kernel", kernel);
+	tool::print_cx_mat("source", source);
+	tool::print_cx_mat("output", output);
+	tool::print_cx_mat("cycle", cycle);
+	tool::print_cx_mat("restored", restored);
 }

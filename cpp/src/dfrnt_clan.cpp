@@ -6,8 +6,13 @@ using namespace arma;
 using namespace watermark;
 using namespace std;
 
-cx_mat dfrnt_clan::kernel(double order, double cycle, uword length, mat random_matrix) {
-    // calculate the random symmetrical matrix
+cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
+	uword length = random_matrix.n_rows;
+	if (length != random_matrix.n_cols) {
+		return nullptr;
+	}
+	
+	// calculate the random symmetrical matrix
     mat symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
 
     // get eig vectors
@@ -47,4 +52,28 @@ cx_mat dfrnt_clan::dfrnt(cx_mat source, cx_mat kernel) {
 		// return nothing
 		return nullptr;
 	}
+}
+
+cx_mat dfrnt_clan::dfrnt2(cx_mat source, cx_mat kernel) {
+	// get size info
+	uword length = source.n_rows;
+	if (length != source.n_cols) {
+		return nullptr;
+	}
+
+	// init output
+	cx_mat output(source);
+
+	// do DFRNT to every row
+	for (uword i = 0; i < length; i++) {
+		output.row(i) = dfrnt_clan::dfrnt(output.row(i), kernel);
+	}
+
+	// do DFRNT to every col
+	for (uword i = 0; i < length; i++) {
+		output.col(i) = dfrnt_clan::dfrnt(output.col(i), kernel);
+	}
+
+	// return result
+	return output;
 }
