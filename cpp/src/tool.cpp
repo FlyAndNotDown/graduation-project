@@ -144,3 +144,79 @@ void tool::save_cube_to_image(char *path, cube source) {
 
 	imwrite(path, image);
 }
+
+uword tool::get_blocks_length(cube source, uword length) {
+	// get source size info
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+	
+	// calculate smaller block nums
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
+
+	// return size
+	return block_num_per_row * block_num_per_col;
+}
+
+void tool::split_to_blocks(cube source, uword length, cube *output) {
+	// get source size info
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+	uword source_channels = source.n_slices;
+
+	// calculate smaller block nums
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
+
+	// get output array size
+	uword size = block_num_per_row * block_num_per_col;
+
+	// init
+	for (uword i = 0; i < size; i++) {
+		output[i].zeros(length, length, source_channels);
+	}
+
+	// do the copy
+	for (uword i = 0; i < block_num_per_col; i++) {
+		for (uword j = 0; j < block_num_per_row; j++) {
+			for (uword m = 0; m < length; m++) {
+				for (uword n = 0; n < length; n++) {
+					for (uword v = 0; v < source_channels; v++) {
+						output[i * block_num_per_row + j](m, n, v) = source(i * length + m, j * length + n, v);
+					}
+				}
+			}
+		}
+	}
+}
+
+cube tool::merge_blocks(cube *blocks, uword size, uword block_per_row) {
+	// get size info
+	uword block_rows = blocks[0].n_rows;
+	uword block_cols = blocks[0].n_cols;
+	uword block_channels = blocks[0].n_slices;
+
+	// get matrix size
+	uword block_per_col = size / block_per_row;
+	uword matrix_rows = block_rows * block_per_col;
+	uword matrix_cols = block_cols * block_per_row;
+
+	// init output
+	cube output(matrix_rows, matrix_cols, block_channels, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < size; i++) {
+		for (uword m = 0; m < block_rows; m++) {
+			for (uword n = 0; n < block_cols; n++) {
+				uword row = i / block_per_row;
+				uword col = i % block_per_row;
+				for (uword v = 0; v < block_channels; v++) {
+					output(row * block_rows + m, col * block_cols + n, v) = blocks[i](m, n, v);
+				}
+			}
+		}
+	}
+
+	// return result
+	return output;
+}
