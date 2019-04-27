@@ -190,11 +190,33 @@ void tool::split_to_blocks(cube source, uword length, cube *output) {
 	}
 }
 
-cube merge_blocks(cube *blocks, uword size, uword block_per_row) {
+cube tool::merge_blocks(cube *blocks, uword size, uword block_per_row) {
 	// get size info
 	uword block_rows = blocks[0].n_rows;
 	uword block_cols = blocks[0].n_cols;
 	uword block_channels = blocks[0].n_slices;
 
-	// TODO
+	// get matrix size
+	uword block_per_col = size / block_per_row;
+	uword matrix_rows = block_rows * block_per_col;
+	uword matrix_cols = block_cols * block_per_row;
+
+	// init output
+	cube output(matrix_rows, matrix_cols, block_channels, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < size; i++) {
+		for (uword m = 0; m < block_rows; m++) {
+			for (uword n = 0; n < block_cols; n++) {
+				uword row = i / block_per_row;
+				uword col = i % block_per_row;
+				for (uword v = 0; v < block_channels; v++) {
+					output(row * block_rows + m, col * block_cols + n, v) = blocks[i](m, n, v);
+				}
+			}
+		}
+	}
+
+	// return result
+	return output;
 }
