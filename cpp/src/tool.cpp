@@ -145,22 +145,38 @@ void tool::save_cube_to_image(char *path, cube source) {
 	imwrite(path, image);
 }
 
+uword tool::get_blocks_length(cube source, uword length) {
+	// get source size info
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+	
+	// calculate smaller block nums
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
 
-cube *tool::split_cube_to_smaller_blocks(cube source, int length) {
+	// return size
+	return block_num_per_row * block_num_per_col;
+}
+
+void tool::split_to_blocks(cube source, uword length, cube *output) {
+	// get source size info
 	uword source_rows = source.n_rows;
 	uword source_cols = source.n_cols;
 	uword source_channels = source.n_slices;
 
+	// calculate smaller block nums
 	uword block_num_per_row = source_cols / length;
 	uword block_num_per_col = source_rows / length;
 
-	uword output_array_length = block_num_per_row * block_num_per_col;
-	cube *output = new cube[output_array_length];
-	for (uword i = 0; i < output_array_length; i++) {
+	// get output array size
+	uword size = block_num_per_row * block_num_per_col;
+
+	// init
+	for (uword i = 0; i < size; i++) {
 		output[i].zeros(length, length, source_channels);
 	}
 
-	// do copy
+	// do the copy
 	for (uword i = 0; i < block_num_per_col; i++) {
 		for (uword j = 0; j < block_num_per_row; j++) {
 			for (uword m = 0; m < length; m++) {
@@ -172,6 +188,13 @@ cube *tool::split_cube_to_smaller_blocks(cube source, int length) {
 			}
 		}
 	}
+}
 
-	return output;
+cube merge_blocks(cube *blocks, uword size, uword block_per_row) {
+	// get size info
+	uword block_rows = blocks[0].n_rows;
+	uword block_cols = blocks[0].n_cols;
+	uword block_channels = blocks[0].n_slices;
+
+	// TODO
 }

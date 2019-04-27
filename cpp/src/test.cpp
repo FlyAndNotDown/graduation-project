@@ -246,19 +246,3 @@ void test::tool_read_write_color_image(char *path, char *output_path) {
 	cube matrix = tool::read_image_to_cube(path);
 	tool::save_cube_to_image(output_path, matrix);
 }
-
-void test::image_qdfrnt2(char *path, char *output, char *restored, char *cycle) {
-	cube source = tool::read_image_to_cube(path);
-	
-	vec unit_pure_quaternion(4, fill::zeros);
-	unit_pure_quaternion(1) = 1;
-	mat random_matrix = randn(8, 8);
-	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, random_matrix);
-	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.25, 1, random_matrix);
-
-	cube *sources = tool::split_cube_to_smaller_blocks(source, 8);
-	uword sources_length = (512 / 8) * (512 / 8);
-	for (int i = 0; i < sources_length; i++) {
-		sources[i] = dfrnt_clan::qdfrnt2(sources[i], kernel, unit_pure_quaternion);
-	}
-}
