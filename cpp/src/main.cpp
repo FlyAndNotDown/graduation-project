@@ -8,5 +8,6 @@ int main(int argc, char *argv[]) {
 		"C:/Users/Administrator/Desktop/lena-restored.bmp",
 		"C:/Users/Administrator/Desktop/lena-cycle.bmp"
 	);
+
     return 0;
 }

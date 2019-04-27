@@ -22,7 +22,7 @@ namespace watermark {
 			static void dfrnt_clan_qdfrnt2();
 
 			// images
-			static void image_qdfrnt2(char *path, char *output, char *restored, char *cycle);
+			static void image_qdfrnt2(char *path, char *output_path, char *restored_path, char *cycle_path);
     };
 };
 

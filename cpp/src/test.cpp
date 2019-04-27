@@ -246,3 +246,32 @@ void test::tool_read_write_color_image(char *path, char *output_path) {
 	cube matrix = tool::read_image_to_cube(path);
 	tool::save_cube_to_image(output_path, matrix);
 }
+
+void test::image_qdfrnt2(char *path, char *output_path, char *restored_path, char *cycle_path) {
+	cube matrix = tool::read_image_to_cube(path);
+	
+	uword blocks_length = tool::get_blocks_length(matrix, 8);
+	cube *blocks = new cube[blocks_length];
+	cube *outputs = new cube[blocks_length];
+	cube *cycles = new cube[blocks_length];
+	cube *restoreds = new cube[blocks_length];
+	tool::split_to_blocks(matrix, 8, blocks);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(8, 8);
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, random_matrix);
+	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.25, 1, random_matrix);
+
+	for (uword i = 0; i < blocks_length; i++) {
+		outputs[i] = dfrnt_clan::qdfrnt2(blocks[i], kernel, unit_pure_quaternion);
+		restoreds[i] = dfrnt_clan::qdfrnt2(outputs[i], inverse_kernel, unit_pure_quaternion);
+		cycles[i] = dfrnt_clan::qdfrnt2(outputs[i], kernel, unit_pure_quaternion);
+		cycles[i] = dfrnt_clan::qdfrnt2(cycles[i], kernel, unit_pure_quaternion);
+		cycles[i] = dfrnt_clan::qdfrnt2(cycles[i], kernel, unit_pure_quaternion);
+	}
+
+	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
+	tool::save_cube_to_image(cycle_path, tool::merge_blocks(cycles, blocks_length, 512 / 8));
+	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
+}
