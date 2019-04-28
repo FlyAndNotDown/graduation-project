@@ -1,8 +1,10 @@
 #ifndef WATERMARK_TOOL_H
 #define WATERMARK_TOOL_H
 
+#include <opencv2/opencv.hpp>
 #include <armadillo>
 using namespace arma;
+using namespace cv;
 
 namespace watermark {
     class tool {
@@ -23,7 +25,8 @@ namespace watermark {
 			static uword get_blocks_length(cube source, uword length);
 			static void split_to_blocks(cube source, uword length, cube *output);
 			static cube merge_blocks(cube *blocks, uword size, uword block_per_row);
-	
+			static void split_to_blocks(cv::Mat source, uword length, cv::Mat *output);
+
 			static vec vectorize(mat source);
 			static mat matrixize(vec source, uword num_per_row);
 

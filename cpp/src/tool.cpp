@@ -190,6 +190,35 @@ void tool::split_to_blocks(cube source, uword length, cube *output) {
 	}
 }
 
+void tool::split_to_blocks(cv::Mat source, uword length, cv::Mat *output) {
+	// get source size info
+	int rows = source.rows;
+	int cols = source.cols;
+
+	// calculate smaller block nums
+	uword block_num_per_row = cols / length;
+	uword block_num_per_col = rows / length;
+
+	// get output array size
+	uword size = block_num_per_row * block_num_per_col;
+
+	// init
+	for (uword i = 0; i < size; i++) {
+		output[i].create(rows, cols, CV_8UC3);
+	}
+
+	// do the copy
+	for (uword i = 0; i < block_num_per_col; i++) {
+		for (uword j = 0; j < block_num_per_row; j++) {
+			for (uword m = 0; m < length; m++) {
+				for (uword n = 0; n < length; n++) {
+					output[i * block_num_per_row + j].at<Vec3b>(m, n) = source.at<Vec3b>(i * length + m, j * length + n);
+				}
+			}
+		}
+	}
+}
+
 cube tool::merge_blocks(cube *blocks, uword size, uword block_per_row) {
 	// get size info
 	uword block_rows = blocks[0].n_rows;
