@@ -256,3 +256,43 @@ mat tool::matrixize(vec source, uword num_per_row) {
 	// return result
 	return output;
 }
+
+mat tool::arnold(mat source, int order) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	if (rows != cols) {
+		mat return_temp(rows, rows, fill::zeros);
+		return return_temp;
+	}
+
+	// init output
+	mat output(rows, rows, fill::zeros);
+	mat temp = source;
+	if (order >= 0) {
+		for (int n = 0; n < order; n++) {
+			for (uword i = 0; i < rows; i++) {
+				for (uword j = 0; j < cols; j++) {
+					uword x = (i + j) % rows;
+					uword y = (i + 2 * j) % rows;
+					output(y, x) = temp(j, i);
+				}
+			}
+			temp = output;
+		}
+		return output;
+	} else {
+		order = 0 - order;
+		for (int n = 0; n < order; n++) {
+			for (uword i = 0; i < rows; i++) {
+				for (uword j = 0; j < cols; j++) {
+					uword x = (2 * i - j) % rows;
+					uword y = (j - i) % rows;
+					output(y, x) = temp(j, i);
+				}
+			}
+			temp = output;
+		}
+		return output;
+	}
+}

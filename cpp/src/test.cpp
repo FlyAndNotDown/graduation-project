@@ -441,3 +441,11 @@ void test::tool_matrixize() {
 	tool::print_mat("source", source);
 	tool::print_mat("output", tool::matrixize(source, 4));
 }
+
+void test::tool_arnold(char *path, char *output_path, char *restored_path) {
+	mat matrix = tool::read_image_to_mat(path);
+	mat output = tool::arnold(matrix, 1);
+	mat restored = tool::arnold(output, -1);
+	tool::save_mat_to_image(output_path, output);
+	tool::save_mat_to_image(restored_path, restored);
+}

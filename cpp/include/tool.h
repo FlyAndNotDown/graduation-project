@@ -26,6 +26,8 @@ namespace watermark {
 	
 			static vec vectorize(mat source);
 			static mat matrixize(vec source, uword num_per_row);
+
+			static mat arnold(mat source, int order);
 	};
 };
 
