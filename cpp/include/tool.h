@@ -23,6 +23,11 @@ namespace watermark {
 			static uword get_blocks_length(cube source, uword length);
 			static void split_to_blocks(cube source, uword length, cube *output);
 			static cube merge_blocks(cube *blocks, uword size, uword block_per_row);
+	
+			static vec vectorize(mat source);
+			static mat matrixize(vec source, uword num_per_row);
+
+			static mat arnold(mat source, int order);
 	};
 };
 

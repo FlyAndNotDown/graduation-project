@@ -1,6 +1,7 @@
 #include "test.h"
 #include "tool.h"
 #include "dfrnt_clan.h"
+#include "dfrft_clan.h"
 #include <armadillo>
 using namespace arma;
 using namespace watermark;
@@ -101,11 +102,11 @@ void test::dfrnt_clan_kernel() {
 }
 
 void test::dfrnt_clan_dfrnt() {
-	uword length = 5;
+	uword length = 9;
 	mat source_real1(length, 1, fill::zeros), source_real2(1, length, fill::zeros);
 	for (uword i = 0; i < length; i++) {
-		source_real1(i, 0) = i;
-		source_real2(0, i) = i;
+		source_real1(i, 0) = i * 0.1;
+		source_real2(0, i) = i * 0.1;
 	}
 
 	cx_mat source1 = tool::mat_to_cx_mat(source_real1);
@@ -274,4 +275,177 @@ void test::image_qdfrnt2(char *path, char *output_path, char *restored_path, cha
 	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
 	tool::save_cube_to_image(cycle_path, tool::merge_blocks(cycles, blocks_length, 512 / 8));
 	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
+}
+
+void test::dfrft_clan_kernel() {
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, randn(4, 4));
+
+	tool::print_cx_mat("kernel", kernel);
+}
+
+void test::dfrft_clan_dfrft() {
+	uword length = 8;
+	mat source_real1(length, 1, fill::zeros), source_real2(1, length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		source_real1(i, 0) = i * 0.1;
+		source_real2(0, i) = i * 0.1;
+	}
+
+	cx_mat source1 = tool::mat_to_cx_mat(source_real1);
+	cx_mat source2 = tool::mat_to_cx_mat(source_real2);
+
+	tool::print_cx_mat("source1", source1);
+	tool::print_cx_mat("source2", source2);
+
+	cx_mat kernel = dfrft_clan::kernel(length, 0.5);
+	cx_mat i_kernel = dfrft_clan::kernel(length, -0.5);
+	cx_mat output1 = dfrft_clan::dfrft(source1, kernel);
+	cx_mat output2 = dfrft_clan::dfrft(source2, kernel);
+
+	tool::print_cx_mat("output1", output1);
+	tool::print_cx_mat("output2", output2);
+
+	cx_mat restored1 = dfrft_clan::dfrft(output1, i_kernel);
+	cx_mat restored2 = dfrft_clan::dfrft(output2, i_kernel);
+
+	tool::print_cx_mat("restored1", restored1);
+	tool::print_cx_mat("restored2", restored2);
+}
+
+void test::dfrft_clan_dfrft2() {
+	uword length = 5;
+	mat source_real(length, length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		for (uword j = 0; j < length; j++) {
+			source_real(i, j) = i * length + j;
+		}
+	}
+	cx_mat source = tool::mat_to_cx_mat(source_real);
+
+	mat random_matrix = randn(length, length);
+	cx_mat kernel = dfrft_clan::kernel(length, 0.25);
+	cx_mat inverse_kernel = dfrft_clan::kernel(length, -0.25);
+	cx_mat output = dfrft_clan::dfrft2(source, kernel);
+	cx_mat restored = dfrft_clan::dfrft2(output, inverse_kernel);
+
+	tool::print_cx_mat("source", source);
+	tool::print_cx_mat("output", output);
+	tool::print_cx_mat("restored", restored);
+}
+
+void test::dfrft_clan_qdfrft() {
+	uword length = 5;
+	uword channels = 4;
+	cube source1(1, length, channels, fill::zeros);
+	cube source2(length, 1, channels, fill::zeros);
+	for (uword i = 0; i < channels; i++) {
+		for (uword j = 0; j < length; j++) {
+			source1(0, j, i) = i * 100 + j;
+			source2(j, 0, i) = i * 100 + j;
+		}
+	}
+
+	tool::print_cube("source1", source1);
+	tool::print_cube("source2", source2);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(length, length);
+	cx_mat kernel = dfrft_clan::kernel(length, 0.25);
+	cx_mat inverse_kernel = dfrft_clan::kernel(length, -0.25);
+
+	cube output1 = dfrft_clan::qdfrft(source1, kernel, unit_pure_quaternion);
+	cube output2 = dfrft_clan::qdfrft(source2, kernel, unit_pure_quaternion);
+	cube restored1 = dfrft_clan::qdfrft(output1, inverse_kernel, unit_pure_quaternion);
+	cube restored2 = dfrft_clan::qdfrft(output2, inverse_kernel, unit_pure_quaternion);
+
+	tool::print_cube("output1", output1);
+	tool::print_cube("output2", output2);
+	tool::print_cube("restored1", restored1);
+	tool::print_cube("restored2", restored2);
+}
+
+void test::dfrft_clan_qdfrft2() {
+	uword length = 5;
+	uword channels = 4;
+	cube source(length, length, channels, fill::zeros);
+	for (uword i = 1; i < channels; i++) {
+		for (uword j = 0; j < length; j++) {
+			for (uword k = 0; k < length; k++) {
+				source(j, k, i) = i * 100 + j * length + k;
+			}
+		}
+	}
+
+	tool::print_cube("source", source);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(length, length);
+	cx_mat kernel = dfrft_clan::kernel(length, 0.25);
+	cx_mat inverse_kernel = dfrft_clan::kernel(length, -0.25);
+
+	cube output = dfrft_clan::qdfrft2(source, kernel, unit_pure_quaternion);
+	cube restored = dfrft_clan::qdfrft2(output, inverse_kernel, unit_pure_quaternion);
+
+	tool::print_cube("output", output);
+	tool::print_cube("restored", restored);
+}
+
+void test::image_qdfrft2(char *path, char *output_path, char *restored_path) {
+	cube matrix = tool::read_image_to_cube(path);
+
+	uword blocks_length = tool::get_blocks_length(matrix, 8);
+	cube *blocks = new cube[blocks_length];
+	cube *outputs = new cube[blocks_length];
+	cube *cycles = new cube[blocks_length];
+	cube *restoreds = new cube[blocks_length];
+	tool::split_to_blocks(matrix, 8, blocks);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(8, 8);
+	cx_mat kernel = dfrft_clan::kernel(8, 0.25);
+	cx_mat inverse_kernel = dfrft_clan::kernel(8, -0.25);
+
+	for (uword i = 0; i < blocks_length; i++) {
+		outputs[i] = dfrft_clan::qdfrft2(blocks[i], kernel, unit_pure_quaternion);
+		restoreds[i] = dfrft_clan::qdfrft2(outputs[i], inverse_kernel, unit_pure_quaternion);
+	}
+
+	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
+	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
+}
+
+void test::tool_vectorize() {
+	uword rows = 4;
+	uword cols = 4;
+	mat source(rows, cols, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			source(i, j) = i * cols + j;
+		}
+	}
+
+	tool::print_mat("source", source);
+	tool::print_mat("output", tool::vectorize(source));
+}
+
+void test::tool_matrixize() {
+	uword length = 16;
+	vec source(length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		source(i) = i;
+	}
+
+	tool::print_mat("source", source);
+	tool::print_mat("output", tool::matrixize(source, 4));
+}
+
+void test::tool_arnold(char *path, char *output_path, char *restored_path) {
+	mat matrix = tool::read_image_to_mat(path);
+	mat output = tool::arnold(matrix, 1);
+	mat restored = tool::arnold(output, -1);
+	tool::save_mat_to_image(output_path, output);
+	tool::save_mat_to_image(restored_path, restored);
 }

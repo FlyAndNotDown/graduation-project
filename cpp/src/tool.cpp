@@ -220,3 +220,79 @@ cube tool::merge_blocks(cube *blocks, uword size, uword block_per_row) {
 	// return result
 	return output;
 }
+
+vec tool::vectorize(mat source) {
+	// get size info
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+
+	// init output vector
+	vec output(source_rows * source_cols, fill::zeros);
+
+	// copy
+	for (uword i = 0; i < source_rows; i++) {
+		for (uword j = 0; j < source_cols; j++) {
+			output(i * source_cols + j) = source(i, j);
+		}
+	}
+
+	// return output
+	return output;
+}
+
+mat tool::matrixize(vec source, uword num_per_row) {
+	// get size info
+	uword length = source.n_rows;
+	uword num_per_col = length / num_per_row;
+
+	// init output matrix
+	mat output(num_per_col, num_per_row, fill::zeros);
+	for (uword i = 0; i < num_per_col; i++) {
+		for (uword j = 0; j < num_per_row; j++) {
+			output(i, j) = source(i * num_per_row + j);
+		}
+	}
+	
+	// return result
+	return output;
+}
+
+mat tool::arnold(mat source, int order) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	if (rows != cols) {
+		mat return_temp(rows, rows, fill::zeros);
+		return return_temp;
+	}
+
+	// init output
+	mat output(rows, rows, fill::zeros);
+	mat temp = source;
+	if (order >= 0) {
+		for (int n = 0; n < order; n++) {
+			for (uword i = 0; i < rows; i++) {
+				for (uword j = 0; j < cols; j++) {
+					uword x = (i + j) % rows;
+					uword y = (i + 2 * j) % rows;
+					output(y, x) = temp(j, i);
+				}
+			}
+			temp = output;
+		}
+		return output;
+	} else {
+		order = 0 - order;
+		for (int n = 0; n < order; n++) {
+			for (uword i = 0; i < rows; i++) {
+				for (uword j = 0; j < cols; j++) {
+					uword x = (2 * i - j) % rows;
+					uword y = (j - i) % rows;
+					output(y, x) = temp(j, i);
+				}
+			}
+			temp = output;
+		}
+		return output;
+	}
+}
