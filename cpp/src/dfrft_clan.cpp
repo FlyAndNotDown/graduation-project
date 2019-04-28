@@ -66,7 +66,7 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 	evs = orth(evs);
 
 	// do project from hermite space to DFT space
-	for (uword n = 0; n < 4; n++) {
+	/* for (uword n = 0; n < 4; n++) {
 		uword locations_length = (length - n - 1) / 4;
 		vec locations(locations_length, fill::zeros);
 		for (uword i = 0; i < locations_length; i++) {
@@ -87,13 +87,14 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 		for (uword i = 0; i < locations_length; i++) {
 			u.col(locations(i)) = u_orth.col(i);
 		}
-	}
+	} */
+	u = orth(evs * u * evs.t());
 
 	// get matrix d
 	cx_mat d(length + 1, length + 1, fill::zeros);
 	for (uword i = 0; i <= length; i++) {
 		cx_double cx_temp(0, 0 - order * i);
-		d(i, i) = cx_temp;
+		d(i, i) = exp(cx_temp);
 	}
 	if (even) {
 		cx_vec temp1 = d.col(length);
@@ -120,11 +121,12 @@ cx_mat dfrft_clan::dfrft(cx_mat source, cx_mat kernel) {
 	// switch via vector type
 	if (cols == 1) {
 		// if it's a col vector, just do transform
-		return shift(kernel * shift(source, rows / 2), rows / 2);
+		// return shift(kernel * shift(source, rows / 2), rows / 2);
+		return kernel * source;
 	} else if (rows == 1) {
 		// if it's a row vector, transport it and do transform
-		// TODO
-		return shift(kernel * shift(source.t(), cols / 2, 1).t(), cols / 2, 1);
+		// return shift(kernel * shift(source.t(), cols / 2, 1).t(), cols / 2, 1);
+		return (kernel * source.t()).t();
 	} else {
 		// return nothing
 		cx_mat output(rows, cols, fill::zeros);
