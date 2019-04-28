@@ -2,6 +2,8 @@
 #include "define.h"
 #include "tool.h"
 #include <armadillo>
+#include <iostream>
+using namespace std;
 using namespace arma;
 using namespace watermark;
 
@@ -35,8 +37,6 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 	}
 
 	// do remove and shift
-	tool::print_mat("hermite sample", u);
-
 	if (even) {
 		vec temp = u.col(length);
 		u = u.cols(0, length - 2);
@@ -44,14 +44,72 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 	} else {
 		u = u.cols(0, length - 1);
 	}
-
-	tool::print_mat("hermite sample", u);
-
 	u = shift(u, length / 2);
 
-	tool::print_mat("hermite sample", u);
+	// get DFT eigenvectors
+	mat s(length, length, fill::zeros);
+	vec diag_source1(length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		diag_source1(i) = 2 * cos(i * 2.0 * PI / length);
+	}
+	vec diag_source2(length - 1, fill::zeros);
+	for (uword i = 1; i < length; i++) {
+		diag_source2(i - 1) = 1;
+	}
+	s.diag() = diag_source1;
+	s.diag(1) = diag_source2;
+	s.diag(-1) = diag_source2;
+	s(0, length - 1) = 1;
+	s(length - 1, 0) = 1;
+	cx_vec cx_eig_values;
+	cx_mat cx_eig_vectors;
+	eig_gen(cx_eig_values, cx_eig_vectors, s);
+	mat evs = real(cx_eig_vectors);
+	evs = orth(evs);
 
-	// TODO
+	// do project from hermite space to DFT space
+	for (uword n = 0; n < 4; n++) {
+		uword locations_length = (length - n - 1) / 4;
+		vec locations(locations_length, fill::zeros);
+		for (uword i = 0; i < locations_length; i++) {
+			locations(i) = n + 4 * i;
+		}
+		
+		mat evs_some(length, locations_length, fill::zeros);
+		for (uword i = 0; i < locations_length; i++) {
+			evs_some.col(i) = evs.col(locations(i));
+		}
+		mat u_some(length, locations_length, fill::zeros);
+		for (uword i = 0; i < locations_length; i++) {
+			u_some.col(i) = u.col(locations(i));
+		}
+		mat u_orth = orth(evs_some * evs_some.t() * u_some);
+		uword dis = locations_length - u_orth.n_cols;
+		u_orth = join_horiz(u_orth, zeros<mat>(length, dis));
+		for (uword i = 0; i < locations_length; i++) {
+			u.col(locations(i)) = u_orth.col(i);
+		}
+	}
 
-	return nullptr;
+	// get matrix d
+	cx_mat d(length + 1, length + 1, fill::zeros);
+	for (uword i = 0; i <= length; i++) {
+		cx_double cx_temp(0, 0 - order * i);
+		d(i, i) = cx_temp;
+	}
+	if (even) {
+		cx_vec temp1 = d.col(length);
+		d = d.cols(0, length - 2);
+		d.insert_cols(length - 1, temp1);
+		cx_mat temp2 = d.row(length);
+		d = d.rows(0, length - 2);
+		d.insert_rows(length - 1, temp2);
+	}
+	else {
+		d = d.cols(0, length - 1);
+		d = d.rows(0, length - 1);
+	}
+
+	// return kernel
+	return u * d * u.t();
 }

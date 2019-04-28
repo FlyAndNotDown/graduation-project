@@ -3,7 +3,7 @@
 using namespace watermark;
 
 int main(int argc, char *argv[]) {
-	cx_mat kernel = dfrft_clan::kernel(8, 0.5);
+	cx_mat kernel = dfrft_clan::kernel(9, 0.5);
 
     return 0;
 }
