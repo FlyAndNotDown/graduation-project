@@ -34,9 +34,22 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 		m1 = m2 / m1;
 	}
 
+	// do remove and shift
 	tool::print_mat("hermite sample", u);
 
-	// do shift
+	if (even) {
+		vec temp = u.col(length);
+		u = u.cols(0, length - 2);
+		u.insert_cols(length - 1, temp);
+	} else {
+		u = u.cols(0, length - 1);
+	}
+
+	tool::print_mat("hermite sample", u);
+
+	u = shift(u, length / 2);
+
+	tool::print_mat("hermite sample", u);
 
 	// TODO
 
