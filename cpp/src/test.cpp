@@ -102,11 +102,11 @@ void test::dfrnt_clan_kernel() {
 }
 
 void test::dfrnt_clan_dfrnt() {
-	uword length = 5;
+	uword length = 9;
 	mat source_real1(length, 1, fill::zeros), source_real2(1, length, fill::zeros);
 	for (uword i = 0; i < length; i++) {
-		source_real1(i, 0) = i;
-		source_real2(0, i) = i;
+		source_real1(i, 0) = i * 0.1;
+		source_real2(0, i) = i * 0.1;
 	}
 
 	cx_mat source1 = tool::mat_to_cx_mat(source_real1);
@@ -390,4 +390,29 @@ void test::dfrft_clan_qdfrft2() {
 
 	tool::print_cube("output", output);
 	tool::print_cube("restored", restored);
+}
+
+void test::image_qdfrft2(char *path, char *output_path, char *restored_path) {
+	cube matrix = tool::read_image_to_cube(path);
+
+	uword blocks_length = tool::get_blocks_length(matrix, 8);
+	cube *blocks = new cube[blocks_length];
+	cube *outputs = new cube[blocks_length];
+	cube *cycles = new cube[blocks_length];
+	cube *restoreds = new cube[blocks_length];
+	tool::split_to_blocks(matrix, 8, blocks);
+
+	vec unit_pure_quaternion(4, fill::zeros);
+	unit_pure_quaternion(1) = 1;
+	mat random_matrix = randn(8, 8);
+	cx_mat kernel = dfrft_clan::kernel(8, 0.25);
+	cx_mat inverse_kernel = dfrft_clan::kernel(8, -0.25);
+
+	for (uword i = 0; i < blocks_length; i++) {
+		outputs[i] = dfrft_clan::qdfrft2(blocks[i], kernel, unit_pure_quaternion);
+		restoreds[i] = dfrft_clan::qdfrft2(outputs[i], inverse_kernel, unit_pure_quaternion);
+	}
+
+	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
+	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
 }
