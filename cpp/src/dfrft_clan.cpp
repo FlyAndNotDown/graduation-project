@@ -133,3 +133,115 @@ cx_mat dfrft_clan::dfrft(cx_mat source, cx_mat kernel) {
 		return output;
 	}
 }
+
+cx_mat dfrft_clan::dfrft2(cx_mat source, cx_mat kernel) {
+	// get size info
+	uword length = source.n_rows;
+	if (length != source.n_cols) {
+		return nullptr;
+	}
+
+	// init output
+	cx_mat output(source);
+
+	// do DFRFT to every row
+	for (uword i = 0; i < length; i++) {
+		output.row(i) = dfrft_clan::dfrft(output.row(i), kernel);
+	}
+
+	// do DFRFT to every col
+	for (uword i = 0; i < length; i++) {
+		output.col(i) = dfrft_clan::dfrft(output.col(i), kernel);
+	}
+
+	// return result
+	return output;
+}
+
+cube dfrft_clan::qdfrft(cube source, cx_mat kernel, vec unit_pure_quaternion) {
+	if (source.n_slices != 4) {
+		cube t(source.n_rows, source.n_cols, source.n_slices, fill::zeros);
+		return t;
+	}
+
+	// split source matrix to 4 channels
+	mat source_r = source.slice(0);
+	mat source_i = source.slice(1);
+	mat source_j = source.slice(2);
+	mat source_k = source.slice(3);
+
+	// get three imag part of unit pure quaternion
+	double ua = unit_pure_quaternion.at(1);
+	double ub = unit_pure_quaternion.at(2);
+	double uc = unit_pure_quaternion.at(3);
+
+	// // do DFRFT to every channel
+	cx_mat output_r = dfrft_clan::dfrft(tool::mat_to_cx_mat(source_r), kernel);
+	cx_mat output_i = dfrft_clan::dfrft(tool::mat_to_cx_mat(source_i), kernel);
+	cx_mat output_j = dfrft_clan::dfrft(tool::mat_to_cx_mat(source_j), kernel);
+	cx_mat output_k = dfrft_clan::dfrft(tool::mat_to_cx_mat(source_k), kernel);
+
+	// get real part and imag part of output
+	mat output_r_real = real(output_r);
+	mat output_r_imag = imag(output_r);
+	mat output_i_real = real(output_i);
+	mat output_i_imag = imag(output_i);
+	mat output_j_real = real(output_j);
+	mat output_j_imag = imag(output_j);
+	mat output_k_real = real(output_k);
+	mat output_k_imag = imag(output_k);
+
+	// get output
+	cube output(source);
+	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
+	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
+	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+
+	// return it
+	return output;
+}
+
+cube dfrft_clan::qdfrft2(cube source, cx_mat kernel, vec unit_pure_quaternion) {
+	if (source.n_slices != 4 || source.n_rows != source.n_cols) {
+		cube t(source.n_rows, source.n_cols, source.n_slices, fill::zeros);
+		return t;
+	}
+
+	// split source matrix to 4 channels
+	mat source_r = source.slice(0);
+	mat source_i = source.slice(1);
+	mat source_j = source.slice(2);
+	mat source_k = source.slice(3);
+
+	// get three imag part of unit pure quaternion
+	double ua = unit_pure_quaternion.at(1);
+	double ub = unit_pure_quaternion.at(2);
+	double uc = unit_pure_quaternion.at(3);
+
+	// // do DFRFT to every channel
+	cx_mat output_r = dfrft_clan::dfrft2(tool::mat_to_cx_mat(source_r), kernel);
+	cx_mat output_i = dfrft_clan::dfrft2(tool::mat_to_cx_mat(source_i), kernel);
+	cx_mat output_j = dfrft_clan::dfrft2(tool::mat_to_cx_mat(source_j), kernel);
+	cx_mat output_k = dfrft_clan::dfrft2(tool::mat_to_cx_mat(source_k), kernel);
+
+	// get real part and imag part of output
+	mat output_r_real = real(output_r);
+	mat output_r_imag = imag(output_r);
+	mat output_i_real = real(output_i);
+	mat output_i_imag = imag(output_i);
+	mat output_j_real = real(output_j);
+	mat output_j_imag = imag(output_j);
+	mat output_k_real = real(output_k);
+	mat output_k_imag = imag(output_k);
+
+	// get output
+	cube output(source);
+	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
+	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
+	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+
+	// return it
+	return output;
+}
