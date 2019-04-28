@@ -13,6 +13,8 @@ namespace watermark {
 			static void tool_cube_to_cx_cube();
 			static void tool_read_write_image(char *path, char *output_path);
 			static void tool_read_write_color_image(char *path, char *output_path);
+			static void tool_vectorize();
+			static void tool_matrixize();
 
 			// dfrnt_clan
             static void dfrnt_clan_kernel();

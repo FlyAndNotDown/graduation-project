@@ -416,3 +416,28 @@ void test::image_qdfrft2(char *path, char *output_path, char *restored_path) {
 	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
 	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
 }
+
+void test::tool_vectorize() {
+	uword rows = 4;
+	uword cols = 4;
+	mat source(rows, cols, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			source(i, j) = i * cols + j;
+		}
+	}
+
+	tool::print_mat("source", source);
+	tool::print_mat("output", tool::vectorize(source));
+}
+
+void test::tool_matrixize() {
+	uword length = 16;
+	vec source(length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		source(i) = i;
+	}
+
+	tool::print_mat("source", source);
+	tool::print_mat("output", tool::matrixize(source, 4));
+}

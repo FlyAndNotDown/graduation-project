@@ -220,3 +220,39 @@ cube tool::merge_blocks(cube *blocks, uword size, uword block_per_row) {
 	// return result
 	return output;
 }
+
+vec tool::vectorize(mat source) {
+	// get size info
+	uword source_rows = source.n_rows;
+	uword source_cols = source.n_cols;
+
+	// init output vector
+	vec output(source_rows * source_cols, fill::zeros);
+
+	// copy
+	for (uword i = 0; i < source_rows; i++) {
+		for (uword j = 0; j < source_cols; j++) {
+			output(i * source_cols + j) = source(i, j);
+		}
+	}
+
+	// return output
+	return output;
+}
+
+mat tool::matrixize(vec source, uword num_per_row) {
+	// get size info
+	uword length = source.n_rows;
+	uword num_per_col = length / num_per_row;
+
+	// init output matrix
+	mat output(num_per_col, num_per_row, fill::zeros);
+	for (uword i = 0; i < num_per_col; i++) {
+		for (uword j = 0; j < num_per_row; j++) {
+			output(i, j) = source(i * num_per_row + j);
+		}
+	}
+	
+	// return result
+	return output;
+}

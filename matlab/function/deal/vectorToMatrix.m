@@ -11,7 +11,7 @@ function output = vectorToMatrix(source, numPerRow)
 % get size info
 [~, vectorLength] = size(source);
 
-% init output vector
+% init output matrix
 output = zeros(floor(vectorLength / numPerRow), numPerRow);
 
 % copy
