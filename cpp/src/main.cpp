@@ -1,9 +1,8 @@
 #include "test.h"
-#include "dfrft_clan.h"
 using namespace watermark;
 
 int main(int argc, char *argv[]) {
-	cx_mat kernel = dfrft_clan::kernel(9, 0.5);
+	test::dfrft_clan_dfrft();
 
     return 0;
 }

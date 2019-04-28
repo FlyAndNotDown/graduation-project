@@ -1,6 +1,7 @@
 #include "test.h"
 #include "tool.h"
 #include "dfrnt_clan.h"
+#include "dfrft_clan.h"
 #include <armadillo>
 using namespace arma;
 using namespace watermark;
@@ -274,4 +275,39 @@ void test::image_qdfrnt2(char *path, char *output_path, char *restored_path, cha
 	tool::save_cube_to_image(output_path, tool::merge_blocks(outputs, blocks_length, 512 / 8));
 	tool::save_cube_to_image(cycle_path, tool::merge_blocks(cycles, blocks_length, 512 / 8));
 	tool::save_cube_to_image(restored_path, tool::merge_blocks(restoreds, blocks_length, 512 / 8));
+}
+
+void test::dfrft_clan_kernel() {
+	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, randn(4, 4));
+
+	tool::print_cx_mat("kernel", kernel);
+}
+
+void test::dfrft_clan_dfrft() {
+	uword length = 8;
+	mat source_real1(length, 1, fill::zeros), source_real2(1, length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		source_real1(i, 0) = i;
+		source_real2(0, i) = i;
+	}
+
+	cx_mat source1 = tool::mat_to_cx_mat(source_real1);
+	// cx_mat source2 = tool::mat_to_cx_mat(source_real2);
+
+	tool::print_cx_mat("source1", source1);
+	// tool::print_cx_mat("source2", source2);
+
+	cx_mat kernel = dfrft_clan::kernel(8, 0.25);
+	cx_mat i_kernel = dfrft_clan::kernel(8, -0.25);
+	cx_mat output1 = dfrft_clan::dfrft(source1, kernel);
+	// cx_mat output2 = dfrft_clan::dfrft(source2, kernel);
+
+	tool::print_cx_mat("output1", output1);
+	// tool::print_cx_mat("output2", output2);
+
+	cx_mat restored1 = dfrft_clan::dfrft(output1, i_kernel);
+	// cx_mat restored2 = dfrft_clan::dfrft(output2, i_kernel);
+
+	tool::print_cx_mat("restored1", restored1);
+	// tool::print_cx_mat("restored2", restored2);
 }

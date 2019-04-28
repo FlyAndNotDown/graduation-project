@@ -21,6 +21,13 @@ namespace watermark {
 			static void dfrnt_clan_qdfrnt();
 			static void dfrnt_clan_qdfrnt2();
 
+			// dfrft_clan
+			static void dfrft_clan_kernel();
+			static void dfrft_clan_dfrft();
+			static void dfrft_clan_dfrft2();
+			static void dfrft_clan_qdfrft();
+			static void dfrft_clan_qdfrft2();
+
 			// images
 			static void image_qdfrnt2(char *path, char *output_path, char *restored_path, char *cycle_path);
     };

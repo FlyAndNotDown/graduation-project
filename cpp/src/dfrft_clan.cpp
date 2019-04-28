@@ -2,8 +2,6 @@
 #include "define.h"
 #include "tool.h"
 #include <armadillo>
-#include <iostream>
-using namespace std;
 using namespace arma;
 using namespace watermark;
 
@@ -112,4 +110,24 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 
 	// return kernel
 	return u * d * u.t();
+}
+
+cx_mat dfrft_clan::dfrft(cx_mat source, cx_mat kernel) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// switch via vector type
+	if (cols == 1) {
+		// if it's a col vector, just do transform
+		return shift(kernel * shift(source, rows / 2), rows / 2);
+	} else if (rows == 1) {
+		// if it's a row vector, transport it and do transform
+		// TODO
+		return shift(kernel * shift(source.t(), cols / 2, 1).t(), cols / 2, 1);
+	} else {
+		// return nothing
+		cx_mat output(rows, cols, fill::zeros);
+		return output;
+	}
 }
