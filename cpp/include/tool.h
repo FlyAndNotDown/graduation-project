@@ -37,7 +37,7 @@ namespace watermark {
 
 			static mat arnold(mat source, int order);
 
-			static vec normalize(vec source);
+			static mat normalize(mat source);
 	};
 };
 

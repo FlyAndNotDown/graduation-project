@@ -457,6 +457,7 @@ void test::mark_svm_mark(char *source_path, char *secret_path, char *output_path
 	cv::Mat output;
 
 	mat rd_matrix = randn(8, 8);
+
 	cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
 	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.75, 1, rd_matrix);
 	umat location_keys;
