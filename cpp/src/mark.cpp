@@ -6,7 +6,7 @@
 using namespace arma;
 using namespace watermark;
 
-vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) {
+vec mark::get_texture_masks(cv::Mat *blocks, uword length, int window_length) {
 	// init output
 	vec output(length, fill::zeros);
 	
@@ -17,40 +17,38 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) 
 		uword cols = blocks[t].cols;
 
 		// get window size
-		uword window_size = (2 * window_length + 1) * (2 * window_length + 1);
+		int window_size = (2 * window_length + 1) * (2 * window_length + 1);
 
 		// for every pixel, calculate texture mask and get sum
 		double mask = 0;
-		for (uword i = 0; i < rows; i++) {
-			for (uword j = 0; j < cols; j++) {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				double sum_b = 0;
 				double sum_g = 0;
 				double sum_r = 0;
 
 				// get near (2 * length) ^ 2 size pixels' value sum
-				for (uword m = i - window_length; m <= i + window_length; m++) {
-					for (uword n = i - window_length; n <= i + window_length; n++) {
+				for (int m = i - window_length; m <= i + window_length; m++) {
+					for (int n = j - window_length; n <= j + window_length; n++) {
 						if (m >= 0 && m <= (rows - 1) && n >= 0 && n <= (cols - 1)) {
-							Vec3i pixel_t = blocks[t].at<Vec3i>(m, n);
-							sum_b += pixel_t[0];
-							sum_g += pixel_t[1];
-							sum_r += pixel_t[2];
+							Vec3b pixel_t = blocks[t].at<Vec3b>(m, n);
+							sum_b += pixel_t[0] * 1.0 / 255;
+							sum_g += pixel_t[1] * 1.0 / 255;
+							sum_r += pixel_t[2] * 1.0 / 255;
 						}
 					}
 				}
 
 				// get average
-				double average_b = sum_b / window_size;
-				double average_g = sum_g / window_size;
-				double average_r = sum_r / window_size;
-
-				cout << average_b << "  " << average_g << "  " << average_r << endl;
+				double average_b = sum_b * 1.0 / window_size;
+				double average_g = sum_g * 1.0 / window_size;
+				double average_r = sum_r * 1.0 / window_size;
 
 				// get texture mask value in three channel
-				Vec3i pixel = blocks[t].at<Vec3i>(i, j);
-				double mask_b = abs(pixel[0] - average_b);
-				double mask_g = abs(pixel[1] - average_g);
-				double mask_r = abs(pixel[2] - average_r);
+				Vec3b pixel = blocks[t].at<Vec3b>(i, j);
+				double mask_b = abs(pixel[0] * 1.0 / 255 - average_b);
+				double mask_g = abs(pixel[1] * 1.0 / 255 - average_g);
+				double mask_r = abs(pixel[2] * 1.0 / 255 - average_r);
 
 				// get mask and add it to result
 				double max = mask_b;
@@ -301,8 +299,8 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 
 			// get average
 			double average = 0;
-			for (uword i = -1; i <= 1; i++) {
-				for (uword j = -1; j <= 1; j++) {
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
 					average += block_channel(row + i, col + j);
 				}
 			}
