@@ -19,6 +19,20 @@ void tool::print_mat(char *name, mat matrix) {
     cout << endl;
 }
 
+void tool::print_umat(char *name, umat matrix) {
+	uword rows = matrix.n_rows;
+	uword cols = matrix.n_cols;
+
+	cout << name << ":" << endl;
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			cout << matrix.at(i, j) << "    ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
 void tool::print_cx_mat(char *name, cx_mat matrix) {
     uword rows = matrix.n_rows;
     uword cols = matrix.n_cols;
@@ -158,6 +172,19 @@ uword tool::get_blocks_length(cube source, uword length) {
 	return block_num_per_row * block_num_per_col;
 }
 
+uword tool::get_blocks_length(cv::Mat source, uword length) {
+	// get source size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+
+	// calculate smaller block nums
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
+
+	// return size
+	return block_num_per_row * block_num_per_col;
+}
+
 void tool::split_to_blocks(cube source, uword length, cube *output) {
 	// get source size info
 	uword source_rows = source.n_rows;
@@ -184,6 +211,37 @@ void tool::split_to_blocks(cube source, uword length, cube *output) {
 					for (uword v = 0; v < source_channels; v++) {
 						output[i * block_num_per_row + j](m, n, v) = source(i * length + m, j * length + n, v);
 					}
+				}
+			}
+		}
+	}
+}
+
+void tool::split_to_blocks(cv::Mat source, uword length, cv::Mat *output) {
+	// get source size info
+	int rows = source.rows;
+	int cols = source.cols;
+
+	// calculate smaller block nums
+	uword block_num_per_row = cols / length;
+	uword block_num_per_col = rows / length;
+
+	// get output array size
+	uword size = block_num_per_row * block_num_per_col;
+
+	// init
+	for (uword i = 0; i < size; i++) {
+		output[i].create(length, length, CV_8UC3);
+	}
+
+	// do the copy
+	for (uword i = 0; i < block_num_per_col; i++) {
+		for (uword j = 0; j < block_num_per_row; j++) {
+			for (uword m = 0; m < length; m++) {
+				for (uword n = 0; n < length; n++) {
+					Vec3b pixel = source.at<Vec3b>(i * length + m, j * length + n);
+					Vec3b temp(pixel[0], pixel[1], pixel[2]);
+					output[i * block_num_per_row + j].at<Vec3b>(m, n) = temp;
 				}
 			}
 		}
@@ -295,4 +353,167 @@ mat tool::arnold(mat source, int order) {
 		}
 		return output;
 	}
+}
+
+/* vec tool::normalize(vec source) {
+	// get length
+	uword length = source.n_rows;
+
+	// get max & min value of vector
+	double max_value = source(0);
+	double min_value = source(0);
+	for (uword i = 0; i < length; i++) {
+		if (source(i) > max_value) {
+			max_value = source(i);
+		}
+		if (source(i) < min_value) {
+			min_value = source(i);
+		}
+	}
+
+	// init output
+	vec output(length, fill::zeros);
+	
+	// do normalize
+	double step = max_value - min_value;
+	for (uword i = 0; i < length; i++) {
+		output(i) = (source(i) - min_value) * 1.0 / step;
+	}
+
+	// return result
+	return output;
+} */
+
+mat tool::normalize(mat source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// get max & min value of matrix
+	double max_value = source(0, 0);
+	double min_value = source(0, 0);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (source(i, j) > max_value) {
+				max_value = source(i, j);
+			}
+			if (source(i, j) < min_value) {
+				min_value = source(i, j);
+			}
+		}
+	}
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do normalize
+	double step = max_value - min_value;
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output(i, j) = (source(i, j) - min_value) * 1.0 / step;
+		}
+	}
+
+	// return result
+	return output;
+}
+
+mat tool::normalize_by_max(mat source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// get max value of matrix
+	double max_value = source(0, 0);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (source(i, j) > max_value) {
+				max_value = source(i, j);
+			}
+		}
+	}
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do normalize
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output(i, j) = source(i, j) / max_value;
+		}
+	}
+
+	// return result
+	return output;
+}
+
+cube tool::cv_mat_to_cube(cv::Mat source) {
+	// cvtColor(source, source, COLOR_RGB2BGR);
+
+	// get size info
+	uword rows = source.rows;
+	uword cols = source.cols;
+
+	// init output
+	cube output(rows, cols, 4, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel = source.at<Vec3b>(i, j);
+			output(i, j, 1) = pixel[0] * 1.0 / 255;
+			output(i, j, 2) = pixel[1] * 1.0 / 255;
+			output(i, j, 3) = pixel[2] * 1.0 / 255;
+		}
+	}
+
+	// return result
+	return output;
+}
+
+cv::Mat tool::cube_to_cv_mat(cube source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// init output
+	cv::Mat output(rows, cols, CV_8UC3);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel(
+				(uchar)(source(i, j, 1) * 255),
+				(uchar)(source(i, j, 2) * 255),
+				(uchar)(source(i, j, 3) * 255)
+			);
+			output.at<Vec3b>(i, j) = pixel;
+		}
+	}
+	
+	// return it
+	return output;
+}
+
+mat tool::cv_mat_to_bmat(cv::Mat source) {
+	// get size info
+	uword rows = source.rows;
+	uword cols = source.cols;
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (source.at<uchar>(i, j) > 255 * 1.0 / 2) {
+				output(i, j) = 1;
+			} else {
+				output(i, j) = 0;
+			}
+		}
+	}
+
+	// return result
+	return output;
 }

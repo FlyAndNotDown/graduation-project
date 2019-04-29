@@ -34,6 +34,9 @@ namespace watermark {
 			// images
 			static void image_qdfrnt2(char *path, char *output_path, char *restored_path, char *cycle_path);
 			static void image_qdfrft2(char *path, char *output_path, char *restored_path);
+	
+			// mark
+			static void mark_svm_mark(char *source_path, char *secret_path, char *output_path);
 	};
 };
 

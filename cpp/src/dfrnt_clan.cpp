@@ -13,7 +13,8 @@ cx_mat dfrnt_clan::kernel(double order, double cycle, mat random_matrix) {
 	}
 	
 	// calculate the random symmetrical matrix
-    mat symmetrical_matrix = (random_matrix + random_matrix.t()) / 2;
+	mat rd_matrix_d = tool::normalize(random_matrix);
+    mat symmetrical_matrix = (rd_matrix_d + rd_matrix_d.t()) / 2;
 
     // get eig vectors
     cx_vec cx_eig_values;
