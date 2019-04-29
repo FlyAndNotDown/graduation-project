@@ -21,6 +21,8 @@ namespace watermark {
 			static cube read_image_to_cube(char *path);
 			static void save_mat_to_image(char *path, mat source);
 			static void save_cube_to_image(char *path, cube source);
+			static cube cv_mat_to_cube(cv::Mat source);
+			static cv::Mat cube_to_cv_mat(cube source);
     
 			static uword get_blocks_length(cube source, uword length);
 			static uword get_blocks_length(cv::Mat source, uword length);

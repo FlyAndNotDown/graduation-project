@@ -369,3 +369,49 @@ vec tool::normalize(vec source) {
 	// return result
 	return output;
 }
+
+cube tool::cv_mat_to_cube(cv::Mat source) {
+	// get size info
+	uword rows = source.rows;
+	uword cols = source.cols;
+
+	// init output
+	cube output(rows, cols, 4, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel = source.at<Vec3b>(i, j);
+			output(i, j, 1) = pixel[0] * 1.0 / 255;
+			output(i, j, 2) = pixel[1] * 1.0 / 255;
+			output(i, j, 3) = pixel[2] * 1.0 / 255;
+		}
+	}
+
+	// return result
+	return output;
+}
+
+cv::Mat tool::cube_to_cv_mat(cube source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// init output
+	cv::Mat output(rows, cols, CV_8UC3);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			Vec3b pixel(
+				(uchar)(source(i, j, 1) * 255),
+				(uchar)(source(i, j, 2) * 255),
+				(uchar)(source(i, j, 3) * 255)
+			);
+			output.at<Vec3b>(i, j) = pixel;
+		}
+	}
+	
+	// return it
+	return output;
+}
