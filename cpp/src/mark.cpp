@@ -27,7 +27,7 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) 
 				double sum_g = 0;
 				double sum_r = 0;
 
-				// get near (2 * length) ^ 2 size pixels' mask sum
+				// get near (2 * length) ^ 2 size pixels' value sum
 				for (uword m = i - window_length; m <= i + window_length; m++) {
 					for (uword n = i - window_length; n <= i + window_length; n++) {
 						if (m >= 0 && m <= (rows - 1) && n >= 0 && n <= (cols - 1)) {
