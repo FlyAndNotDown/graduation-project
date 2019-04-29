@@ -158,6 +158,19 @@ uword tool::get_blocks_length(cube source, uword length) {
 	return block_num_per_row * block_num_per_col;
 }
 
+uword tool::get_blocks_length(cv::Mat source, uword length) {
+	// get source size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+
+	// calculate smaller block nums
+	uword block_num_per_row = source_cols / length;
+	uword block_num_per_col = source_rows / length;
+
+	// return size
+	return block_num_per_row * block_num_per_col;
+}
+
 void tool::split_to_blocks(cube source, uword length, cube *output) {
 	// get source size info
 	uword source_rows = source.n_rows;
@@ -326,4 +339,33 @@ mat tool::arnold(mat source, int order) {
 		}
 		return output;
 	}
+}
+
+vec tool::normalize(vec source) {
+	// get length
+	uword length = source.n_rows;
+
+	// get max & min value of vector
+	double max_value = source(0);
+	double min_value = source(0);
+	for (uword i = 0; i < length; i++) {
+		if (source(i) > max_value) {
+			max_value = source(i);
+		}
+		if (source(i) < min_value) {
+			min_value = source(i);
+		}
+	}
+
+	// init output
+	vec output(length, fill::zeros);
+	
+	// do normalize
+	double step = max_value - min_value;
+	for (uword i = 0; i < length; i++) {
+		output(i) = (source(i) - min_value) * 1.0 / step;
+	}
+
+	// return result
+	return output;
 }

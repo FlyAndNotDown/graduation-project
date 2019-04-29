@@ -4,7 +4,7 @@
 using namespace arma;
 using namespace watermark;
 
-vec mark::get_texture_mask(cv::Mat *blocks, uword length, uword window_length) {
+vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) {
 	// init output
 	vec output(length, fill::zeros);
 	
@@ -68,7 +68,7 @@ vec mark::get_texture_mask(cv::Mat *blocks, uword length, uword window_length) {
 	return output;
 }
 
-vec mark::get_color_mask(cv::Mat *blocks, uword length, double color_factor) {
+vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 	// init output
 	vec output(length, fill::zeros);
 
@@ -88,8 +88,8 @@ vec mark::get_color_mask(cv::Mat *blocks, uword length, double color_factor) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
 				Vec3b pixel = lab.at<Vec3b>(i, j);
-				double channel_a = pixel[1] / 255;
-				double channel_b = pixel[2] / 255;
+				double channel_a = pixel[1] * 1.0 / 255;
+				double channel_b = pixel[2] * 1.0 / 255;
 
 				// get mask
 				mask += 1 - exp(0 - channel_a * channel_a - channel_b * channel_b) / (color_factor * color_factor);
@@ -102,6 +102,71 @@ vec mark::get_color_mask(cv::Mat *blocks, uword length, double color_factor) {
 
 	// return result
 	return output;
+}
+
+vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
+	// init output
+	vec output(length, fill::zeros);
+
+	// for every blocks, get its edge mask
+	for (uword t = 0; t < length; t++) {
+		// get size info
+		uword rows = blocks[t].rows;
+		uword cols = blocks[t].cols;
+
+		// get three channels
+		cv::Mat channels[3];
+		cv::split(blocks[t], channels);
+
+		// get canny edge of three channels
+		cv::Mat blurs[3], edges[3];
+		for (uword i = 0; i < 3; i++) {
+			blur(channels[i], blurs[i], Size(9, 9));
+			Canny(blurs[i], edges[i], 3, 9);
+		}
+
+		// get sum
+		double mask = 0;
+		for (uword i = 0; i < rows; i++) {
+			for (uword j = 0; j < cols; j++) {
+				mask += edges[0].at<uint>(i, j) * 1.0 / 255;
+				mask += edges[1].at<uint>(i, j) * 1.0 / 255;
+				mask += edges[2].at<uint>(i, j) * 1.0 / 255;
+			}
+		}
+
+		// add mask to result vector
+		output(t) = mask;
+	}
+
+	// return result
+	return output;
+}
+
+vec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_factor) {
+	// do split
+	uword blocks_length = tool::get_blocks_length(source, 8);
+	cv::Mat *blocks = new cv::Mat[blocks_length];
+
+	// get three mask vector and do normalize
+	vec texture_masks = tool::normalize(get_texture_masks(blocks, blocks_length, window_length));
+	vec color_masks = tool::normalize(get_color_masks(blocks, blocks_length, color_factor));
+	vec edge_masks = tool::normalize(get_edge_masks(blocks, blocks_length));
+
+	// clear mem
+	delete[] blocks;
+
+	// get adaptive and do normalize
+	vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+
+	// split it to 6 order
+	vec masks(blocks_length, fill::zeros);
+	for (uword i = 0; i < blocks_length; i++) {
+		masks(i) = floor(temp_masks(i) * 6);
+	}
+	
+	// return result
+	return masks;
 }
 
 void mark::svm_mark(int type, cube source, mat secret, cube &output, mat &location_keys, int arnold_times, cx_mat kernel, cx_mat invser_kernel, uword intensity) {
@@ -133,5 +198,5 @@ void mark::svm_mark(int type, cube source, mat secret, cube &output, mat &locati
 	u(1) = 1;
 
 	// get adaptive factors of every blocks
-	// TODO
+	// TODO delete blocks mem
 }
