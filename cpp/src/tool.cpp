@@ -212,7 +212,9 @@ void tool::split_to_blocks(cv::Mat source, uword length, cv::Mat *output) {
 		for (uword j = 0; j < block_num_per_row; j++) {
 			for (uword m = 0; m < length; m++) {
 				for (uword n = 0; n < length; n++) {
-					output[i * block_num_per_row + j].at<Vec3b>(m, n) = source.at<Vec3b>(i * length + m, j * length + n);
+					Vec3b pixel = source.at<Vec3b>(i * length + m, j * length + n);
+					Vec3b temp(pixel[0], pixel[1], pixel[2]);
+					output[i * block_num_per_row + j].at<Vec3b>(m, n) = temp;
 				}
 			}
 		}

@@ -4,6 +4,7 @@
 #include <armadillo>
 #include <opencv2/opencv.hpp>
 using namespace arma;
+using namespace cv;
 
 namespace watermark {
 	class mark {
