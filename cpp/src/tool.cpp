@@ -415,3 +415,26 @@ cv::Mat tool::cube_to_cv_mat(cube source) {
 	// return it
 	return output;
 }
+
+mat tool::cv_mat_to_bmat(cv::Mat source) {
+	// get size info
+	uword rows = source.rows;
+	uword cols = source.cols;
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (source.at<uchar>(i, j) > 255 * 1.0 / 2) {
+				output(i, j) = 1;
+			} else {
+				output(i, j) = 0;
+			}
+		}
+	}
+
+	// return result
+	return output;
+}

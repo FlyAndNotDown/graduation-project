@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 		"C:\\Users\\Administrator\\Desktop\\lena-arnold-restored.bmp"
 	); */
 
-	cv::Mat image = imread("C:\\Users\\Administrator\\Desktop\\lena.bmp");
+	cv::Mat image = imread("C:\\Users\\Administrator\\Desktop\\secret.bmp", IMREAD_GRAYSCALE);
 	cv::Mat channels[3], edge;
 	cv::split(image, channels);
 

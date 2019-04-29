@@ -171,7 +171,7 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	return masks;
 }
 
-void mark::svm_mark(int type, cv::Mat source, mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
+void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
 	// normalize the intensity
 	double intensity_d = intensity * 1.0 / 255;
 
@@ -180,7 +180,8 @@ void mark::svm_mark(int type, cv::Mat source, mat secret, cv::Mat &output, umat 
 	uword source_cols = source.cols;
 
 	// do arnold transform to secret
-	mat secret_arnold = tool::arnold(secret, arnold_times);
+	mat secret_b = tool::cv_mat_to_bmat(secret);
+	mat secret_arnold = tool::arnold(secret_b, arnold_times);
 
 	// get binary secret sequence
 	vec secret_sequence = tool::vectorize(secret_arnold);

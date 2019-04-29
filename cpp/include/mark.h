@@ -15,9 +15,9 @@ namespace watermark {
 			vec get_texture_masks(cv::Mat *blocks, uword length, uword window_length);
 			vec get_color_masks(cv::Mat *blocks, uword length, double color_factor);
 			vec get_edge_masks(cv::Mat *blocks, uword length);
-			vec get_adaptive_masks(cv::Mat source, uword window_length, double color_factor);
+			uvec get_adaptive_masks(cv::Mat source, uword window_length, double color_factor);
 
-			void svm_mark(int type, cv::Mat source, mat secret, cv::Mat &output, mat &location_keys, int arnold_times, cx_mat kernel, cx_mat invser_kernel, uword intensity);
+			void svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat invser_kernel, uword intensity);
 	};
 };
 
