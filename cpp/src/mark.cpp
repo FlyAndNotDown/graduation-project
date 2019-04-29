@@ -156,8 +156,6 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	vec color_masks = tool::normalize(get_color_masks(blocks, blocks_length, color_factor));
 	vec edge_masks = tool::normalize(get_edge_masks(blocks, blocks_length));
 
-	tool::print_mat("texture_masks", texture_masks);
-
 	// clear mem
 	delete[] blocks;
 
@@ -169,7 +167,7 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	for (uword i = 0; i < blocks_length; i++) {
 		masks(i) = (uword) floor(temp_masks(i) * 6);
 	}
-	
+
 	// return result
 	return masks;
 }

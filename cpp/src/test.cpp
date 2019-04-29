@@ -460,7 +460,7 @@ void test::mark_svm_mark(char *source_path, char *secret_path, char *output_path
 	cx_mat kernel = dfrnt_clan::kernel(0.25, 1, rd_matrix);
 	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.25, 1, rd_matrix);
 	umat location_keys;
-	mark::svm_mark(mark::MARK_TYPE_QDFRNT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 15);
+	mark::svm_mark(mark::MARK_TYPE_QDFRFT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 15);
 
 	imwrite(output_path, output);
 }
