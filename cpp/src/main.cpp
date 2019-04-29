@@ -11,12 +11,11 @@ int main(int argc, char *argv[]) {
 		"C:\\Users\\Administrator\\Desktop\\lena-arnold-restored.bmp"
 	); */
 
-	cv::Mat image = imread("C:\\Users\\Administrator\\Desktop\\secret.bmp", IMREAD_GRAYSCALE);
-	cv::Mat channels[3], edge;
-	cv::split(image, channels);
-
-	blur(channels[0], edge, Size(9, 9));
-	Canny(edge, edge, 3, 9);
+	test::mark_svm_mark(
+		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
+		"C:\\Users\\Administrator\\Desktop\\secret.bmp",
+		"C:\\Users\\Administrator\\Desktop\\lena-marked.bmp"
+	);
 
     return 0;
 }

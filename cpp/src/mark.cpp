@@ -149,11 +149,14 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	// do split
 	uword blocks_length = tool::get_blocks_length(source, 8);
 	cv::Mat *blocks = new cv::Mat[blocks_length];
+	tool::split_to_blocks(source, 8, blocks);
 
 	// get three mask vector and do normalize
 	vec texture_masks = tool::normalize(get_texture_masks(blocks, blocks_length, window_length));
 	vec color_masks = tool::normalize(get_color_masks(blocks, blocks_length, color_factor));
 	vec edge_masks = tool::normalize(get_edge_masks(blocks, blocks_length));
+
+	tool::print_mat("texture_masks", texture_masks);
 
 	// clear mem
 	delete[] blocks;

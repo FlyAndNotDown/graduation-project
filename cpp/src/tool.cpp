@@ -217,7 +217,7 @@ void tool::split_to_blocks(cv::Mat source, uword length, cv::Mat *output) {
 
 	// init
 	for (uword i = 0; i < size; i++) {
-		output[i].create(rows, cols, CV_8UC3);
+		output[i].create(length, length, CV_8UC3);
 	}
 
 	// do the copy
