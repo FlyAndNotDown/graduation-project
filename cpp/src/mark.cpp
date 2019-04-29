@@ -35,6 +35,11 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, int window_length) {
 							sum_b += pixel_t[0] * 1.0 / 255;
 							sum_g += pixel_t[1] * 1.0 / 255;
 							sum_r += pixel_t[2] * 1.0 / 255;
+						} else {
+							Vec3b pixel_t = blocks[t].at<Vec3b>(i, j);
+							sum_b += pixel_t[0] * 1.0 / 255;
+							sum_g += pixel_t[1] * 1.0 / 255;
+							sum_r += pixel_t[2] * 1.0 / 255;
 						}
 					}
 				}
@@ -239,7 +244,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			}
 
 			// if adaptive factor is zero, do not watermark
-			if (!(masks(n) > 0)) {
+			if (masks(n) <= 1 || masks(n) >= 5) {
 				continue;
 			}
 
@@ -306,6 +311,9 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			average = average * 1.0 / 8;
 
 			// do watermark
+			/* if (abs((2 * secret_sequence(x) - 1) * masks(n) * intensity_d) > 0.1) {
+				cout << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << endl;
+			} */
 			encoded_blocks[n](row, col, channel) = average + (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
 			x++;
 		}

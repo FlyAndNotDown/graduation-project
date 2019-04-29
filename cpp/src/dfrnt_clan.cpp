@@ -88,9 +88,9 @@ cube dfrnt_clan::qdfrnt(cube source, cx_mat kernel, vec unit_pure_quaternion) {
 	
 	// split source matrix to 4 channels
 	mat source_r = source.slice(0);
-	mat source_i = source.slice(1);
+	mat source_k = source.slice(1);
 	mat source_j = source.slice(2);
-	mat source_k = source.slice(3);
+	mat source_i = source.slice(3);
 
 	// get three imag part of unit pure quaternion
 	double ua = unit_pure_quaternion.at(1);
@@ -116,9 +116,9 @@ cube dfrnt_clan::qdfrnt(cube source, cx_mat kernel, vec unit_pure_quaternion) {
 	// get output
 	cube output(source);
 	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
-	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(3) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
 	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
-	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+	output.slice(1) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
 
 	// return it
 	return output;
@@ -132,9 +132,9 @@ cube dfrnt_clan::qdfrnt2(cube source, cx_mat kernel, vec unit_pure_quaternion) {
 
 	// split source matrix to 4 channels
 	mat source_r = source.slice(0);
-	mat source_i = source.slice(1);
+	mat source_k = source.slice(1);
 	mat source_j = source.slice(2);
-	mat source_k = source.slice(3);
+	mat source_i = source.slice(3);
 
 	// get three imag part of unit pure quaternion
 	double ua = unit_pure_quaternion.at(1);
@@ -160,9 +160,9 @@ cube dfrnt_clan::qdfrnt2(cube source, cx_mat kernel, vec unit_pure_quaternion) {
 	// get output
 	cube output(source);
 	output.slice(0) = output_r_real - output_i_imag * ua - output_j_imag * ub - output_k_imag * uc;
-	output.slice(1) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
+	output.slice(3) = output_i_real + output_r_imag * ua - output_j_imag * uc + output_k_imag * ub;
 	output.slice(2) = output_j_real + output_r_imag * ub - output_k_imag * ua + output_i_imag * uc;
-	output.slice(3) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
+	output.slice(1) = output_k_real + output_r_imag * uc - output_i_imag * ub + output_j_imag * ua;
 
 	// return it
 	return output;
