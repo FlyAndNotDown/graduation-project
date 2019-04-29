@@ -31,7 +31,7 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) 
 				for (uword m = i - window_length; m <= i + window_length; m++) {
 					for (uword n = i - window_length; n <= i + window_length; n++) {
 						if (m >= 0 && m <= (rows - 1) && n >= 0 && n <= (cols - 1)) {
-							Vec3b pixel_t = blocks[t].at<Vec3b>(m, n);
+							Vec3i pixel_t = blocks[t].at<Vec3i>(m, n);
 							sum_b += pixel_t[0];
 							sum_g += pixel_t[1];
 							sum_r += pixel_t[2];
@@ -44,8 +44,10 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) 
 				double average_g = sum_g / window_size;
 				double average_r = sum_r / window_size;
 
+				cout << average_b << "  " << average_g << "  " << average_r << endl;
+
 				// get texture mask value in three channel
-				Vec3b pixel = blocks[t].at<Vec3b>(i, j);
+				Vec3i pixel = blocks[t].at<Vec3i>(i, j);
 				double mask_b = abs(pixel[0] - average_b);
 				double mask_g = abs(pixel[1] - average_g);
 				double mask_r = abs(pixel[2] - average_r);
@@ -61,6 +63,8 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, uword window_length) 
 				mask += max;
 			}
 		}
+
+		cout << mask << endl;
 
 		// add result to output vector
 		output(t) = mask;
@@ -89,7 +93,7 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 		for (uword i = 0; i < rows; i++) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
-				Vec3b pixel = lab.at<Vec3b>(i, j);
+				Vec3i pixel = lab.at<Vec3i>(i, j);
 				double channel_a = abs((pixel[1] - 128) * 1.0 / 128);
 				double channel_b = abs((pixel[2] - 128) * 1.0 / 128);
 
