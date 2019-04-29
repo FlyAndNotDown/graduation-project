@@ -62,8 +62,6 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, int window_length) {
 			}
 		}
 
-		cout << mask << endl;
-
 		// add result to output vector
 		output(t) = mask;
 	}
@@ -91,12 +89,12 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 		for (uword i = 0; i < rows; i++) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
-				Vec3i pixel = lab.at<Vec3i>(i, j);
+				Vec3b pixel = lab.at<Vec3b>(i, j);
 				double channel_a = abs((pixel[1] - 128) * 1.0 / 128);
 				double channel_b = abs((pixel[2] - 128) * 1.0 / 128);
 
 				// get mask
-				mask += 1 - exp(0 - channel_a * channel_a - channel_b * channel_b) / (color_factor * color_factor);
+				mask += 1 - exp(0 - (channel_a * channel_a + channel_b * channel_b) / (color_factor * color_factor));
 			}
 		}
 
@@ -133,9 +131,9 @@ vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
 		double mask = 0;
 		for (uword i = 0; i < rows; i++) {
 			for (uword j = 0; j < cols; j++) {
-				mask += edges[0].at<uint>(i, j) * 1.0 / 255;
-				mask += edges[1].at<uint>(i, j) * 1.0 / 255;
-				mask += edges[2].at<uint>(i, j) * 1.0 / 255;
+				mask += (unsigned int) edges[0].at<uchar>(i, j) * 1.0 / 255;
+				mask += (unsigned int) edges[1].at<uchar>(i, j) * 1.0 / 255;
+				mask += (unsigned int) edges[2].at<uchar>(i, j) * 1.0 / 255;
 			}
 		}
 
@@ -162,7 +160,7 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	delete[] blocks;
 
 	// get adaptive and do normalize
-	vec temp_masks = tool::normalize(0.3 * texture_masks + 0.4 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+	vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
 	// vec temp_masks = tool::normalize(0.3 * texture_masks - 0.4 * edge_masks - 0.3 * color_masks);
 
 	// split it to 6 order
