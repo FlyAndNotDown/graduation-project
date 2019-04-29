@@ -38,6 +38,7 @@ namespace watermark {
 			static mat arnold(mat source, int order);
 
 			static mat normalize(mat source);
+			static mat normalize_by_max(mat source);
 	};
 };
 

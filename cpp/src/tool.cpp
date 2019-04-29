@@ -389,9 +389,9 @@ mat tool::normalize(mat source) {
 	uword rows = source.n_rows;
 	uword cols = source.n_cols;
 
-	// get max & min value of vector
-	double max_value = source(0);
-	double min_value = source(0);
+	// get max & min value of matrix
+	double max_value = source(0, 0);
+	double min_value = source(0, 0);
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			if (source(i, j) > max_value) {
@@ -411,6 +411,35 @@ mat tool::normalize(mat source) {
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			output(i, j) = (source(i, j) - min_value) * 1.0 / step;
+		}
+	}
+
+	// return result
+	return output;
+}
+
+mat tool::normalize_by_max(mat source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// get max value of matrix
+	double max_value = source(0, 0);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (source(i, j) > max_value) {
+				max_value = source(i, j);
+			}
+		}
+	}
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do normalize
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output(i, j) = source(i, j) / max_value;
 		}
 	}
 
