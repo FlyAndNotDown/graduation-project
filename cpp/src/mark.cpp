@@ -103,6 +103,8 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 			}
 		}
 
+		cout << mask << endl;
+
 		// add mask to output vector
 		output(t) = mask;
 	}
