@@ -17,5 +17,6 @@ int main(int argc, char *argv[]) {
 		"C:\\Users\\Administrator\\Desktop\\lena-marked.bmp"
 	);
 
-    return 0;
+
+	return 0;
 }

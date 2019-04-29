@@ -90,8 +90,8 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
 				Vec3b pixel = lab.at<Vec3b>(i, j);
-				double channel_a = pixel[1] * 1.0 / 255;
-				double channel_b = pixel[2] * 1.0 / 255;
+				double channel_a = abs((pixel[1] - 128) * 1.0 / 128);
+				double channel_b = abs((pixel[2] - 128) * 1.0 / 128);
 
 				// get mask
 				mask += 1 - exp(0 - channel_a * channel_a - channel_b * channel_b) / (color_factor * color_factor);
@@ -123,7 +123,7 @@ vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
 		// get canny edge of three channels
 		cv::Mat blurs[3], edges[3];
 		for (uword i = 0; i < 3; i++) {
-			blur(channels[i], blurs[i], Size(9, 9));
+			blur(channels[i], blurs[i], Size(3, 3));
 			Canny(blurs[i], edges[i], 3, 9);
 		}
 
@@ -160,7 +160,8 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	delete[] blocks;
 
 	// get adaptive and do normalize
-	vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+	vec temp_masks = tool::normalize(0.3 * texture_masks + 0.4 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+	// vec temp_masks = tool::normalize(0.3 * texture_masks - 0.4 * edge_masks - 0.3 * color_masks);
 
 	// split it to 6 order
 	uvec masks(blocks_length, fill::zeros);
@@ -250,7 +251,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			for (uword i = 0; i < 8; i++) {
 				for (uword j = 0; j < 8; j++) {
 					uword index_t = i * 8 + j;
-					block_channel_sequence(0, index_t) = block_channel(i, j);
+					block_channel_sequence(0, index_t) = abs(block_channel(i, j));
 					block_channel_sequence(1, index_t) = i;
 					block_channel_sequence(2, index_t) = j;
 				}
