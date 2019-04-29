@@ -165,13 +165,13 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	delete[] blocks;
 
 	// get adaptive and do normalize
-	vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
-	// vec temp_masks = tool::normalize(0.3 * texture_masks - 0.4 * edge_masks - 0.3 * color_masks);
+	// vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+	vec temp_masks = tool::normalize(0.2 * texture_masks - 0.5 * edge_masks - 0.3 * color_masks);
 
 	// split it to 6 order
 	uvec masks(blocks_length, fill::zeros);
 	for (uword i = 0; i < blocks_length; i++) {
-		masks(i) = (uword) floor(temp_masks(i) * 6);
+		masks(i) = (uword) floor(temp_masks(i) * 4);
 	}
 
 	// return result
@@ -244,7 +244,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			}
 
 			// if adaptive factor is zero, do not watermark
-			if (masks(n) <= 1 || masks(n) >= 5) {
+			if (masks(n) <= 0 || masks(n) >= 3) {
 				continue;
 			}
 
@@ -276,7 +276,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			}
 
 			// get middle sequence value's position
-			uword t = 31;
+			uword t = 28;
 			uword row = (uword) block_channel_sequence(1, t);
 			uword col = (uword) block_channel_sequence(2, t);
 			uword count = 1;
