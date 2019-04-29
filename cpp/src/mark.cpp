@@ -35,12 +35,12 @@ vec mark::get_texture_masks(cv::Mat *blocks, uword length, int window_length) {
 							sum_b += pixel_t[0] * 1.0 / 255;
 							sum_g += pixel_t[1] * 1.0 / 255;
 							sum_r += pixel_t[2] * 1.0 / 255;
-						} else {
+						} /* else {
 							Vec3b pixel_t = blocks[t].at<Vec3b>(i, j);
 							sum_b += pixel_t[0] * 1.0 / 255;
 							sum_g += pixel_t[1] * 1.0 / 255;
 							sum_r += pixel_t[2] * 1.0 / 255;
-						}
+						} */
 					}
 				}
 
@@ -165,13 +165,13 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	delete[] blocks;
 
 	// get adaptive and do normalize
-	// vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
-	vec temp_masks = tool::normalize(0.2 * texture_masks - 0.5 * edge_masks - 0.3 * color_masks);
+	vec temp_masks = tool::normalize(0.2 * texture_masks + 0.5 * (1 - edge_masks) + 0.3 * (1 - color_masks));
+	// vec temp_masks = tool::normalize(0.2 * texture_masks - 0.5 * edge_masks - 0.3 * color_masks);
 
 	// split it to 6 order
 	uvec masks(blocks_length, fill::zeros);
 	for (uword i = 0; i < blocks_length; i++) {
-		masks(i) = (uword) floor(temp_masks(i) * 4);
+		masks(i) = (uword) floor(temp_masks(i) * 6);
 	}
 
 	// return result
@@ -244,7 +244,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			}
 
 			// if adaptive factor is zero, do not watermark
-			if (masks(n) <= 0 || masks(n) >= 3) {
+			if (masks(n) <= 1) {
 				continue;
 			}
 
@@ -322,17 +322,17 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	// do inverse transform to every encoded block
 	cube *restored_blocks = new cube[blocks_length];
 	switch (type) {
-	case mark::MARK_TYPE_QDFRFT:
-		for (uword i = 0; i < blocks_length; i++) {
-			restored_blocks[i] = dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u);
-		}
-		break;
-	case mark::MARK_TYPE_QDFRNT:
-		for (uword i = 0; i < blocks_length; i++) {
-			restored_blocks[i] = dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u);
-		}
-	default:
-		break;
+		case mark::MARK_TYPE_QDFRFT:
+			for (uword i = 0; i < blocks_length; i++) {
+				restored_blocks[i] = dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u);
+			}
+			break;
+		case mark::MARK_TYPE_QDFRNT:
+			for (uword i = 0; i < blocks_length; i++) {
+				restored_blocks[i] = dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u);
+			}
+		default:
+			break;
 	}
 
 	// merge
