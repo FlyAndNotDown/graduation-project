@@ -128,7 +128,7 @@ vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
 		// get canny edge of three channels
 		cv::Mat blurs[3], edges[3];
 		for (uword i = 0; i < 3; i++) {
-			blur(channels[i], blurs[i], Size(3, 3));
+			blur(channels[i], blurs[i], Size(9, 9));
 			Canny(blurs[i], edges[i], 3, 9);
 		}
 

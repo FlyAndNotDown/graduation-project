@@ -419,6 +419,8 @@ mat tool::normalize(mat source) {
 }
 
 cube tool::cv_mat_to_cube(cv::Mat source) {
+	// cvtColor(source, source, COLOR_RGB2BGR);
+
 	// get size info
 	uword rows = source.rows;
 	uword cols = source.cols;

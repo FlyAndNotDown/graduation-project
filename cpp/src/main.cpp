@@ -12,11 +12,16 @@ int main(int argc, char *argv[]) {
 	); */
 
 	test::mark_svm_mark(
+		"C:\\Users\\Administrator\\Desktop\\peppers.tiff",
+		"C:\\Users\\Administrator\\Desktop\\secret.bmp",
+		"C:\\Users\\Administrator\\Desktop\\peppers-marked.bmp"
+	);
+
+	/* test::mark_svm_mark(
 		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
 		"C:\\Users\\Administrator\\Desktop\\secret.bmp",
 		"C:\\Users\\Administrator\\Desktop\\lena-marked.bmp"
-	);
-
+	); */
 
 	return 0;
 }
