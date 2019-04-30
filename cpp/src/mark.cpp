@@ -182,7 +182,7 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	return masks;
 }
 
-void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
+void mark::im_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
 	// normalize the intensity
 	double intensity_d = intensity * 1.0 / 255;
 
@@ -358,7 +358,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	delete[] restored_blocks;
 }
 
-void mark::svm_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file) {
+void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file) {
 	// normalize the intensity
 	double intensity_d = intensity * 1.0 / 255;
 
@@ -503,14 +503,31 @@ void mark::svm_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword
 					}
 				}
 			}
-			train_data_set.y[train_data_count] = secret_sequence(x);
+			train_data_set.y[train_data_count] = secret_sequence(x) == 0 ? -1 : 1;
 			train_data_count++;
 			x++;
 		}
 	}
 
 	// start train
-	// TODO
+	svm_parameter param;
+	param.svm_type = ONE_CLASS;
+	param.kernel_type = LINEAR;
+	param.degree = 3;
+	param.gamma = 0;	// 1/num_features
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 100;
+	param.C = 1;
+	param.eps = 1e-3;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+	svm_model *model = svm_train(&train_data_set, &param);
+	svm_save_model(model_file, model);
 
 	// free blocks mem
 	delete[] blocks;
@@ -520,4 +537,5 @@ void mark::svm_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword
 	}
 	delete train_data_set.x;
 	delete train_data_set.y;
+	delete model;
 }
