@@ -95,15 +95,15 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
 				Vec3b pixel = lab.at<Vec3b>(i, j);
-				double channel_a = abs((pixel[1] - 128) * 1.0 / 128);
-				double channel_b = abs((pixel[2] - 128) * 1.0 / 128);
+
+				// TODO
+				double channel_a = pixel[1] * 1.0 / 256;
+				double channel_b = pixel[2] * 1.0 / 256;
 
 				// get mask
 				mask += 1 - exp(0 - (channel_a * channel_a + channel_b * channel_b) / (color_factor * color_factor));
 			}
 		}
-
-		cout << mask << endl;
 
 		// add mask to output vector
 		output(t) = mask;
@@ -128,10 +128,12 @@ vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
 		cv::split(blocks[t], channels);
 
 		// get canny edge of three channels
-		cv::Mat blurs[3], edges[3];
+		cv::Mat blurs[3];
+		cv::Mat edges[3];
 		for (uword i = 0; i < 3; i++) {
-			blur(channels[i], blurs[i], Size(9, 9));
-			Canny(blurs[i], edges[i], 3, 9);
+			// blur(channels[i], blurs[i], Size(9, 9));
+			// Canny(blurs[i], edges[i], 3, 9);
+			Sobel(channels[i], edges[i], CV_8U, 1, 1, 3, 1, 1);
 		}
 
 		// get sum
@@ -159,9 +161,9 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	tool::split_to_blocks(source, 8, blocks);
 
 	// get three mask vector and do normalize
-	vec texture_masks = tool::normalize_by_max(get_texture_masks(blocks, blocks_length, window_length));
-	vec color_masks = tool::normalize_by_max(get_color_masks(blocks, blocks_length, color_factor));
-	vec edge_masks = tool::normalize_by_max(get_edge_masks(blocks, blocks_length));
+	vec texture_masks = tool::normalize(get_texture_masks(blocks, blocks_length, window_length));
+	vec color_masks = tool::normalize(get_color_masks(blocks, blocks_length, color_factor));
+	vec edge_masks = tool::normalize(get_edge_masks(blocks, blocks_length));
 
 	// clear mem
 	delete[] blocks;
@@ -275,6 +277,8 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 				block_channel_sequence.col(i) = block_channel_sequence.col(min_index);
 				block_channel_sequence.col(min_index) = t;
 			}
+
+			// tool::print_mat("block_channel_sequence", block_channel_sequence);
 
 			// get middle sequence value's position
 			uword t = 28;
