@@ -506,7 +506,7 @@ cv::Mat tool::mat_to_cv_mat(mat source) {
 	// do copy
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
-			output.at<uchar>(i, j) = (uchar) source(i, j) * 255;
+			output.at<uchar>(i, j) = (uchar) (source(i, j) * 255);
 		}
 	}
 

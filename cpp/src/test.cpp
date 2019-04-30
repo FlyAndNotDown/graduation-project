@@ -476,15 +476,15 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path,
 
 void test::mark_im_train(char *source_path, char *model_path) {
 	cv::Mat source = imread(source_path);
-	mat random = randn(64, 64);
+	mat random = randn(10, 10);
 	random = tool::normalize(random);
-	uvec secret(4096, fill::zeros);
-	for (uword i = 0; i < 64; i++) {
-		for (uword j = 0; j < 64; j++) {
+	uvec secret(100, fill::zeros);
+	for (uword i = 0; i < 10; i++) {
+		for (uword j = 0; j < 10; j++) {
 			if (random(i, j) > 0.5) {
-				secret(i * 64 + j) = 1;
+				secret(i * 10 + j) = 1;
 			} else {
-				secret(i * 64 + j) = 0;
+				secret(i * 10 + j) = 0;
 			}
 		}
 	}

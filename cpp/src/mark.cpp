@@ -480,7 +480,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 			// get train data
 			train_data_set.x[train_data_count] = new svm_node[10];
 			train_data_set.x[train_data_count][9].index = -1;
-			double increment = (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
+			double increment = (double) (2 * (int) secret_sequence(x) - 1) * masks(n) * intensity_d;
 			double average = 0;
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
@@ -504,6 +504,14 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 					}
 				}
 			}
+
+			if (train_data_count == 0) {
+				for (int i = 0; i < 9; i++) {
+					cout << train_data_set.x[train_data_count][i].value << " ";
+				}
+				cout << endl;
+			}
+
 			train_data_set.y[train_data_count] = secret_sequence(x) == 0 ? -1 : 1;
 			train_data_count++;
 			x++;
@@ -512,14 +520,18 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 
 	// start train
 	svm_parameter param;
+	// param.svm_type = C_SVC;
 	param.svm_type = ONE_CLASS;
+	// param.kernel_type = RBF;
 	param.kernel_type = LINEAR;
 	param.degree = 3;
-	param.gamma = 0;
+	// param.gamma = 1;	// 1/num_features
+	param.gamma = 1.0 / 9;
 	param.coef0 = 0;
 	param.nu = 0.5;
-	param.cache_size = 100;
+	param.cache_size = 1000;
 	param.C = 1;
+	// param.eps = 1e-3;
 	param.eps = 1e-3;
 	param.p = 0.1;
 	param.shrinking = 1;
@@ -581,12 +593,12 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 	}
 
 	// for every position, get secret value
-	for (uword i = 0; i < location_keys_cols; i++) {
+	for (uword n = 0; n < location_keys_cols; n++) {
 		// get info
-		uword block_index = location_keys(0, i);
-		uword channel = location_keys(1, i);
-		uword row = location_keys(2, i);
-		uword col = location_keys(3, i);
+		uword block_index = location_keys(0, n);
+		uword channel = location_keys(1, n);
+		uword row = location_keys(2, n);
+		uword col = location_keys(3, n);
 
 		// calculate svm input data
 		mat block_channel = encoded_blocks[block_index].slice(channel);
@@ -613,6 +625,13 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 					nodes[index].value = block_channel(row, col) - block_channel(row + i, col + j);
 				}
 			}
+		}
+
+		if (secret_count == 0) {
+			for (int i = 0; i < 9; i++) {
+				cout << nodes[i].value << " " << endl;
+			}
+			cout << endl;
 		}
 
 		// predict result
