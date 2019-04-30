@@ -517,3 +517,26 @@ mat tool::cv_mat_to_bmat(cv::Mat source) {
 	// return result
 	return output;
 }
+
+cube tool::fix_after_transform(cube source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	uword channels = source.n_slices;
+
+	// init output
+	cube output(rows, cols, 4, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			for (uword k = 0; k < channels; k++) {
+				double temp = abs(source(i, j, k));
+				output(i, j, k) = temp > 1 ? 1 : temp;
+			}
+		}
+	}
+
+	// return result
+	return output;
+}

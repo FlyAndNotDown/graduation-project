@@ -317,8 +317,14 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			/* if (abs((2 * secret_sequence(x) - 1) * masks(n) * intensity_d) > 0.1) {
 				cout << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << endl;
 			} */
+			if (n == 56) {
+				cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
+			}
 			// cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
 			encoded_blocks[n](row, col, channel) = average + (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
+			if (n == 56) {
+				cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
+			}
 			// cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
 			x++;
 		}
@@ -329,14 +335,12 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	switch (type) {
 		case mark::MARK_TYPE_QDFRFT:
 			for (uword i = 0; i < blocks_length; i++) {
-				restored_blocks[i] = dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u);
-				restored_blocks[i] = arma::abs(restored_blocks[i]);
+				restored_blocks[i] = tool::fix_after_transform(dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u));
 			}
 			break;
 		case mark::MARK_TYPE_QDFRNT:
 			for (uword i = 0; i < blocks_length; i++) {
-				restored_blocks[i] = dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u);
-				restored_blocks[i] = arma::abs(restored_blocks[i]);
+				restored_blocks[i] = tool::fix_after_transform(dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u));
 			}
 		default:
 			break;

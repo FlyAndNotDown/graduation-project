@@ -39,6 +39,8 @@ namespace watermark {
 
 			static mat normalize(mat source);
 			static mat normalize_by_max(mat source);
+
+			static cube fix_after_transform(cube source);
 	};
 };
 
