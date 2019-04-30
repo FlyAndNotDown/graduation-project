@@ -2,6 +2,7 @@
 #include "tool.h"
 #include "dfrft_clan.h"
 #include "dfrnt_clan.h"
+#include "svm.h"
 #include <armadillo>
 using namespace arma;
 using namespace watermark;
@@ -355,4 +356,168 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	delete[] blocks;
 	delete[] encoded_blocks;
 	delete[] restored_blocks;
+}
+
+void mark::svm_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file) {
+	// normalize the intensity
+	double intensity_d = intensity * 1.0 / 255;
+
+	// get size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+	uword secret_length = secret.n_rows;
+
+	// init train data set
+	svm_problem train_data_set;
+	train_data_set.l = secret_length;
+	train_data_set.y = new double[secret_length];
+	train_data_set.x = new svm_node*[secret_length];
+	int train_data_count = 0;
+
+	// get binary secret sequence
+	uvec secret_sequence = secret;
+	uword secret_sequence_length = secret_sequence.n_rows;
+
+	// splice picture to smaller blocks
+	uword blocks_length = tool::get_blocks_length(source, 8);
+	cube *blocks = new cube[blocks_length];
+	tool::split_to_blocks(tool::cv_mat_to_cube(source), 8, blocks);
+
+	// set the unit quaternion
+	vec u(4, fill::zeros);
+	u(1) = 1;
+
+	// get adaptive factors of every blocks
+	uvec masks = mark::get_adaptive_masks(source, 1, 0.25);
+
+	// do transform to every block
+	cube *encoded_blocks = new cube[blocks_length];
+	switch (type) {
+	case mark::MARK_TYPE_QDFRFT:
+		for (uword i = 0; i < blocks_length; i++) {
+			encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+			// tool::print_cube("encoded_blocks", encoded_blocks[i]);
+		}
+		break;
+	case mark::MARK_TYPE_QDFRNT:
+		for (uword i = 0; i < blocks_length; i++) {
+			encoded_blocks[i] = dfrnt_clan::qdfrnt2(blocks[i], kernel, u);
+		}
+	default:
+		break;
+	}
+
+	// start watermakring
+	uword x = 0;
+	bool over = false;
+	for (uword channel = 2; channel <= 3; channel++) {
+		// if over, break
+		if (over) {
+			break;
+		}
+
+		// mark 1 point in single block
+		for (uword n = 0; n < blocks_length; n++) {
+			// if secret sequence have used up, break
+			if (x >= secret_sequence_length) {
+				over = true;
+				break;
+			}
+
+			// if adaptive factor is zero, do not watermark
+			if (masks(n) <= 1) {
+				continue;
+			}
+
+			// get channel
+			mat block_channel = encoded_blocks[n].slice(channel);
+
+			// get location & location key-value sequence
+			mat block_channel_sequence(3, 64);
+			for (uword i = 0; i < 8; i++) {
+				for (uword j = 0; j < 8; j++) {
+					uword index_t = i * 8 + j;
+					block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					block_channel_sequence(1, index_t) = i;
+					block_channel_sequence(2, index_t) = j;
+				}
+			}
+
+			// sorting sequence by value
+			for (uword i = 0; i < 63; i++) {
+				uword min_index = i;
+				for (uword j = i + 1; j < 64; j++) {
+					if (block_channel_sequence(0, j) < block_channel_sequence(0, min_index)) {
+						min_index = j;
+					}
+				}
+				vec t = block_channel_sequence.col(i);
+				block_channel_sequence.col(i) = block_channel_sequence.col(min_index);
+				block_channel_sequence.col(min_index) = t;
+			}
+
+			// tool::print_mat("block_channel", block_channel);
+
+			// get middle sequence value's position
+			uword t = 31;
+			uword row = (uword)block_channel_sequence(1, t);
+			uword col = (uword)block_channel_sequence(2, t);
+			uword count = 1;
+			bool flag = true;
+			while (!(row >= 1 && row <= 6 && col >= 1 && col <= 6)) {
+				if (flag) {
+					t += count;
+				}
+				else {
+					t -= count;
+				}
+				count++;
+				flag = !flag;
+				row = (uword)block_channel_sequence(1, t);
+				col = (uword)block_channel_sequence(2, t);
+			}
+
+			// get train data
+			train_data_set.x[train_data_count] = new svm_node[9];
+			double increment = (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
+			double average = 0;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+						average += block_channel(row, col);
+					} else {
+						average += block_channel(row + i, col + j);
+					}
+				}
+			}
+			average = (average - block_channel(row, col)) * 1.0 / 8;
+			double value_on_mark_position = average + increment;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					int index = (i + 1) * 3 + (j + 1);
+					train_data_set.x[train_data_count][index].index = index;
+					if (i == 0 && j == 0) {
+						train_data_set.x[train_data_count][index].value = increment;
+					} else {
+						train_data_set.x[train_data_count][index].value = value_on_mark_position - block_channel(row + i, col + j);
+					}
+				}
+			}
+			train_data_set.y[train_data_count] = secret_sequence(x);
+			train_data_count++;
+			x++;
+		}
+	}
+
+	// start train
+	// TODO
+
+	// free blocks mem
+	delete[] blocks;
+	delete[] encoded_blocks;
+	for (int i = 0; i < secret_length; i++) {
+		delete[] train_data_set.x[i];
+	}
+	delete train_data_set.x;
+	delete train_data_set.y;
 }
