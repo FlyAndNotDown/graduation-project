@@ -478,7 +478,8 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 			}
 
 			// get train data
-			train_data_set.x[train_data_count] = new svm_node[9];
+			train_data_set.x[train_data_count] = new svm_node[10];
+			train_data_set.x[train_data_count][9].index = -1;
 			double increment = (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
 			double average = 0;
 			for (int i = -1; i <= 1; i++) {
@@ -495,7 +496,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
 					int index = (i + 1) * 3 + (j + 1);
-					train_data_set.x[train_data_count][index].index = index;
+					train_data_set.x[train_data_count][index].index = index + 1;
 					if (i == 0 && j == 0) {
 						train_data_set.x[train_data_count][index].value = increment;
 					} else {
@@ -514,7 +515,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 	param.svm_type = ONE_CLASS;
 	param.kernel_type = LINEAR;
 	param.degree = 3;
-	param.gamma = 0;	// 1/num_features
+	param.gamma = 0;
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 100;
