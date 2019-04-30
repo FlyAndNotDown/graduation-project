@@ -278,10 +278,8 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 				block_channel_sequence.col(min_index) = t;
 			}
 
-			// tool::print_mat("block_channel_sequence", block_channel_sequence);
-
 			// get middle sequence value's position
-			uword t = 28;
+			uword t = 31;
 			uword row = (uword) block_channel_sequence(1, t);
 			uword col = (uword) block_channel_sequence(2, t);
 			uword count = 1;
@@ -319,7 +317,9 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			/* if (abs((2 * secret_sequence(x) - 1) * masks(n) * intensity_d) > 0.1) {
 				cout << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << endl;
 			} */
+			// cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
 			encoded_blocks[n](row, col, channel) = average + (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
+			// cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
 			x++;
 		}
 	}
@@ -330,11 +330,13 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 		case mark::MARK_TYPE_QDFRFT:
 			for (uword i = 0; i < blocks_length; i++) {
 				restored_blocks[i] = dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u);
+				restored_blocks[i] = arma::abs(restored_blocks[i]);
 			}
 			break;
 		case mark::MARK_TYPE_QDFRNT:
 			for (uword i = 0; i < blocks_length; i++) {
 				restored_blocks[i] = dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u);
+				restored_blocks[i] = arma::abs(restored_blocks[i]);
 			}
 		default:
 			break;
