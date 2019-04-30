@@ -317,14 +317,8 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			/* if (abs((2 * secret_sequence(x) - 1) * masks(n) * intensity_d) > 0.1) {
 				cout << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << endl;
 			} */
-			if (n == 56) {
-				cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
-			}
 			// cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
 			encoded_blocks[n](row, col, channel) = average + (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
-			if (n == 56) {
-				cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
-			}
 			// cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
 			x++;
 		}
