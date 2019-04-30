@@ -477,6 +477,8 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 				col = (uword)block_channel_sequence(2, t);
 			}
 
+			cout << "train: " << "block_index: " << n << "channel: " << channel << "row: " << row << "col: " << col << endl;
+
 			// get train data
 			train_data_set.x[train_data_count] = new svm_node[10];
 			train_data_set.x[train_data_count][9].index = -1;
@@ -505,12 +507,12 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 				}
 			}
 
-			if (train_data_count == 0) {
+			/* if (train_data_count == 0) {
 				for (int i = 0; i < 9; i++) {
 					cout << train_data_set.x[train_data_count][i].value << " ";
 				}
 				cout << endl;
-			}
+			} */
 
 			train_data_set.y[train_data_count] = secret_sequence(x) == 0 ? -1 : 1;
 			train_data_count++;
@@ -564,7 +566,6 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 
 	// get binary secret sequence
 	vec secret_sequence(location_keys_cols, fill::zeros);
-	uword secret_count = 0;
 
 	// splice picture to smaller blocks
 	uword blocks_length = tool::get_blocks_length(source, 8);
@@ -600,6 +601,8 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 		uword row = location_keys(2, n);
 		uword col = location_keys(3, n);
 
+		cout << "restore" << "block_index: " << block_index << "channel: " << channel << "row: " << row << "col: " << col << endl;
+
 		// calculate svm input data
 		mat block_channel = encoded_blocks[block_index].slice(channel);
 		svm_node *nodes = new svm_node[10];
@@ -627,23 +630,22 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 			}
 		}
 
-		if (secret_count == 0) {
+		/* if (n == 0) {
 			for (int i = 0; i < 9; i++) {
 				cout << nodes[i].value << " " << endl;
 			}
 			cout << endl;
-		}
+		} */
 
 		// predict result
 		double predict_result = svm_predict(model, nodes);
 		double distance_to_nega_one = abs(predict_result + 1);
 		double distance_to_one = abs(predict_result - 1);
 		if (distance_to_nega_one > distance_to_one) {
-			secret_sequence(secret_count) = 1;
+			secret_sequence(n) = 1;
 		} else {
-			secret_sequence(secret_count) = 0;
+			secret_sequence(n) = 0;
 		}
-		secret_count++;
 		delete[] nodes;
 	}
 
