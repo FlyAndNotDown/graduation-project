@@ -219,6 +219,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 		case mark::MARK_TYPE_QDFRFT:
 			for (uword i = 0; i < blocks_length; i++) {
 				encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+				// tool::print_cube("encoded_blocks", encoded_blocks[i]);
 			}
 			break;
 		case mark::MARK_TYPE_QDFRNT:
@@ -278,6 +279,8 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 				block_channel_sequence.col(min_index) = t;
 			}
 
+			// tool::print_mat("block_channel", block_channel);
+
 			// get middle sequence value's position
 			uword t = 31;
 			uword row = (uword) block_channel_sequence(1, t);
@@ -307,7 +310,11 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			double average = 0;
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
-					average += block_channel(row + i, col + j);
+					if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+						average += block_channel(row, col);
+					} else {
+						average += block_channel(row + i, col + j);
+					}
 				}
 			}
 			average -= block_channel(row, col);
