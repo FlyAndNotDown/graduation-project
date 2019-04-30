@@ -19,7 +19,9 @@ namespace watermark {
 
 			static void im_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat invser_kernel, uword intensity);
 			static void im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file);
+			static void im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_times, cx_mat kernel, umat location_keys, char *model_file);
 	};
 };
 
 #endif
+

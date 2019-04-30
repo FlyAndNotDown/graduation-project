@@ -495,6 +495,25 @@ cv::Mat tool::cube_to_cv_mat(cube source) {
 	return output;
 }
 
+cv::Mat tool::mat_to_cv_mat(mat source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// init output
+	cv::Mat output(rows, cols, CV_8U);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output.at<uchar>(i, j) = (uchar) source(i, j) * 255;
+		}
+	}
+
+	// return it
+	return output;
+}
+
 mat tool::cv_mat_to_bmat(cv::Mat source) {
 	// get size info
 	uword rows = source.rows;

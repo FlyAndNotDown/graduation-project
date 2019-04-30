@@ -540,3 +540,100 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 	delete train_data_set.y;
 	delete model;
 }
+
+void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_times, cx_mat kernel, umat location_keys, char *model_file) {
+	// load model
+	svm_model *model = svm_load_model(model_file);
+	
+	// get size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+	uword location_keys_cols = location_keys.n_cols;
+
+	// get binary secret sequence
+	vec secret_sequence(location_keys_cols, fill::zeros);
+	uword secret_count = 0;
+
+	// splice picture to smaller blocks
+	uword blocks_length = tool::get_blocks_length(source, 8);
+	cube *blocks = new cube[blocks_length];
+	tool::split_to_blocks(tool::cv_mat_to_cube(source), 8, blocks);
+
+	// set the unit quaternion
+	vec u(4, fill::zeros);
+	u(1) = 1;
+
+	// do transform to every block
+	cube *encoded_blocks = new cube[blocks_length];
+	switch (type) {
+		case mark::MARK_TYPE_QDFRFT:
+			for (uword i = 0; i < blocks_length; i++) {
+				encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+				// tool::print_cube("encoded_blocks", encoded_blocks[i]);
+			}
+			break;
+		case mark::MARK_TYPE_QDFRNT:
+			for (uword i = 0; i < blocks_length; i++) {
+				encoded_blocks[i] = dfrnt_clan::qdfrnt2(blocks[i], kernel, u);
+			}
+		default:
+			break;
+	}
+
+	// for every position, get secret value
+	for (uword i = 0; i < location_keys_cols; i++) {
+		// get info
+		uword block_index = location_keys(0, i);
+		uword channel = location_keys(1, i);
+		uword row = location_keys(2, i);
+		uword col = location_keys(3, i);
+
+		// calculate svm input data
+		mat block_channel = encoded_blocks[block_index].slice(channel);
+		svm_node *nodes = new svm_node[10];
+		nodes[9].index = -1;
+		double average = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+					average += block_channel(row, col);
+				} else {
+					average += block_channel(row + i, col + j);
+				}
+			}
+		}
+		average = (average - block_channel(row, col)) * 1.0 / 8;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				int index = (i + 1) * 3 + (j + 1);
+				nodes[index].index = index + 1;
+				if (i == 0 && j == 0) {
+					nodes[index].value = block_channel(row, col) - average;
+				} else {
+					nodes[index].value = block_channel(row, col) - block_channel(row + i, col + j);
+				}
+			}
+		}
+
+		// predict result
+		double predict_result = svm_predict(model, nodes);
+		double distance_to_nega_one = abs(predict_result + 1);
+		double distance_to_one = abs(predict_result - 1);
+		if (distance_to_nega_one > distance_to_one) {
+			secret_sequence(secret_count) = 1;
+		} else {
+			secret_sequence(secret_count) = 0;
+		}
+		secret_count++;
+		delete[] nodes;
+	}
+
+	// change secret sequence to matrix
+	uword secret_sequence_length = secret_sequence.n_rows;
+	secret = tool::mat_to_cv_mat(tool::arnold(tool::matrixize(secret_sequence, floor(sqrt(secret_sequence_length))), 0 - arnold_times));
+
+	// free blocks mem
+	delete[] blocks;
+	delete[] encoded_blocks;
+	delete model;
+}

@@ -451,7 +451,7 @@ void test::tool_arnold(char *path, char *output_path, char *restored_path) {
 	tool::save_mat_to_image(restored_path, restored);
 }
 
-void test::mark_im_mark(char *source_path, char *secret_path, char *output_path) {
+void test::mark_im_mark(char *source_path, char *secret_path, char *output_path, char *model_file, char *restored_path) {
 	cv::Mat source = imread(source_path);
 	cv::Mat secret = imread(secret_path, IMREAD_GRAYSCALE);
 	cv::Mat output;
@@ -467,6 +467,11 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path)
 	// mark::svm_mark(mark::MARK_TYPE_QDFRFT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 15);
 
 	imwrite(output_path, output);
+
+	cv::Mat restored;
+	mark::im_restored(mark::MARK_TYPE_QDFRNT, source, restored, 3, kernel, location_keys, model_file);
+	
+	imwrite(restored_path, restored);
 }
 
 void test::mark_im_train(char *source_path, char *model_path) {
