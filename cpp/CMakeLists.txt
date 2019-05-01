@@ -11,6 +11,7 @@ add_library (LIB_SRC_LIB ${LIB_SRC_DIR})
 
 include_directories ($ENV{ARMADILLO_INCLUDE_DIR})
 include_directories ($ENV{OPENCV_INCLUDE_DIR})
+include_directories ($ENV{CMDLINE_INCLUDE_DIR})
 
 if (WIN32)
     link_directories ($ENV{ARMADILLO_LIB_DIR})

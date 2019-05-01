@@ -42,6 +42,9 @@ namespace watermark {
 			static mat normalize_by_max(mat source);
 
 			static cube fix_after_transform(cube source);
+
+			static void save_matrix_to_file(mat source, char *file_path);
+			static mat read_matrix_from_file(uword rows, uword cols, char *file_path);
 	};
 };
 

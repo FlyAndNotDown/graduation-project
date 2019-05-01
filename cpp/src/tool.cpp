@@ -1,6 +1,7 @@
 #include "tool.h"
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 using namespace watermark;
 using namespace std;
 using namespace cv;
@@ -555,6 +556,52 @@ cube tool::fix_after_transform(cube source) {
 			}
 		}
 	}
+
+	// return result
+	return output;
+}
+
+void tool::save_matrix_to_file(mat source, char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::out | ios::trunc);
+
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// do write
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			file << source(i, j) << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	
+	// close file
+	file.close();
+}
+
+mat tool::read_matrix_from_file(uword rows, uword cols, char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::in);
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do read
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			double temp;
+			file >> temp;
+			output(i, j) = temp;
+		}
+	}
+
+	// close file
+	file.close();
 
 	// return result
 	return output;
