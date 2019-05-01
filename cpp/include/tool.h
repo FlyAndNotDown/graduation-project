@@ -44,7 +44,11 @@ namespace watermark {
 			static cube fix_after_transform(cube source);
 
 			static void save_matrix_to_file(mat source, const char *file_path);
-			static mat read_matrix_from_file(uword rows, uword cols, const char *file_path);
+			static mat read_matrix_from_file(const char *file_path);
+			static void save_u_matrix_to_file(umat source, const char *file_path);
+			static umat read_u_matrix_from_file(const char *file_path);
+	
+			static uvec get_random_secret_sequence(uword rows, uword cols);
 	};
 };
 

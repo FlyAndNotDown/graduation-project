@@ -471,7 +471,7 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path,
 	imwrite(output_path, output);
 
 	cv::Mat restored;
-	mark::im_restored(mark::MARK_TYPE_QDFRNT, marked, restored, 3, kernel, location_keys, model_file);
+	mark::im_restore(mark::MARK_TYPE_QDFRNT, marked, restored, 3, kernel, location_keys, model_file);
 	
 	imwrite(restored_path, restored);
 }

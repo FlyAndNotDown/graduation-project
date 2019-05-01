@@ -571,27 +571,34 @@ void tool::save_matrix_to_file(mat source, const char *file_path) {
 	uword cols = source.n_cols;
 
 	// do write
+	file << rows << " " << cols << endl;
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			file << source(i, j) << " ";
 		}
-		cout << endl;
+		file << endl;
 	}
-	cout << endl;
+	file << endl;
 	
 	// close file
 	file.close();
 }
 
-mat tool::read_matrix_from_file(uword rows, uword cols, const char *file_path) {
+mat tool::read_matrix_from_file(const char *file_path) {
 	// open file
 	fstream file;
 	file.open(file_path, ios::in);
 
+	// read size info
+	uword rows;
+	uword cols;
+	file >> rows;
+	file >> cols;
+
 	// init output
 	mat output(rows, cols, fill::zeros);
 
-	// do read
+	// read data
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			double temp;
@@ -605,4 +612,80 @@ mat tool::read_matrix_from_file(uword rows, uword cols, const char *file_path) {
 
 	// return result
 	return output;
+}
+
+void tool::save_u_matrix_to_file(umat source, const char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::out | ios::trunc);
+
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// do write
+	file << rows << " " << cols << endl;
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			file << source(i, j) << " ";
+		}
+		file << endl;
+	}
+	file << endl;
+
+	// close file
+	file.close();
+}
+
+umat tool::read_u_matrix_from_file(const char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::in);
+
+	// read size info
+	uword rows;
+	uword cols;
+	file >> rows;
+	file >> cols;
+
+	// init output
+	umat output(rows, cols, fill::zeros);
+
+	// read data
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			double temp;
+			file >> temp;
+			output(i, j) = temp;
+		}
+	}
+
+	// close file
+	file.close();
+
+	// return result
+	return output;
+}
+
+uvec tool::get_random_secret_sequence(uword rows, uword cols) {
+	// get a random matrix
+	mat random = randn(rows, cols);
+	
+	// do normalize
+	random = tool::normalize(random);
+
+	// init output
+	uvec secret(rows * cols, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (random(i, j) > 0.5) {
+				secret(i * cols + j) = 1;
+			} else {
+				secret(i * cols + j) = 0;
+			}
+		}
+	}
+
+	// return result
+	return secret;
 }
