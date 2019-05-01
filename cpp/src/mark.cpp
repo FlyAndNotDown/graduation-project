@@ -358,7 +358,7 @@ void mark::im_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, um
 	delete[] restored_blocks;
 }
 
-void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file) {
+void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, const char *model_file) {
 	// normalize the intensity
 	double intensity_d = intensity * 1.0 / 255;
 
@@ -556,7 +556,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 	delete model;
 }
 
-void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_times, cx_mat kernel, umat location_keys, char *model_file) {
+void mark::im_restore(int type, cv::Mat source, cv::Mat &secret, int arnold_times, cx_mat kernel, umat location_keys, const char *model_file) {
 	// load model
 	svm_model *model = svm_load_model(model_file);
 	

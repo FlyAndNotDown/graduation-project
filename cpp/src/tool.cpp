@@ -6,7 +6,7 @@ using namespace watermark;
 using namespace std;
 using namespace cv;
 
-void tool::print_mat(char *name, mat matrix) {
+void tool::print_mat(const char *name, mat matrix) {
     uword rows = matrix.n_rows;
     uword cols = matrix.n_cols;
 
@@ -20,7 +20,7 @@ void tool::print_mat(char *name, mat matrix) {
     cout << endl;
 }
 
-void tool::print_umat(char *name, umat matrix) {
+void tool::print_umat(const char *name, umat matrix) {
 	uword rows = matrix.n_rows;
 	uword cols = matrix.n_cols;
 
@@ -34,7 +34,7 @@ void tool::print_umat(char *name, umat matrix) {
 	cout << endl;
 }
 
-void tool::print_cx_mat(char *name, cx_mat matrix) {
+void tool::print_cx_mat(const char *name, cx_mat matrix) {
     uword rows = matrix.n_rows;
     uword cols = matrix.n_cols;
 
@@ -49,7 +49,7 @@ void tool::print_cx_mat(char *name, cx_mat matrix) {
     cout << endl;
 }
 
-void tool::print_cube(char *name, cube matrix) {
+void tool::print_cube(const char *name, cube matrix) {
 	uword rows = matrix.n_rows;
 	uword cols = matrix.n_cols;
 	uword channels = matrix.n_slices;
@@ -68,7 +68,7 @@ void tool::print_cube(char *name, cube matrix) {
 	cout << endl;
 }
 
-void tool::print_cx_cube(char *name, cx_cube matrix) {
+void tool::print_cx_cube(const char *name, cx_cube matrix) {
 	uword rows = matrix.n_rows;
 	uword cols = matrix.n_cols;
 	uword channels = matrix.n_slices;
@@ -100,7 +100,7 @@ cx_cube tool::cube_to_cx_cube(cube matrix) {
 	return output;
 }
 
-mat tool::read_image_to_mat(char *path) {
+mat tool::read_image_to_mat(const char *path) {
 	cv::Mat image = imread(path, IMREAD_GRAYSCALE);
 	uword rows = image.rows;
 	uword cols = image.cols;
@@ -113,7 +113,7 @@ mat tool::read_image_to_mat(char *path) {
 	return output;
 }
 
-void tool::save_mat_to_image(char *path, mat source) {
+void tool::save_mat_to_image(const char *path, mat source) {
 	uword rows = source.n_rows;
 	uword cols = source.n_cols;
 	cv::Mat image(rows, cols, CV_8U);
@@ -126,7 +126,7 @@ void tool::save_mat_to_image(char *path, mat source) {
 	imwrite(path, image);
 }
 
-cube tool::read_image_to_cube(char *path) {
+cube tool::read_image_to_cube(const char *path) {
 	cv::Mat image = imread(path, IMREAD_COLOR);
 	uword rows = image.rows;
 	uword cols = image.cols;
@@ -142,7 +142,7 @@ cube tool::read_image_to_cube(char *path) {
 	return output;
 }
 
-void tool::save_cube_to_image(char *path, cube source) {
+void tool::save_cube_to_image(const char *path, cube source) {
 	uword rows = source.n_rows;
 	uword cols = source.n_cols;
 	cv::Mat image(rows, cols, CV_8UC3);
@@ -561,7 +561,7 @@ cube tool::fix_after_transform(cube source) {
 	return output;
 }
 
-void tool::save_matrix_to_file(mat source, char *file_path) {
+void tool::save_matrix_to_file(mat source, const char *file_path) {
 	// open file
 	fstream file;
 	file.open(file_path, ios::out | ios::trunc);
@@ -571,27 +571,34 @@ void tool::save_matrix_to_file(mat source, char *file_path) {
 	uword cols = source.n_cols;
 
 	// do write
+	file << rows << " " << cols << endl;
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			file << source(i, j) << " ";
 		}
-		cout << endl;
+		file << endl;
 	}
-	cout << endl;
+	file << endl;
 	
 	// close file
 	file.close();
 }
 
-mat tool::read_matrix_from_file(uword rows, uword cols, char *file_path) {
+mat tool::read_matrix_from_file(const char *file_path) {
 	// open file
 	fstream file;
 	file.open(file_path, ios::in);
 
+	// read size info
+	uword rows;
+	uword cols;
+	file >> rows;
+	file >> cols;
+
 	// init output
 	mat output(rows, cols, fill::zeros);
 
-	// do read
+	// read data
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			double temp;
@@ -605,4 +612,80 @@ mat tool::read_matrix_from_file(uword rows, uword cols, char *file_path) {
 
 	// return result
 	return output;
+}
+
+void tool::save_u_matrix_to_file(umat source, const char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::out | ios::trunc);
+
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// do write
+	file << rows << " " << cols << endl;
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			file << source(i, j) << " ";
+		}
+		file << endl;
+	}
+	file << endl;
+
+	// close file
+	file.close();
+}
+
+umat tool::read_u_matrix_from_file(const char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::in);
+
+	// read size info
+	uword rows;
+	uword cols;
+	file >> rows;
+	file >> cols;
+
+	// init output
+	umat output(rows, cols, fill::zeros);
+
+	// read data
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			double temp;
+			file >> temp;
+			output(i, j) = temp;
+		}
+	}
+
+	// close file
+	file.close();
+
+	// return result
+	return output;
+}
+
+uvec tool::get_random_secret_sequence(uword rows, uword cols) {
+	// get a random matrix
+	mat random = randn(rows, cols);
+	
+	// do normalize
+	random = tool::normalize(random);
+
+	// init output
+	uvec secret(rows * cols, fill::zeros);
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			if (random(i, j) > 0.5) {
+				secret(i * cols + j) = 1;
+			} else {
+				secret(i * cols + j) = 0;
+			}
+		}
+	}
+
+	// return result
+	return secret;
 }
