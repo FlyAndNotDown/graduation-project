@@ -2,6 +2,7 @@
 #include "tool.h"
 #include "dfrft_clan.h"
 #include "dfrnt_clan.h"
+#include "svm.h"
 #include <armadillo>
 using namespace arma;
 using namespace watermark;
@@ -95,15 +96,15 @@ vec mark::get_color_masks(cv::Mat *blocks, uword length, double color_factor) {
 			for (uword j = 0; j < cols; j++) {
 				// do normalize
 				Vec3b pixel = lab.at<Vec3b>(i, j);
-				double channel_a = abs((pixel[1] - 128) * 1.0 / 128);
-				double channel_b = abs((pixel[2] - 128) * 1.0 / 128);
+
+				// TODO
+				double channel_a = pixel[1] * 1.0 / 256;
+				double channel_b = pixel[2] * 1.0 / 256;
 
 				// get mask
 				mask += 1 - exp(0 - (channel_a * channel_a + channel_b * channel_b) / (color_factor * color_factor));
 			}
 		}
-
-		cout << mask << endl;
 
 		// add mask to output vector
 		output(t) = mask;
@@ -128,10 +129,12 @@ vec mark::get_edge_masks(cv::Mat *blocks, uword length) {
 		cv::split(blocks[t], channels);
 
 		// get canny edge of three channels
-		cv::Mat blurs[3], edges[3];
+		cv::Mat blurs[3];
+		cv::Mat edges[3];
 		for (uword i = 0; i < 3; i++) {
-			blur(channels[i], blurs[i], Size(9, 9));
-			Canny(blurs[i], edges[i], 3, 9);
+			// blur(channels[i], blurs[i], Size(9, 9));
+			// Canny(blurs[i], edges[i], 3, 9);
+			Sobel(channels[i], edges[i], CV_8U, 1, 1, 3, 1, 1);
 		}
 
 		// get sum
@@ -159,9 +162,9 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	tool::split_to_blocks(source, 8, blocks);
 
 	// get three mask vector and do normalize
-	vec texture_masks = tool::normalize_by_max(get_texture_masks(blocks, blocks_length, window_length));
-	vec color_masks = tool::normalize_by_max(get_color_masks(blocks, blocks_length, color_factor));
-	vec edge_masks = tool::normalize_by_max(get_edge_masks(blocks, blocks_length));
+	vec texture_masks = tool::normalize(get_texture_masks(blocks, blocks_length, window_length));
+	vec color_masks = tool::normalize(get_color_masks(blocks, blocks_length, color_factor));
+	vec edge_masks = tool::normalize(get_edge_masks(blocks, blocks_length));
 
 	// clear mem
 	delete[] blocks;
@@ -179,7 +182,7 @@ uvec mark::get_adaptive_masks(cv::Mat source, uword window_length, double color_
 	return masks;
 }
 
-void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
+void mark::im_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, umat &location_keys, int arnold_times, cx_mat kernel, cx_mat inverse_kernel, uword intensity) {
 	// normalize the intensity
 	double intensity_d = intensity * 1.0 / 255;
 
@@ -217,6 +220,7 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 		case mark::MARK_TYPE_QDFRFT:
 			for (uword i = 0; i < blocks_length; i++) {
 				encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+				// tool::print_cube("encoded_blocks", encoded_blocks[i]);
 			}
 			break;
 		case mark::MARK_TYPE_QDFRNT:
@@ -276,8 +280,10 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 				block_channel_sequence.col(min_index) = t;
 			}
 
+			// tool::print_mat("block_channel", block_channel);
+
 			// get middle sequence value's position
-			uword t = 28;
+			uword t = 31;
 			uword row = (uword) block_channel_sequence(1, t);
 			uword col = (uword) block_channel_sequence(2, t);
 			uword count = 1;
@@ -305,7 +311,11 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			double average = 0;
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
-					average += block_channel(row + i, col + j);
+					if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+						average += block_channel(row, col);
+					} else {
+						average += block_channel(row + i, col + j);
+					}
 				}
 			}
 			average -= block_channel(row, col);
@@ -315,7 +325,9 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 			/* if (abs((2 * secret_sequence(x) - 1) * masks(n) * intensity_d) > 0.1) {
 				cout << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << endl;
 			} */
+			// cout << "before: " << encoded_blocks[n](row, col, channel) << " average: " << average << " add: " << (2 * secret_sequence(x) - 1) * masks(n) * intensity_d << " ";
 			encoded_blocks[n](row, col, channel) = average + (2 * secret_sequence(x) - 1) * masks(n) * intensity_d;
+			// cout << "after: " << encoded_blocks[n](row, col, channel) << endl;
 			x++;
 		}
 	}
@@ -325,12 +337,12 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	switch (type) {
 		case mark::MARK_TYPE_QDFRFT:
 			for (uword i = 0; i < blocks_length; i++) {
-				restored_blocks[i] = dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u);
+				restored_blocks[i] = tool::fix_after_transform(dfrft_clan::qdfrft2(encoded_blocks[i], inverse_kernel, u));
 			}
 			break;
 		case mark::MARK_TYPE_QDFRNT:
 			for (uword i = 0; i < blocks_length; i++) {
-				restored_blocks[i] = dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u);
+				restored_blocks[i] = tool::fix_after_transform(dfrnt_clan::qdfrnt2(encoded_blocks[i], inverse_kernel, u));
 			}
 		default:
 			break;
@@ -344,4 +356,306 @@ void mark::svm_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, u
 	delete[] blocks;
 	delete[] encoded_blocks;
 	delete[] restored_blocks;
+}
+
+void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword intensity, char *model_file) {
+	// normalize the intensity
+	double intensity_d = intensity * 1.0 / 255;
+
+	// get size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+	uword secret_length = secret.n_rows;
+
+	// init train data set
+	svm_problem train_data_set;
+	train_data_set.l = secret_length;
+	train_data_set.y = new double[secret_length];
+	train_data_set.x = new svm_node*[secret_length];
+	int train_data_count = 0;
+
+	// get binary secret sequence
+	uvec secret_sequence = secret;
+	uword secret_sequence_length = secret_sequence.n_rows;
+
+	// splice picture to smaller blocks
+	uword blocks_length = tool::get_blocks_length(source, 8);
+	cube *blocks = new cube[blocks_length];
+	tool::split_to_blocks(tool::cv_mat_to_cube(source), 8, blocks);
+
+	// set the unit quaternion
+	vec u(4, fill::zeros);
+	u(1) = 1;
+
+	// get adaptive factors of every blocks
+	uvec masks = mark::get_adaptive_masks(source, 1, 0.25);
+
+	// do transform to every block
+	cube *encoded_blocks = new cube[blocks_length];
+	switch (type) {
+	case mark::MARK_TYPE_QDFRFT:
+		for (uword i = 0; i < blocks_length; i++) {
+			encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+			// tool::print_cube("encoded_blocks", encoded_blocks[i]);
+		}
+		break;
+	case mark::MARK_TYPE_QDFRNT:
+		for (uword i = 0; i < blocks_length; i++) {
+			encoded_blocks[i] = dfrnt_clan::qdfrnt2(blocks[i], kernel, u);
+		}
+	default:
+		break;
+	}
+
+	// start watermakring
+	uword x = 0;
+	bool over = false;
+	for (uword channel = 2; channel <= 3; channel++) {
+		// if over, break
+		if (over) {
+			break;
+		}
+
+		// mark 1 point in single block
+		for (uword n = 0; n < blocks_length; n++) {
+			// if secret sequence have used up, break
+			if (x >= secret_sequence_length) {
+				over = true;
+				break;
+			}
+
+			// if adaptive factor is zero, do not watermark
+			if (masks(n) <= 1) {
+				continue;
+			}
+
+			// get channel
+			mat block_channel = encoded_blocks[n].slice(channel);
+
+			// get location & location key-value sequence
+			mat block_channel_sequence(3, 64);
+			for (uword i = 0; i < 8; i++) {
+				for (uword j = 0; j < 8; j++) {
+					uword index_t = i * 8 + j;
+					block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					block_channel_sequence(1, index_t) = i;
+					block_channel_sequence(2, index_t) = j;
+				}
+			}
+
+			// sorting sequence by value
+			for (uword i = 0; i < 63; i++) {
+				uword min_index = i;
+				for (uword j = i + 1; j < 64; j++) {
+					if (block_channel_sequence(0, j) < block_channel_sequence(0, min_index)) {
+						min_index = j;
+					}
+				}
+				vec t = block_channel_sequence.col(i);
+				block_channel_sequence.col(i) = block_channel_sequence.col(min_index);
+				block_channel_sequence.col(min_index) = t;
+			}
+
+			// tool::print_mat("block_channel", block_channel);
+
+			// get middle sequence value's position
+			uword t = 31;
+			uword row = (uword)block_channel_sequence(1, t);
+			uword col = (uword)block_channel_sequence(2, t);
+			uword count = 1;
+			bool flag = true;
+			while (!(row >= 1 && row <= 6 && col >= 1 && col <= 6)) {
+				if (flag) {
+					t += count;
+				}
+				else {
+					t -= count;
+				}
+				count++;
+				flag = !flag;
+				row = (uword)block_channel_sequence(1, t);
+				col = (uword)block_channel_sequence(2, t);
+			}
+
+			// cout << "train: " << "block_index: " << n << "channel: " << channel << "row: " << row << "col: " << col << endl;
+
+			// get train data
+			train_data_set.x[train_data_count] = new svm_node[10];
+			train_data_set.x[train_data_count][9].index = -1;
+			double increment = (double) (2 * (int) secret_sequence(x) - 1) * masks(n) * intensity_d;
+			double average = 0;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+						average += block_channel(row, col);
+					} else {
+						average += block_channel(row + i, col + j);
+					}
+				}
+			}
+			average = (average - block_channel(row, col)) * 1.0 / 8;
+			double value_on_mark_position = average + increment;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					int index = (i + 1) * 3 + (j + 1);
+					train_data_set.x[train_data_count][index].index = index + 1;
+					if (i == 0 && j == 0) {
+						train_data_set.x[train_data_count][index].value = increment;
+					} else {
+						train_data_set.x[train_data_count][index].value = value_on_mark_position - block_channel(row + i, col + j);
+					}
+				}
+			}
+
+			/* if (train_data_count == 0) {
+				for (int i = 0; i < 9; i++) {
+					cout << train_data_set.x[train_data_count][i].value << " ";
+				}
+				cout << endl;
+			} */
+
+			train_data_set.y[train_data_count] = secret_sequence(x) == 0 ? -1 : 1;
+			train_data_count++;
+			x++;
+		}
+	}
+
+	// start train
+	svm_parameter param;
+	// param.svm_type = C_SVC;
+	param.svm_type = C_SVC;
+	// param.kernel_type = RBF;
+	param.kernel_type = LINEAR;
+	param.degree = 3;
+	// param.gamma = 1;	// 1/num_features
+	param.gamma = 1.0 / 9;
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 1000;
+	// param.C = 1;
+	param.C = 1e-3;
+	// param.eps = 1e-3;
+	param.eps = 1e-5;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+	svm_model *model = svm_train(&train_data_set, &param);
+	svm_save_model(model_file, model);
+
+	// free blocks mem
+	delete[] blocks;
+	delete[] encoded_blocks;
+	for (int i = 0; i < secret_length; i++) {
+		delete[] train_data_set.x[i];
+	}
+	delete train_data_set.x;
+	delete train_data_set.y;
+	delete model;
+}
+
+void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_times, cx_mat kernel, umat location_keys, char *model_file) {
+	// load model
+	svm_model *model = svm_load_model(model_file);
+	
+	// get size info
+	uword source_rows = source.rows;
+	uword source_cols = source.cols;
+	uword location_keys_cols = location_keys.n_cols;
+
+	// get binary secret sequence
+	vec secret_sequence(location_keys_cols, fill::zeros);
+
+	// splice picture to smaller blocks
+	uword blocks_length = tool::get_blocks_length(source, 8);
+	cube *blocks = new cube[blocks_length];
+	tool::split_to_blocks(tool::cv_mat_to_cube(source), 8, blocks);
+
+	// set the unit quaternion
+	vec u(4, fill::zeros);
+	u(1) = 1;
+
+	// do transform to every block
+	cube *encoded_blocks = new cube[blocks_length];
+	switch (type) {
+		case mark::MARK_TYPE_QDFRFT:
+			for (uword i = 0; i < blocks_length; i++) {
+				encoded_blocks[i] = dfrft_clan::qdfrft2(blocks[i], kernel, u);
+				// tool::print_cube("encoded_blocks", encoded_blocks[i]);
+			}
+			break;
+		case mark::MARK_TYPE_QDFRNT:
+			for (uword i = 0; i < blocks_length; i++) {
+				encoded_blocks[i] = dfrnt_clan::qdfrnt2(blocks[i], kernel, u);
+			}
+		default:
+			break;
+	}
+
+	// for every position, get secret value
+	for (uword n = 0; n < location_keys_cols; n++) {
+		// get info
+		uword block_index = location_keys(0, n);
+		uword channel = location_keys(1, n);
+		uword row = location_keys(2, n);
+		uword col = location_keys(3, n);
+
+		// cout << "restore" << "block_index: " << block_index << "channel: " << channel << "row: " << row << "col: " << col << endl;
+
+		// calculate svm input data
+		mat block_channel = encoded_blocks[block_index].slice(channel);
+		svm_node *nodes = new svm_node[10];
+		nodes[9].index = -1;
+		double average = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+					average += block_channel(row, col);
+				} else {
+					average += block_channel(row + i, col + j);
+				}
+			}
+		}
+		average = (average - block_channel(row, col)) * 1.0 / 8;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				int index = (i + 1) * 3 + (j + 1);
+				nodes[index].index = index + 1;
+				if (i == 0 && j == 0) {
+					nodes[index].value = block_channel(row, col) - average;
+				} else {
+					nodes[index].value = block_channel(row, col) - block_channel(row + i, col + j);
+				}
+			}
+		}
+
+		/* if (n == 0) {
+			for (int i = 0; i < 9; i++) {
+				cout << nodes[i].value << " " << endl;
+			}
+			cout << endl;
+		} */
+
+		// predict result
+		double predict_result = svm_predict(model, nodes);
+		double distance_to_nega_one = abs(predict_result + 1);
+		double distance_to_one = abs(predict_result - 1);
+		if (distance_to_nega_one > distance_to_one) {
+			secret_sequence(n) = 1;
+		} else {
+			secret_sequence(n) = 0;
+		}
+		delete[] nodes;
+	}
+
+	// change secret sequence to matrix
+	uword secret_sequence_length = secret_sequence.n_rows;
+	secret = tool::mat_to_cv_mat(tool::arnold(tool::matrixize(secret_sequence, floor(sqrt(secret_sequence_length))), 0 - arnold_times));
+
+	// free blocks mem
+	delete[] blocks;
+	delete[] encoded_blocks;
+	delete model;
 }

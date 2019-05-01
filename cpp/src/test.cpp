@@ -451,20 +451,50 @@ void test::tool_arnold(char *path, char *output_path, char *restored_path) {
 	tool::save_mat_to_image(restored_path, restored);
 }
 
-void test::mark_svm_mark(char *source_path, char *secret_path, char *output_path) {
+void test::mark_im_mark(char *source_path, char *secret_path, char *output_path, char *model_file, char *marked_path, char *restored_path) {
 	cv::Mat source = imread(source_path);
 	cv::Mat secret = imread(secret_path, IMREAD_GRAYSCALE);
 	cv::Mat output;
 
+	cv::Mat marked = imread(marked_path);
+
 	mat rd_matrix = randn(8, 8);
 
+	umat location_keys;
 	cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
 	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.75, 1, rd_matrix);
-	// cx_mat kernel = dfrft_clan::kernel(8, 0.1);
-	// cx_mat inverse_kernel = dfrft_clan::kernel(8, -0.1);
-	umat location_keys;
-	mark::svm_mark(mark::MARK_TYPE_QDFRNT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 10);
-	// mark::svm_mark(mark::MARK_TYPE_QDFRFT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 10);
+	mark::im_mark(mark::MARK_TYPE_QDFRNT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 15);
+	// cx_mat kernel = dfrft_clan::kernel(8, 0.5);
+	// cx_mat inverse_kernel = dfrft_clan::kernel(8, -0.5);
+	// mark::svm_mark(mark::MARK_TYPE_QDFRFT, source, secret, output, location_keys, 3, kernel, inverse_kernel, 15);
 
 	imwrite(output_path, output);
+
+	cv::Mat restored;
+	mark::im_restored(mark::MARK_TYPE_QDFRNT, marked, restored, 3, kernel, location_keys, model_file);
+	
+	imwrite(restored_path, restored);
+}
+
+void test::mark_im_train(char *source_path, char *model_path) {
+	cv::Mat source = imread(source_path);
+	uword length = 64;
+	mat random = randn(length, length);
+	random = tool::normalize(random);
+	uvec secret(length * length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		for (uword j = 0; j < length; j++) {
+			if (random(i, j) > 0.5) {
+				secret(i * length + j) = 1;
+			} else {
+				secret(i * length + j) = 0;
+			}
+		}
+	}
+
+	mat rd_matrix = randn(8, 8);
+	cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
+	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.75, 1, rd_matrix);
+
+	mark::im_train(mark::MARK_TYPE_QDFRNT, source, secret, kernel, 15, model_path);
 }

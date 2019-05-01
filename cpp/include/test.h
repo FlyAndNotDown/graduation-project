@@ -36,7 +36,8 @@ namespace watermark {
 			static void image_qdfrft2(char *path, char *output_path, char *restored_path);
 	
 			// mark
-			static void mark_svm_mark(char *source_path, char *secret_path, char *output_path);
+			static void mark_im_mark(char *source_path, char *secret_path, char *output_path, char *model_file, char *marked_path, char *restored_path);
+			static void mark_im_train(char *source_path, char *model_path);
 	};
 };
 

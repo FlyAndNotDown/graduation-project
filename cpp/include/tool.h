@@ -25,6 +25,7 @@ namespace watermark {
 			static cube cv_mat_to_cube(cv::Mat source);
 			static cv::Mat cube_to_cv_mat(cube source);
 			static mat cv_mat_to_bmat(cv::Mat source);
+			static cv::Mat mat_to_cv_mat(mat source);
     
 			static uword get_blocks_length(cube source, uword length);
 			static uword get_blocks_length(cv::Mat source, uword length);
@@ -39,6 +40,11 @@ namespace watermark {
 
 			static mat normalize(mat source);
 			static mat normalize_by_max(mat source);
+
+			static cube fix_after_transform(cube source);
+
+			static void save_matrix_to_file(mat source, char *file_path);
+			static mat read_matrix_from_file(uword rows, uword cols, char *file_path);
 	};
 };
 

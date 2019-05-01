@@ -1,6 +1,7 @@
 #include "tool.h"
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 using namespace watermark;
 using namespace std;
 using namespace cv;
@@ -495,6 +496,25 @@ cv::Mat tool::cube_to_cv_mat(cube source) {
 	return output;
 }
 
+cv::Mat tool::mat_to_cv_mat(mat source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// init output
+	cv::Mat output(rows, cols, CV_8U);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			output.at<uchar>(i, j) = (uchar) (source(i, j) * 255);
+		}
+	}
+
+	// return it
+	return output;
+}
+
 mat tool::cv_mat_to_bmat(cv::Mat source) {
 	// get size info
 	uword rows = source.rows;
@@ -513,6 +533,75 @@ mat tool::cv_mat_to_bmat(cv::Mat source) {
 			}
 		}
 	}
+
+	// return result
+	return output;
+}
+
+cube tool::fix_after_transform(cube source) {
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+	uword channels = source.n_slices;
+
+	// init output
+	cube output(rows, cols, 4, fill::zeros);
+
+	// do copy
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			for (uword k = 0; k < channels; k++) {
+				double temp = abs(source(i, j, k));
+				output(i, j, k) = temp > 1 ? 1 : temp;
+			}
+		}
+	}
+
+	// return result
+	return output;
+}
+
+void tool::save_matrix_to_file(mat source, char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::out | ios::trunc);
+
+	// get size info
+	uword rows = source.n_rows;
+	uword cols = source.n_cols;
+
+	// do write
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			file << source(i, j) << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	
+	// close file
+	file.close();
+}
+
+mat tool::read_matrix_from_file(uword rows, uword cols, char *file_path) {
+	// open file
+	fstream file;
+	file.open(file_path, ios::in);
+
+	// init output
+	mat output(rows, cols, fill::zeros);
+
+	// do read
+	for (uword i = 0; i < rows; i++) {
+		for (uword j = 0; j < cols; j++) {
+			double temp;
+			file >> temp;
+			output(i, j) = temp;
+		}
+	}
+
+	// close file
+	file.close();
 
 	// return result
 	return output;
