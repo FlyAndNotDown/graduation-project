@@ -477,7 +477,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 				col = (uword)block_channel_sequence(2, t);
 			}
 
-			cout << "train: " << "block_index: " << n << "channel: " << channel << "row: " << row << "col: " << col << endl;
+			// cout << "train: " << "block_index: " << n << "channel: " << channel << "row: " << row << "col: " << col << endl;
 
 			// get train data
 			train_data_set.x[train_data_count] = new svm_node[10];
@@ -523,7 +523,7 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 	// start train
 	svm_parameter param;
 	// param.svm_type = C_SVC;
-	param.svm_type = ONE_CLASS;
+	param.svm_type = C_SVC;
 	// param.kernel_type = RBF;
 	param.kernel_type = LINEAR;
 	param.degree = 3;
@@ -532,9 +532,10 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 1000;
-	param.C = 1;
+	// param.C = 1;
+	param.C = 1e-3;
 	// param.eps = 1e-3;
-	param.eps = 1e-3;
+	param.eps = 1e-5;
 	param.p = 0.1;
 	param.shrinking = 1;
 	param.probability = 0;
@@ -601,7 +602,7 @@ void mark::im_restored(int type, cv::Mat source, cv::Mat &secret, int arnold_tim
 		uword row = location_keys(2, n);
 		uword col = location_keys(3, n);
 
-		cout << "restore" << "block_index: " << block_index << "channel: " << channel << "row: " << row << "col: " << col << endl;
+		// cout << "restore" << "block_index: " << block_index << "channel: " << channel << "row: " << row << "col: " << col << endl;
 
 		// calculate svm input data
 		mat block_channel = encoded_blocks[block_index].slice(channel);

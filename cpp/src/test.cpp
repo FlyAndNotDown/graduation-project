@@ -451,10 +451,12 @@ void test::tool_arnold(char *path, char *output_path, char *restored_path) {
 	tool::save_mat_to_image(restored_path, restored);
 }
 
-void test::mark_im_mark(char *source_path, char *secret_path, char *output_path, char *model_file, char *restored_path) {
+void test::mark_im_mark(char *source_path, char *secret_path, char *output_path, char *model_file, char *marked_path, char *restored_path) {
 	cv::Mat source = imread(source_path);
 	cv::Mat secret = imread(secret_path, IMREAD_GRAYSCALE);
 	cv::Mat output;
+
+	cv::Mat marked = imread(marked_path);
 
 	mat rd_matrix = randn(8, 8);
 
@@ -469,22 +471,23 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path,
 	imwrite(output_path, output);
 
 	cv::Mat restored;
-	mark::im_restored(mark::MARK_TYPE_QDFRNT, source, restored, 3, kernel, location_keys, model_file);
+	mark::im_restored(mark::MARK_TYPE_QDFRNT, marked, restored, 3, kernel, location_keys, model_file);
 	
 	imwrite(restored_path, restored);
 }
 
 void test::mark_im_train(char *source_path, char *model_path) {
 	cv::Mat source = imread(source_path);
-	mat random = randn(10, 10);
+	uword length = 64;
+	mat random = randn(length, length);
 	random = tool::normalize(random);
-	uvec secret(100, fill::zeros);
-	for (uword i = 0; i < 10; i++) {
-		for (uword j = 0; j < 10; j++) {
+	uvec secret(length * length, fill::zeros);
+	for (uword i = 0; i < length; i++) {
+		for (uword j = 0; j < length; j++) {
 			if (random(i, j) > 0.5) {
-				secret(i * 10 + j) = 1;
+				secret(i * length + j) = 1;
 			} else {
-				secret(i * 10 + j) = 0;
+				secret(i * length + j) = 0;
 			}
 		}
 	}
