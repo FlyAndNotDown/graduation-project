@@ -63,7 +63,7 @@ cx_mat dfrft_clan::kernel(uword length, double order) {
 	cx_mat cx_eig_vectors;
 	eig_gen(cx_eig_values, cx_eig_vectors, s);
 	mat evs = real(cx_eig_vectors);
-	evs = orth(evs);
+	// evs = orth(evs);
 
 	// do project from hermite space to DFT space
 	/* for (uword n = 0; n < 4; n++) {
