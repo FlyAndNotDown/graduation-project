@@ -656,8 +656,8 @@ umat tool::read_u_matrix_from_file(const char *file_path) {
 	uword cols;
 	// file >> rows;
 	// file >> cols;
-	file.read((char *)&rows, sizeof(uword));
-	file.read((char *)&cols, sizeof(uword));
+	file.read((char *) &rows, sizeof(uword));
+	file.read((char *) &cols, sizeof(uword));
 
 	// init output
 	umat output(rows, cols, fill::zeros);
@@ -665,9 +665,9 @@ umat tool::read_u_matrix_from_file(const char *file_path) {
 	// read data
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
-			double temp;
+			uword temp;
 			// file >> temp;
-			file.read((char *)&temp, sizeof(uword));
+			file.read((char *) &temp, sizeof(uword));
 			output(i, j) = temp;
 		}
 	}
