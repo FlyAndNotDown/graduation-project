@@ -456,10 +456,8 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path,
 	cv::Mat secret = imread(secret_path, IMREAD_GRAYSCALE);
 	cv::Mat output;
 
-	cv::Mat marked = imread(marked_path);
 
 	mat rd_matrix = randn(8, 8);
-
 	umat location_keys;
 	cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
 	cx_mat inverse_kernel = dfrnt_clan::kernel(-0.75, 1, rd_matrix);
@@ -470,6 +468,7 @@ void test::mark_im_mark(char *source_path, char *secret_path, char *output_path,
 
 	imwrite(output_path, output);
 
+	cv::Mat marked = imread(marked_path);
 	cv::Mat restored;
 	mark::im_restore(mark::MARK_TYPE_QDFRNT, marked, restored, 3, kernel, location_keys, model_file);
 	

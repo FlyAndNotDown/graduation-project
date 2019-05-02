@@ -5,6 +5,7 @@
 #include "tool.h"
 #include "dfrnt_clan.h"
 #include "dfrft_clan.h"
+#include "test.h"
 using namespace arma;
 using namespace cv;
 using namespace watermark;
@@ -12,13 +13,27 @@ using namespace cmdline;
 using namespace std;
 
 int main(int argc, char *argv[]) {
+	/* test::mark_im_train(
+		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
+		"C:\\Users\\Administrator\\Desktop\\model.dat"
+	); */
+
+	/* test::mark_im_mark(
+		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
+		"C:\\Users\\Administrator\\Desktop\\secret.bmp",
+		"C:\\Users\\Administrator\\Desktop\\marked.bmp",
+		"C:\\Users\\Administrator\\Desktop\\model.dat",
+		"C:\\Users\\Administrator\\Desktop\\marked.bmp",
+		"C:\\Users\\Administrator\\Desktop\\restored.bmp"
+	); */
+
 	// create a parser
 	parser cmdline_parser;
 	
 	// add arguments
-	cmdline_parser.add<string>("type", 't', "mark type", true, "svm", oneof<string>("qc", "svm"));
-	cmdline_parser.add<string>("algorithm", 'a', "algorithm type", true, "qdfrnt", oneof<string>("qdfrnt", "qdfrft"));
-	cmdline_parser.add<string>("action", 'c', "mark or restore", true, "mark", oneof<string>("mark", "restore", "train"));
+	cmdline_parser.add<string>("type", 't', "mark type, can be \'svm\' or \'qc\'", true, "svm", oneof<string>("qc", "svm"));
+	cmdline_parser.add<string>("algorithm", 'a', "algorithm type, can be \'qdfrnt\' or \'qdfrft\'", true, "qdfrnt", oneof<string>("qdfrnt", "qdfrft"));
+	cmdline_parser.add<string>("action", 'c', "mark, restore or train", true, "mark", oneof<string>("mark", "restore", "train"));
 	cmdline_parser.add<string>("source", 's', "source file path", false, "source.jpg");
 	cmdline_parser.add<string>("output", 'o', "output file path", false, "output.jpg");
 	cmdline_parser.add<string>("secret", 'e', "secret file path", false, "secret.jpg");
