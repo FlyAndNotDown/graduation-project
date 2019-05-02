@@ -125,6 +125,10 @@ options:
 ./watermark -t svm -a qdfrnt -c restore -s marked.bmp -o restored.bmp
 ```
 
+## 已知缺陷
+* `QC` 方法不知道有没有时间做
+* `SVM-QDFRFT` 方法因为实现比较复杂，求特征向量的时候莫名总是比正常值偏大，导致使用核矩阵变换之后值抖动过大，`SVM` 提取会有百分之 `10` 到 `20` 的误码率，建议使用 `SVM-QDFRNT` 来进行工程化，`QDFRNT` 的实现简单，计算量小，误码率低，比较适合工程使用
+
 # 😁 关于
 * 作者：`John Kindem` ( `NUAA 161520311` )
 * 项目：`NUAA 2019` 毕业设计
