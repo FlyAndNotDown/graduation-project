@@ -5,6 +5,7 @@
 #include "tool.h"
 #include "dfrnt_clan.h"
 #include "dfrft_clan.h"
+#include "test.h"
 using namespace arma;
 using namespace cv;
 using namespace watermark;
@@ -12,13 +13,27 @@ using namespace cmdline;
 using namespace std;
 
 int main(int argc, char *argv[]) {
+	/* test::mark_im_train(
+		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
+		"C:\\Users\\Administrator\\Desktop\\model.dat"
+	); */
+
+	/* test::mark_im_mark(
+		"C:\\Users\\Administrator\\Desktop\\lena.bmp",
+		"C:\\Users\\Administrator\\Desktop\\secret.bmp",
+		"C:\\Users\\Administrator\\Desktop\\marked.bmp",
+		"C:\\Users\\Administrator\\Desktop\\model.dat",
+		"C:\\Users\\Administrator\\Desktop\\marked.bmp",
+		"C:\\Users\\Administrator\\Desktop\\restored.bmp"
+	); */
+
 	// create a parser
 	parser cmdline_parser;
 	
 	// add arguments
-	cmdline_parser.add<string>("type", 't', "mark type", true, "svm", oneof<string>("qc", "svm"));
-	cmdline_parser.add<string>("algorithm", 'a', "algorithm type", true, "qdfrnt", oneof<string>("qdfrnt", "qdfrft"));
-	cmdline_parser.add<string>("action", 'c', "mark or restore", true, "mark", oneof<string>("mark", "restore", "train"));
+	cmdline_parser.add<string>("type", 't', "mark type, can be \'svm\' or \'qc\'", true, "svm", oneof<string>("qc", "svm"));
+	cmdline_parser.add<string>("algorithm", 'a', "algorithm type, can be \'qdfrnt\' or \'qdfrft\'", true, "qdfrnt", oneof<string>("qdfrnt", "qdfrft"));
+	cmdline_parser.add<string>("action", 'c', "mark, restore or train", true, "mark", oneof<string>("mark", "restore", "train"));
 	cmdline_parser.add<string>("source", 's', "source file path", false, "source.jpg");
 	cmdline_parser.add<string>("output", 'o', "output file path", false, "output.jpg");
 	cmdline_parser.add<string>("secret", 'e', "secret file path", false, "secret.jpg");
@@ -61,11 +76,15 @@ int main(int argc, char *argv[]) {
 				mat rd_matrix = randn(8, 8);
 				tool::save_matrix_to_file(rd_matrix, matrix_path.data());
 
+				// tool::print_mat("rd_matrix", rd_matrix);
+
 				cout << "[log] get kernel matrix" << endl;
 
 				// get kernel
 				cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
 				cx_mat inverse_kernel = dfrnt_clan::kernel(-0.75, 1, rd_matrix);
+
+				// tool::print_cx_mat("kernel", kernel);
 
 				// keys & output
 				umat location_keys;
@@ -159,6 +178,8 @@ int main(int argc, char *argv[]) {
 				// read random matrix from file
 				mat rd_matrix = tool::read_matrix_from_file(matrix_path.data());
 				
+				// tool::print_mat("rd_matrix", rd_matrix);
+
 				cout << "[log] read keys from file" << endl;
 
 				// read keys from file
@@ -168,6 +189,8 @@ int main(int argc, char *argv[]) {
 
 				// get kernel matrix
 				cx_mat kernel = dfrnt_clan::kernel(0.75, 1, rd_matrix);
+
+				// tool::print_cx_mat("kernel", kernel);
 
 				// result var
 				cv::Mat restored_image;

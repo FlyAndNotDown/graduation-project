@@ -86,9 +86,9 @@
 ```
 usage: ./watermark --type=string --algorithm=string --action=string [options] ...
 options:
-  -t, --type         mark type (string)
-  -a, --algorithm    algorithm type (string)
-  -c, --action       mark or restore (string)
+  -t, --type         mark type, can be 'svm' or 'qc' (string)
+  -a, --algorithm    algorithm type, can be 'qdfrnt' or 'qdfrft' (string)
+  -c, --action       mark, restore or train (string)
   -s, --source       source file path (string [=source.jpg])
   -o, --output       output file path (string [=output.jpg])
   -e, --secret       secret file path (string [=secret.jpg])
@@ -111,6 +111,23 @@ options:
 ```
 
 来获取帮助
+
+下面给出几个使用示例：
+
+```
+# 训练基于 QDFRNT 的 SVM-Model
+./watermark -t svm -a qdfrnt -c train -s lena.bmp
+
+# 使用 SVM-QDFRNT 方法嵌入水印
+./watermark -t svm -a qdfrnt -c mark -s lena.bmp -o marked.bmp -e secret.bmp
+
+# 提取 SVM-QDFRNT 方法嵌入的水印, 需要 matrix.dat, keys.dat, model.dat
+./watermark -t svm -a qdfrnt -c restore -s marked.bmp -o restored.bmp
+```
+
+## 已知缺陷
+* `QC` 方法不知道有没有时间做
+* `SVM-QDFRFT` 方法因为实现比较复杂，求特征向量的时候莫名总是比正常值偏大，导致使用核矩阵变换之后值抖动过大，`SVM` 提取会有百分之 `10` 到 `20` 的误码率，建议使用 `SVM-QDFRNT` 来进行工程化，`QDFRNT` 的实现简单，计算量小，误码率低，比较适合工程使用
 
 # 😁 关于
 * 作者：`John Kindem` ( `NUAA 161520311` )
