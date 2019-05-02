@@ -76,15 +76,91 @@
 这个环境变量就设置到 `cmdline.h` 所在的目录即可
 
 ### Linux/Unix/MacOS
-待补全
+首先需要安装上面说到的几个库：
+* `OpenCV 4`
+* `Armadillo`
+* `LibSVM`
+* `Cmdline`
 
-<!-- TODO -->
+首先是 `OpenCV 4` 的安装，根据官方的教程，首先去官网下载源码包：[Source Code - OpenCV 4](https://opencv.org/releases/)
+
+在开始编译之前，你需要安装 `OpenCV 4` 所需要的一切依赖：
+
+```
+# 编译套件
+sudo apt-get install build-essential
+
+# 必要依赖
+sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+
+# 可选依赖
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+```
+
+进入源码包目录并且使用 `cmake` 生成 `Makefile`：
+
+```
+cd ~/opencv
+mkdir build
+cd build
+cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
+```
+
+接着使用 `make install` 指令编译并安装包：
+
+```
+sudo make install
+```
+
+漫长的等待即可，如果内存过小可能会导致失败，如果失败了可以适当调节 `swap` 文件的大小后重试，已经编译过的文件将不会再次被编译，可以直接重上次失败的地方开始，你要做的只有安装 `OpenCV` 本身，你无需再配置其他的参数等
+
+接下来是 `Armadillo`，首先你需要在官网下载最新的源码包：[Armadillo](http://arma.sourceforge.net)，如果遇到被墙的情况，可以使用 [SourceForge Images](http://sourceforge.mirrorservice.org/) 下载，找到 `arma` 即可。
+
+下载源码包之后，依然是先安装依赖：
+
+```
+sudo apt-get install libopenblas-dev
+sudo apt-get install liblapack-dev
+sudo apt-get install libarpack2-dev
+sudo apt-get install libsuperlu-dev
+```
+
+接着进入源码目录使用 `cmake` 生成 `Makefile` 然后使用 `make` 编译并安装即可：
+
+```
+cd ~/armadillo
+mkdir build
+cd build
+cmake ..
+sudo make install
+```
+
+至于 `LibSVM`，我们只需要两个文件，`svm.h` 和 `svm.cpp`，这两个文件都可以在官方的源码包得到，或者你也可以从官方的 `github` 下载，地址在这里：[LibSVM - github](https://github.com/cjlin1/libsvm)，下载后将这两个文件分别放在 `cpp` 项目中的 `lib/include` 和 `lib/src` 目录下，如果没有则手动新建
+
+最后是 `Cmdline`，这个库只需要一个头文件 `cmdline.h`，我们可以在官方 `github` 上获取，地址在这里：[Cmdline - github](https://github.com/tanakh/cmdline)，下载头文件之后将头文件放在 `/usr/include` 或者 `/usr/local/include` 目录下即可
+
+最后是 `Linux` 平台上项目的编译运行，进入 `cpp` 项目：
+
+```
+cd ~/graduation-project/cpp
+```
+
+使用 `cmake` 生成 `Release` 版本的 `makefile`：
+
+```
+mkdir build
+cd build
+cmake -D CMAKE_BUILD_TYPE=Release ..
+make
+```
+
+即可得到目标文件 `WATERMARK`
 
 ## Usage
 使用方法如下：
 
 ```
-usage: ./watermark --type=string --algorithm=string --action=string [options] ...
+usage: ./WATERMARK --type=string --algorithm=string --action=string [options] ...
 options:
   -t, --type         mark type, can be 'svm' or 'qc' (string)
   -a, --algorithm    algorithm type, can be 'qdfrnt' or 'qdfrft' (string)
@@ -127,7 +203,6 @@ options:
 
 ## 已知缺陷
 * `QC` 方法不知道有没有时间做
-* `SVM-QDFRFT` 方法因为实现比较复杂，求特征向量的时候莫名总是比正常值偏大，导致使用核矩阵变换之后值抖动过大，`SVM` 提取会有百分之 `10` 到 `20` 的误码率，建议使用 `SVM-QDFRNT` 来进行工程化，`QDFRNT` 的实现简单，计算量小，误码率低，比较适合工程使用
 
 # 😁 关于
 * 作者：`John Kindem` ( `NUAA 161520311` )
