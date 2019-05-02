@@ -86,9 +86,9 @@
 ```
 usage: ./watermark --type=string --algorithm=string --action=string [options] ...
 options:
-  -t, --type         mark type (string)
-  -a, --algorithm    algorithm type (string)
-  -c, --action       mark or restore (string)
+  -t, --type         mark type, can be 'svm' or 'qc' (string)
+  -a, --algorithm    algorithm type, can be 'qdfrnt' or 'qdfrft' (string)
+  -c, --action       mark, restore or train (string)
   -s, --source       source file path (string [=source.jpg])
   -o, --output       output file path (string [=output.jpg])
   -e, --secret       secret file path (string [=secret.jpg])
@@ -111,6 +111,19 @@ options:
 ```
 
 来获取帮助
+
+下面给出几个使用示例：
+
+```
+# 训练基于 QDFRNT 的 SVM-Model
+./watermark -t svm -a qdfrnt -c train -s lena.bmp
+
+# 使用 SVM-QDFRNT 方法嵌入水印
+./watermark -t svm -a qdfrnt -c mark -s lena.bmp -o marked.bmp -e secret.bmp
+
+# 提取 SVM-QDFRNT 方法嵌入的水印, 需要 matrix.dat, keys.dat, model.dat
+./watermark -t svm -a qdfrnt -c restore -s marked.bmp -o restored.bmp
+```
 
 # 😁 关于
 * 作者：`John Kindem` ( `NUAA 161520311` )
