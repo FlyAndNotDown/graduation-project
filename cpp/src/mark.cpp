@@ -261,7 +261,12 @@ void mark::im_mark(int type, cv::Mat source, cv::Mat secret, cv::Mat &output, um
 			for (uword i = 0; i < 8; i++) {
 				for (uword j = 0; j < 8; j++) {
 					uword index_t = i * 8 + j;
-					block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					if (type == mark::MARK_TYPE_QDFRFT) {
+						block_channel_sequence(0, index_t) = block_channel(i, j);
+					} else {
+						block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					}
+					// block_channel_sequence(0, index_t) = abs(block_channel(i, j));
 					block_channel_sequence(1, index_t) = i;
 					block_channel_sequence(2, index_t) = j;
 				}
@@ -437,7 +442,13 @@ void mark::im_train(int type, cv::Mat source, uvec secret, cx_mat kernel, uword 
 			for (uword i = 0; i < 8; i++) {
 				for (uword j = 0; j < 8; j++) {
 					uword index_t = i * 8 + j;
-					block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					if (type == mark::MARK_TYPE_QDFRFT) {
+						block_channel_sequence(0, index_t) = block_channel(i, j);
+					}
+					else {
+						block_channel_sequence(0, index_t) = abs(block_channel(i, j));
+					}
+					// block_channel_sequence(0, index_t) = abs(block_channel(i, j));
 					block_channel_sequence(1, index_t) = i;
 					block_channel_sequence(2, index_t) = j;
 				}
