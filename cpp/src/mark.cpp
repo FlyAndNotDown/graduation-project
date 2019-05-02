@@ -622,11 +622,12 @@ void mark::im_restore(int type, cv::Mat source, cv::Mat &secret, int arnold_time
 		double average = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
+				/* if (type == mark::MARK_TYPE_QDFRFT && abs(block_channel(row + i, col + j)) > 3 * abs(block_channel(row, col))) {
 					average += block_channel(row, col);
 				} else {
 					average += block_channel(row + i, col + j);
-				}
+				} */
+				average += block_channel(row + i, col + j);
 			}
 		}
 		average = (average - block_channel(row, col)) * 1.0 / 8;
