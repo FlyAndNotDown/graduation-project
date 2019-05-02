@@ -1,18 +1,13 @@
 # VS Code
 /.vscode
 
-# LaTex temp file
-/translation/*.log
-/translation/*.synctex*
-/translation/*.gz
-
-# matlab
+# Matlab
 /matlab/data/*.mat
 /matlab/dist/*
 /matlab/program
 /matlab/lib
 
-# cpp
+# Cpp Project
 /cpp/.vs
 /cpp/cmake-build-debug
 /cpp/.idea
@@ -20,3 +15,7 @@
 /cpp/CMakeCache.txt
 /cpp/build
 /cpp/lib
+
+# Web
+/web/frontend/node_modules
+/web/frontend/yarn.lock
