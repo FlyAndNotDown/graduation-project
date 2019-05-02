@@ -564,21 +564,24 @@ cube tool::fix_after_transform(cube source) {
 void tool::save_matrix_to_file(mat source, const char *file_path) {
 	// open file
 	fstream file;
-	file.open(file_path, ios::out | ios::trunc);
+	file.open(file_path, ios::out | ios::trunc | ios::binary);
 
 	// get size info
 	uword rows = source.n_rows;
 	uword cols = source.n_cols;
 
 	// do write
-	file << rows << " " << cols << endl;
+	// file << rows << " " << cols << endl;
+	file.write((char *) &rows, sizeof(uword));
+	file.write((char *) &cols, sizeof(uword));
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
-			file << source(i, j) << " ";
+			// file << source(i, j) << " ";
+			file.write((char *) &source(i, j), sizeof(double));
 		}
-		file << endl;
+		// file << endl;
 	}
-	file << endl;
+	// file << endl;
 	
 	// close file
 	file.close();
@@ -587,13 +590,15 @@ void tool::save_matrix_to_file(mat source, const char *file_path) {
 mat tool::read_matrix_from_file(const char *file_path) {
 	// open file
 	fstream file;
-	file.open(file_path, ios::in);
+	file.open(file_path, ios::in | ios::binary);
 
 	// read size info
 	uword rows;
 	uword cols;
-	file >> rows;
-	file >> cols;
+	// file >> rows;
+	// file >> cols;
+	file.read((char *) &rows, sizeof(uword));
+	file.read((char *) &cols, sizeof(uword));
 
 	// init output
 	mat output(rows, cols, fill::zeros);
@@ -602,7 +607,8 @@ mat tool::read_matrix_from_file(const char *file_path) {
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			double temp;
-			file >> temp;
+			// file >> temp;
+			file.read((char *) &temp, sizeof(double));
 			output(i, j) = temp;
 		}
 	}
@@ -617,21 +623,24 @@ mat tool::read_matrix_from_file(const char *file_path) {
 void tool::save_u_matrix_to_file(umat source, const char *file_path) {
 	// open file
 	fstream file;
-	file.open(file_path, ios::out | ios::trunc);
+	file.open(file_path, ios::out | ios::trunc | ios::binary);
 
 	// get size info
 	uword rows = source.n_rows;
 	uword cols = source.n_cols;
 
 	// do write
-	file << rows << " " << cols << endl;
+	// file << rows << " " << cols << endl;
+	file.write((char *) &rows, sizeof(uword));
+	file.write((char *) &cols, sizeof(uword));
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
-			file << source(i, j) << " ";
+			// file << source(i, j) << " ";
+			file.write((char *) &source(i, j), sizeof(uword));
 		}
-		file << endl;
+		// file << endl;
 	}
-	file << endl;
+	// file << endl;
 
 	// close file
 	file.close();
@@ -640,13 +649,15 @@ void tool::save_u_matrix_to_file(umat source, const char *file_path) {
 umat tool::read_u_matrix_from_file(const char *file_path) {
 	// open file
 	fstream file;
-	file.open(file_path, ios::in);
+	file.open(file_path, ios::in | ios::binary);
 
 	// read size info
 	uword rows;
 	uword cols;
-	file >> rows;
-	file >> cols;
+	// file >> rows;
+	// file >> cols;
+	file.read((char *)&rows, sizeof(uword));
+	file.read((char *)&cols, sizeof(uword));
 
 	// init output
 	umat output(rows, cols, fill::zeros);
@@ -655,7 +666,8 @@ umat tool::read_u_matrix_from_file(const char *file_path) {
 	for (uword i = 0; i < rows; i++) {
 		for (uword j = 0; j < cols; j++) {
 			double temp;
-			file >> temp;
+			// file >> temp;
+			file.read((char *)&temp, sizeof(uword));
 			output(i, j) = temp;
 		}
 	}
