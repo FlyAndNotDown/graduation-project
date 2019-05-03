@@ -216,6 +216,7 @@ export class IndexPage extends React.Component<Props, State> {
                 keys: this.state.restoreKeys
             } : {
                 algorithm: this.state.restoreAlgorithm,
+                source: this.state.restoreSource,
                 keys: this.state.restoreKeys
             });
         } catch (e) {
