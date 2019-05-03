@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Button, Layout, Row, Col, Avatar, Drawer, Steps } from 'antd';
+import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon } from 'antd';
 import headerImage from '../img/header.jpg';
+import { config } from '../config';
 
 const { Step } = Steps;
 
@@ -69,6 +70,31 @@ export class IndexPage extends React.Component<Props, State> {
             </div>
         );
         
+        const markDrawerSteps = (
+            <div className={'mt-xxl'}>
+                <Steps current={0} size={'small'}>
+                    <Step title={'上传源文件'}/>
+                    <Step title={'嵌入水印'}/>
+                    <Step title={'保存结果'}/>
+                </Steps>
+            </div>
+        );
+        const markDrawerUploadSourceRow = (
+            <Row className={'mt-60px'}>
+                <Col span={12} offset={6}>
+                    <div className={'text-align-center'}>
+                        <Upload
+                            name={'mark-source'}
+                            action={`${config.urlPrefix}/file/upload`}>
+                            <Button>
+                                <Icon type={'upload'}/>&nbsp;
+                                上传文件
+                            </Button>
+                        </Upload>
+                    </div>
+                </Col>
+            </Row>
+        );
         const markDrawer = (
             <Drawer
                 title={'嵌入水印'}
@@ -82,13 +108,8 @@ export class IndexPage extends React.Component<Props, State> {
                     align={'middle'}
                     className={'w-100 h-100'}>
                     <Col span={12}>
-                        <div className={'mt-xxl'}>
-                            <Steps current={0} size={'small'}>
-                                <Step title={'上传源文件'}/>
-                                <Step title={'嵌入水印'}/>
-                                <Step title={'保存结果'}/>
-                            </Steps>
-                        </div>
+                        {markDrawerSteps}
+                        {markDrawerUploadSourceRow}
                     </Col>
                 </Row>
             </Drawer>
