@@ -92,7 +92,7 @@ router
         const sourceName = sourcePart[0];
         const sourceExtend = sourcePart[sourcePart.length - 1];
         const keys = body.keys || '';
-        const output = `${sourceName}-marked.${sourceExtend}`;
+        const output = `${sourceName}-restored.${sourceExtend}`;
         if (algorithm === 'qdfrnt') {
             const matrix = body.matrix || '';
             execFileSync(config.executeProgram, [

@@ -54,7 +54,7 @@ export class IndexPage extends React.Component<Props, State> {
             locked: false,
 
             restoreFiles: [],
-            restoreAlgorithm: '',
+            restoreAlgorithm: 'qdfrnt',
             restoreSource: '',
             restoreMatrix: '',
             restoreKeys: '',
@@ -65,7 +65,7 @@ export class IndexPage extends React.Component<Props, State> {
     showMarkDrawer = (): void => { this.setState({ markDrawerVisible: true }); };
     closeMarkDrawer = (): void => { this.setState({ markDrawerVisible: false, markDrawerStep: 0 }); };
     showRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: true }); };
-    closeRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: false }); };
+    closeRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: false, restoreDrawerStep: 0 }); };
     onMarkButtonClick = (): void => { this.showMarkDrawer(); };
     onRestoreButtonClick = (): void => { this.showRestoreDrawer(); };
     goNextMarkStep = (): void => { this.setState((prevState: State) => ({ markDrawerStep: prevState.markDrawerStep + 1 })); };
@@ -209,7 +209,7 @@ export class IndexPage extends React.Component<Props, State> {
 
         let response;
         try {
-            response = await Axios.post(`${config.urlPrefix}/mark/restore`, this.state.restoreAlgorithm === 'qdfrnt' ? {
+            response = await Axios.post(`${config.urlPrefix}/restore`, this.state.restoreAlgorithm === 'qdfrnt' ? {
                 algorithm: this.state.restoreAlgorithm,
                 source: this.state.restoreSource,
                 matrix: this.state.restoreMatrix,
@@ -467,7 +467,7 @@ export class IndexPage extends React.Component<Props, State> {
                                 返回上一步
                             </Button>
                             <Button disabled={this.state.locked} className={'w-45 float-right'} type={'primary'} onClick={this.onRestoreStartRestoreButtonClicked}>
-                                开始嵌入
+                                开始提取
                             </Button>
                         </Form.Item>
                     </Form>
