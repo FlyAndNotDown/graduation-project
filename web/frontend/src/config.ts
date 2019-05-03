@@ -4,7 +4,7 @@ export interface Config {
     staticPath: string
 }
 
-const devMode = true;
+const devMode = false;
 export const config: Config = {
     devMode: devMode,
     urlPrefix: devMode ? 'http://localhost:1750/request/watermark' : '/request/watermark',
