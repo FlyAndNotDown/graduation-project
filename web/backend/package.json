@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/koa": "^2.0.48",
     "@types/koa-router": "^7.0.40",
+    "@types/koa-static": "^4.0.1",
     "@types/koa2-cors": "^2.0.1",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
@@ -23,6 +24,7 @@
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6"
   }
 }

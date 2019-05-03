@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon, Form, Input, Select } from 'antd';
+import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon, Form, Input, Select, message } from 'antd';
 import headerImage from '../img/header.jpg';
 import { config } from '../config';
+import Axios from 'axios';
 
 const { Step } = Steps;
 
@@ -18,7 +19,8 @@ interface State {
     markFiles: UploadedFile[],
     markAlgorithm: string,
     markSource: string,
-    markSecret: string
+    markSecret: string,
+    locked: boolean
 }
 
 export class IndexPage extends React.Component<Props, State> {
@@ -34,7 +36,9 @@ export class IndexPage extends React.Component<Props, State> {
             markFiles: [],
             markAlgorithm: 'qdfrnt',
             markSource: '',
-            markSecret: ''
+            markSecret: '',
+
+            locked: false
         };
     }
 
@@ -48,6 +52,8 @@ export class IndexPage extends React.Component<Props, State> {
     goPrevMarkStep = (): void => { this.setState((prevState: State) => ({ markDrawerStep: prevState.markDrawerStep - 1 })); };
     goNextRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep + 1 })); };
     goPrevRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep - 1 })); };
+    lock = (): void => { this.setState({ locked: true }); };
+    unlock = (): void => { this.setState({ locked: false }); };
     onMarkUploadChange = (info: any): void => {
         if (info.file.status === 'done') {
             this.setState((prevState: State) => {
@@ -82,6 +88,30 @@ export class IndexPage extends React.Component<Props, State> {
     onMarkAlgorithmChange = (value: string) => { this.setState({ markAlgorithm: value }); };
     onMarkSourceChange = (value: string) => { this.setState({ markSource: value }); };
     onMarkSecretChange = (value: string) => { this.setState({ markSecret: value }); };
+    onMarkStartMarkButtonClicked = () => {
+        if (this.state.markAlgorithm === '') {
+            return message.error('请选择算法');
+        }
+        if (this.state.markSource === '') {
+            return message.error('请选择原图');
+        }
+        if (this.state.markSecret === '') {
+            return message.error('请选择水印图像');
+        }
+        this.lock();
+        try {
+            const response = Axios.post(config.urlPrefix, {
+                algorithm: this.state.markAlgorithm,
+                source: this.state.markSource,
+                secret: this.state.markSecret
+            });
+        } catch (e) {
+            this.unlock();
+            return message.error('服务器错误，请重试');
+        }
+        // TODO
+        this.unlock();
+    };
 
     render(): any {
         const titleRow = (
@@ -182,10 +212,10 @@ export class IndexPage extends React.Component<Props, State> {
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                            <Button className={'w-45 float-left'} onClick={this.goPrevMarkStep}>
+                            <Button disabled={this.state.locked} className={'w-45 float-left'} onClick={this.goPrevMarkStep}>
                                 返回上一步
                             </Button>
-                            <Button className={'w-45 float-right'} type={'primary'} onClick={this.goNextMarkStep}>
+                            <Button disabled={this.state.locked} className={'w-45 float-right'} type={'primary'} onClick={this.onMarkStartMarkButtonClicked}>
                                 开始嵌入
                             </Button>
                         </Form.Item>

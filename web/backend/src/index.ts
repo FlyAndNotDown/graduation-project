@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import * as hash from 'hash.js';
 import * as cors from 'koa2-cors';
 import * as path from 'path';
+import * as koaStatic from 'koa-static';
+import { execSync } from 'child_process';
 import { config } from './config';
 
 const server: Koa = new Koa();
@@ -15,7 +17,6 @@ server.use(async (context, next) => {
     await next();
 });
 server.use(koaBody({
-    
     multipart: true,
     formidable: {
         maxFileSize: 2 * 1024 * 1024
@@ -24,6 +25,7 @@ server.use(koaBody({
 server.use(cors({
     origin: config.corsOrigin
 }));
+server.use(koaStatic(config.staticPath));
 
 router
     .post(`${config.urlPrefix}/file/upload`, async (context, next) => {
@@ -41,6 +43,37 @@ router
         context.response.body = {
             name: fileName
         };
+        await next();
+    })
+    .post(`${config.urlPrefix}/mark`, async (context, next) => {
+        const body = context.request.body || {};
+        const algorithm = body.algorithm || 'qdfrnt';
+        const source = body.source || '';
+        const sourcePart = source.split('.');
+        const sourceExtend = sourcePart[sourcePart.length - 1];
+        const output = `${source}-marked.${sourceExtend}`;
+        const secret = body.secret || '';
+        const matrix = `${source}-matrix.dat`;
+        const keys = `${source}-keys.dat`;
+        execSync([
+            `../${config.executeProgram}`,
+            '-t',
+            'svm',
+            '-a',
+            algorithm,
+            '-c',
+            'mark',
+            '-s',
+            source,
+            '-o',
+            output,
+            '-e',
+            secret,
+            '-r',
+            matrix,
+            '-k',
+            keys
+        ].join(' '));
         await next();
     });
 
