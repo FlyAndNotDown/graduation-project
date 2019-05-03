@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Button, Layout, Row, Col, Avatar, Drawer } from 'antd';
+import { Button, Layout, Row, Col, Avatar, Drawer, Steps } from 'antd';
 import headerImage from '../img/header.jpg';
+
+const { Step } = Steps;
 
 interface Props {}
 interface State {
@@ -70,16 +72,31 @@ export class IndexPage extends React.Component<Props, State> {
         const markDrawer = (
             <Drawer
                 title={'嵌入水印'}
-                height={'100%'}
+                height={'80%'}
                 onClose={this.closeMarkDrawer}
                 visible={this.state.markDrawerVisible}
                 placement={'bottom'}>
+                <Row
+                    type={'flex'}
+                    justify={'center'}
+                    align={'middle'}
+                    className={'w-100 h-100'}>
+                    <Col span={12}>
+                        <div className={'mt-xxl'}>
+                            <Steps current={0} size={'small'}>
+                                <Step title={'上传源文件'}/>
+                                <Step title={'嵌入水印'}/>
+                                <Step title={'保存结果'}/>
+                            </Steps>
+                        </div>
+                    </Col>
+                </Row>
             </Drawer>
         );
         const restoreDrawer = (
             <Drawer
                 title={'提取水印'}
-                height={'100%'}
+                height={'80%'}
                 onClose={this.closeRestoreDrawer}
                 visible={this.state.restoreDrawerVisible}
                 placement={'bottom'}>
