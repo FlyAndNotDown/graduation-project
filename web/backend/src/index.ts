@@ -56,7 +56,7 @@ router
         const secret = path.join(config.uploadPath, body.secret || '');
         const matrix = path.join(config.uploadPath, `${sourceName}-matrix.dat`);
         const keys = path.join(config.uploadPath, `${sourceName}-keys.dat`);
-        execFileSync(path.join(__dirname, '..', config.executeProgram), [
+        execFileSync(config.executeProgram, [
             '-t',
             'svm',
             '-a',

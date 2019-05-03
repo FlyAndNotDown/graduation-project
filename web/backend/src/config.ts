@@ -17,5 +17,5 @@ export const config: Config = {
     uploadPath: path.join(__dirname, '../public/upload'),
     listenPort: 1750,
     corsOrigin: devMode ? 'http://localhost:3000' : 'http://dev.kindemh.cn',
-    executeProgram: os.platform() === 'win32' ? 'WATERMARK.exe' : 'WATERMARK'
+    executeProgram: path.join(__dirname, '..', os.platform() === 'win32' ? 'WATERMARK.exe' : 'WATERMARK')
 };
