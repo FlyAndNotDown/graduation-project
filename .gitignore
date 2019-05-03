@@ -24,3 +24,4 @@
 /web/backend/build
 /web/backend/public
 /web/backend/yarn.lock
+/web/backend/*.log
