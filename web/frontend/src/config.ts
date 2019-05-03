@@ -1,10 +1,12 @@
 export interface Config {
     devMode: boolean,
-    urlPrefix: string
+    urlPrefix: string,
+    staticPath: string
 }
 
 const devMode = true;
 export const config: Config = {
     devMode: devMode,
-    urlPrefix: devMode ? 'http://localhost:1750/request/watermark' : '/request/watermark'
+    urlPrefix: devMode ? 'http://localhost:1750/request/watermark' : '/request/watermark',
+    staticPath: devMode ? 'http://localhost:1750/upload' : '/upload'
 };
