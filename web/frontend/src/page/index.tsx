@@ -3,6 +3,7 @@ import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon, Form, In
 import headerImage from '../img/header.jpg';
 import { config } from '../config';
 import Axios from 'axios';
+import { async } from 'q';
 
 const { Step } = Steps;
 
@@ -23,7 +24,13 @@ interface State {
     locked: boolean,
     markOutputAddr: string,
     markMatrixAddr: string,
-    markKeysAddr: string
+    markKeysAddr: string,
+    restoreFiles: UploadedFile[],
+    restoreAlgorithm: string,
+    restoreSource: string,
+    restoreMatrix: string,
+    restoreKeys: string,
+    restoreOutputAddr: string
 }
 
 export class IndexPage extends React.Component<Props, State> {
@@ -44,7 +51,14 @@ export class IndexPage extends React.Component<Props, State> {
             markMatrixAddr: '',
             markKeysAddr: '',
 
-            locked: false
+            locked: false,
+
+            restoreFiles: [],
+            restoreAlgorithm: '',
+            restoreSource: '',
+            restoreMatrix: '',
+            restoreKeys: '',
+            restoreOutputAddr: ''
         };
     }
 
@@ -78,6 +92,24 @@ export class IndexPage extends React.Component<Props, State> {
             });
         }
     };
+    onRestoreUploadChange = (info: any): void => {
+        if (info.file.status === 'done') {
+            this.setState((prevState: State) => {
+                const newRestoreFiles: UploadedFile[] = [];
+                for (let i: number = 0; i < prevState.restoreFiles.length; i++) {
+                    newRestoreFiles.push(prevState.restoreFiles[i]);
+                }
+                const file: UploadedFile = {
+                    name: info.file.name,
+                    value: info.file.response.name
+                };
+                newRestoreFiles.push(file);
+                return {
+                    restoreFiles: newRestoreFiles
+                };
+            });
+        }
+    };
     onMarkUploadRemove = (file: any) => {
         this.setState((prevState: State) => {
             const newMarkFiles: UploadedFile[] = [];
@@ -91,6 +123,19 @@ export class IndexPage extends React.Component<Props, State> {
             };
         });
     }
+    onRestoreUploadRemove = (file: any) => {
+        this.setState((prevState: State) => {
+            const newRestoreFiles: UploadedFile[] = [];
+            for (let i: number = 0; i < prevState.restoreFiles.length; i++) {
+                if (prevState.restoreFiles[i].name !== file.name) {
+                    newRestoreFiles.push(prevState.restoreFiles[i]);
+                }
+            }
+            return {
+                restoreFiles: newRestoreFiles
+            };
+        });
+    };
     onMarkAlgorithmChange = (value: string) => { this.setState({ markAlgorithm: value }); };
     onMarkSourceChange = (value: string) => { this.setState({ markSource: value }); };
     onMarkSecretChange = (value: string) => { this.setState({ markSecret: value }); };
@@ -110,8 +155,8 @@ export class IndexPage extends React.Component<Props, State> {
             markMatrixAddr: '',
             markKeysAddr: ''
         });
-
         this.lock();
+
         let response;
         try {
             response = await Axios.post(`${config.urlPrefix}/mark`, {
@@ -121,7 +166,7 @@ export class IndexPage extends React.Component<Props, State> {
             });
         } catch (e) {
             this.unlock();
-            return message.error('服务器错误，请重试');
+            return message.error('参数错误，请重试');
         }
 
         response = response || {};
@@ -137,6 +182,55 @@ export class IndexPage extends React.Component<Props, State> {
         });
 
         this.goNextMarkStep();
+        this.unlock();
+    };
+    onRestoreAlgorithmChange = (value: string) => { this.setState({ restoreAlgorithm: value }); };
+    onRestoreSourceChange = (value: string) => { this.setState({ restoreSource: value }); };
+    onRestoreMatrixChange = (value: string) => { this.setState({ restoreMatrix: value }); };
+    onRestoreKeysChange = (value: string) => { this.setState({ restoreKeys: value }); };
+    onRestoreStartRestoreButtonClicked = async () => {
+        if (this.state.restoreAlgorithm === '') {
+            return message.error('请选择算法');
+        }
+        if (this.state.restoreSource === '') {
+            return message.error('请选择含水印图像');
+        }
+        if (this.state.restoreAlgorithm === 'qdfrnt' && this.state.restoreMatrix === '') {
+            return message.error('请选择 Matrix 秘钥文件');
+        }
+        if (this.state.restoreKeys === '') {
+            return message.error('请选择 Keys 秘钥文件');
+        }
+
+        this.setState({
+            restoreOutputAddr: ''
+        });
+        this.lock();
+
+        let response;
+        try {
+            response = await Axios.post(`${config.urlPrefix}/mark/restore`, this.state.restoreAlgorithm === 'qdfrnt' ? {
+                algorithm: this.state.restoreAlgorithm,
+                matrix: this.state.restoreMatrix,
+                keys: this.state.restoreKeys
+            } : {
+                algorithm: this.state.restoreAlgorithm,
+                keys: this.state.restoreKeys
+            });
+        } catch (e) {
+            this.unlock();
+            return message.error('参数错误，请重试');
+        }
+
+        response = response || {};
+        let data = response.data || {};
+        let output = data.output || '';
+
+        this.setState({
+            restoreOutputAddr: output === '' ? '' : `${config.staticPath}/${output}`
+        });
+
+        this.goNextRestoreStep();
         this.unlock();
     };
 
@@ -266,7 +360,7 @@ export class IndexPage extends React.Component<Props, State> {
                                 value={this.state.markOutputAddr}
                                 addonAfter={<a target={'__blank'} className={'color-font-second'} href={this.state.markOutputAddr}>下载</a>}/>
                         </Form.Item>
-                        <Form.Item label={'Matrix 秘钥'}>
+                        <Form.Item label={'Matrix 秘钥 (QDFrFT 不需要)'}>
                             <Input
                                 disabled={true}
                                 value={this.state.markMatrixAddr}
@@ -303,6 +397,102 @@ export class IndexPage extends React.Component<Props, State> {
                 </Row>
             </Drawer>
         );
+
+        const restoreDrawerSteps = (
+            <div className={'mt-xxl'}>
+                <Steps current={this.state.restoreDrawerStep} size={'small'}>
+                    <Step title={'上传源文件'}/>
+                    <Step title={'提取水印'}/>
+                    <Step title={'保存结果'}/>
+                </Steps>
+            </div>
+        );
+        const restoreDrawerUploadSourceRow = (
+            <Row className={'mt-60px'}>
+                <Col span={12} offset={6}>
+                    <div className={'text-align-center'}>
+                        <Upload
+                            name={'file'}
+                            onChange={this.onRestoreUploadChange}
+                            onRemove={this.onRestoreUploadRemove}
+                            action={`${config.urlPrefix}/file/upload`}>
+                            <Button>
+                                <Icon type={'upload'}/>&nbsp;
+                                上传文件
+                            </Button>
+                        </Upload>
+                    </div>
+                    <div className={'text-align-center mt-lg'}>
+                        <Button type={'primary'} onClick={this.goNextRestoreStep}>
+                            <Icon type={'next'}/> 上传完毕，下一步
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
+        );
+        const restoreDrawerRestoreReadyRow = (
+            <Row className={'mt-60px'}>
+                <Col span={12} offset={6}>
+                    <Form>
+                        <Form.Item label={'变换算法'}>
+                            <Select defaultValue={'qdfrnt'} onChange={this.onRestoreAlgorithmChange}>
+                                <Select.Option value={'qdfrnt'}>QDFRNT</Select.Option>
+                                <Select.Option value={'qdfrft'}>QDFrFT</Select.Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label={'含水印图像'}>
+                            <Select defaultValue={''} onChange={this.onRestoreSourceChange}>
+                                {this.state.restoreFiles.map((file: UploadedFile): any => {
+                                    return (<Select.Option value={file.value}>{file.name}</Select.Option>);
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label={'Matrix 秘钥'}>
+                            <Select disabled={this.state.restoreAlgorithm === 'qdfrft'} defaultValue={''} onChange={this.onRestoreMatrixChange}>
+                                {this.state.restoreFiles.map((file: UploadedFile): any => {
+                                    return (<Select.Option value={file.value}>{file.name}</Select.Option>);
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label={'Keys 秘钥'}>
+                            <Select defaultValue={''} onChange={this.onRestoreKeysChange}>
+                                {this.state.restoreFiles.map((file: UploadedFile): any => {
+                                    return (<Select.Option value={file.value}>{file.name}</Select.Option>);
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button disabled={this.state.locked} className={'w-45 float-left'} onClick={this.goPrevRestoreStep}>
+                                返回上一步
+                            </Button>
+                            <Button disabled={this.state.locked} className={'w-45 float-right'} type={'primary'} onClick={this.onRestoreStartRestoreButtonClicked}>
+                                开始嵌入
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
+        );
+        const restoreDrawerSaveResultRow = (
+            <Row className={'mt-60px'}>
+                <Col span={12} offset={6}>
+                    <div className={'font-size-20px color-font-primary text-align-center'}>
+                        提取完成，结果如下
+                    </div>
+                    <div className={'font-size-15px color-font-second text-align-center'}>
+                        请自行下载并且妥善保管
+                    </div>
+                    <Form className={'mt-xxl'}>
+                        <Form.Item label={'结果'}>
+                            <Input
+                                disabled={true}
+                                value={this.state.restoreOutputAddr}
+                                addonAfter={<a target={'__blank'} className={'color-font-second'} href={this.state.restoreOutputAddr}>下载</a>}/>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
+        );
         const restoreDrawer = (
             <Drawer
                 title={'提取水印'}
@@ -310,6 +500,18 @@ export class IndexPage extends React.Component<Props, State> {
                 onClose={this.closeRestoreDrawer}
                 visible={this.state.restoreDrawerVisible}
                 placement={'bottom'}>
+                <Row
+                    type={'flex'}
+                    justify={'center'}
+                    align={'middle'}
+                    className={'w-100 h-100'}>
+                    <Col span={12}>
+                        {restoreDrawerSteps}
+                        {this.state.restoreDrawerStep === 0 && restoreDrawerUploadSourceRow}
+                        {this.state.restoreDrawerStep === 1 && restoreDrawerRestoreReadyRow}
+                        {this.state.restoreDrawerStep === 2 && restoreDrawerSaveResultRow}
+                    </Col>
+                </Row>
             </Drawer>
         );
 
