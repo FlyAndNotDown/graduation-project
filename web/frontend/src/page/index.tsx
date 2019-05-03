@@ -3,7 +3,6 @@ import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon, Form, In
 import headerImage from '../img/header.jpg';
 import { config } from '../config';
 import Axios from 'axios';
-import { async } from 'q';
 
 const { Step } = Steps;
 
