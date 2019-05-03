@@ -13,6 +13,8 @@ interface UploadedFile {
 interface State {
     markDrawerVisible: boolean,
     restoreDrawerVisible: boolean,
+    markDrawerStep: number,
+    restoreDrawerStep: number,
     markFiles: UploadedFile[]
 }
 
@@ -23,6 +25,8 @@ export class IndexPage extends React.Component<Props, State> {
         this.state = {
             markDrawerVisible: false,
             restoreDrawerVisible: false,
+            markDrawerStep: 0,
+            restoreDrawerStep: 0,
             markFiles: []
         };
     }
@@ -33,6 +37,10 @@ export class IndexPage extends React.Component<Props, State> {
     closeRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: false }); };
     onMarkButtonClick = (): void => { this.showMarkDrawer(); };
     onRestoreButtonClick = (): void => { this.showRestoreDrawer(); };
+    goNextMarkStep = (): void => { this.setState((prevState: State) => ({ markDrawerStep: prevState.markDrawerStep + 1 })); };
+    goPrevMarkStep = (): void => { this.setState((prevState: State) => ({ markDrawerStep: prevState.markDrawerStep - 1 })); };
+    goNextRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep + 1 })); };
+    goPrevRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep - 1 })); };
 
     onMarkUploadChange = (info: any): void => {
         if (info.file.status === 'done') {
@@ -52,6 +60,19 @@ export class IndexPage extends React.Component<Props, State> {
             });
         }
     };
+    onMarkUploadRemove = (file: any) => {
+        this.setState((prevState: State) => {
+            const newMarkFiles: UploadedFile[] = [];
+            for (let i: number = 0; i < prevState.markFiles.length; i++) {
+                if (prevState.markFiles[i].name !== file.name) {
+                    newMarkFiles.push(prevState.markFiles[i]);
+                }
+            }
+            return {
+                markFiles: newMarkFiles
+            };
+        });
+    }
 
     render(): any {
         const titleRow = (
@@ -97,7 +118,7 @@ export class IndexPage extends React.Component<Props, State> {
         
         const markDrawerSteps = (
             <div className={'mt-xxl'}>
-                <Steps current={0} size={'small'}>
+                <Steps current={this.state.markDrawerStep} size={'small'}>
                     <Step title={'上传源文件'}/>
                     <Step title={'嵌入水印'}/>
                     <Step title={'保存结果'}/>
@@ -107,16 +128,22 @@ export class IndexPage extends React.Component<Props, State> {
         const markDrawerUploadSourceRow = (
             <Row className={'mt-60px'}>
                 <Col span={8} offset={8}>
-                    <div className={'text-align-center'}>
+                    <div className={'text-align-center mh-300px'}>
                         <Upload
                             name={'file'}
                             onChange={this.onMarkUploadChange}
+                            onRemove={this.onMarkUploadRemove}
                             action={`${config.urlPrefix}/file/upload`}>
                             <Button>
                                 <Icon type={'upload'}/>&nbsp;
                                 上传文件
                             </Button>
                         </Upload>
+                    </div>
+                    <div className={'text-align-center mt-lg'}>
+                        <Button type={'primary'} onClick={this.goNextMarkStep}>
+                            <Icon type={'next'}/> 上传完毕，下一步
+                        </Button>
                     </div>
                 </Col>
             </Row>
@@ -135,7 +162,7 @@ export class IndexPage extends React.Component<Props, State> {
                     className={'w-100 h-100'}>
                     <Col span={12}>
                         {markDrawerSteps}
-                        {markDrawerUploadSourceRow}
+                        {this.state.markDrawerStep === 0 && markDrawerUploadSourceRow}
                     </Col>
                 </Row>
             </Drawer>

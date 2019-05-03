@@ -11,12 +11,20 @@
     width: 100%;
 }
 
-.h-100 {
-    height: 100%;
+.mh-300px {
+    min-height: 300px;
 }
 
 .h-50 {
     height: 50%;
+}
+
+.h-70 {
+    height: 70%;
+}
+
+.h-100 {
+    height: 100%;
 }
 
 /* Align */
