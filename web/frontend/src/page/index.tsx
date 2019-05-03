@@ -100,7 +100,7 @@ export class IndexPage extends React.Component<Props, State> {
         }
         this.lock();
         try {
-            const response = Axios.post(config.urlPrefix, {
+            const response = Axios.post(`${config.urlPrefix}/mark`, {
                 algorithm: this.state.markAlgorithm,
                 source: this.state.markSource,
                 secret: this.state.markSecret

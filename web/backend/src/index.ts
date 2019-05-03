@@ -6,7 +6,7 @@ import * as hash from 'hash.js';
 import * as cors from 'koa2-cors';
 import * as path from 'path';
 import * as koaStatic from 'koa-static';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { config } from './config';
 
 const server: Koa = new Koa();
@@ -48,15 +48,15 @@ router
     .post(`${config.urlPrefix}/mark`, async (context, next) => {
         const body = context.request.body || {};
         const algorithm = body.algorithm || 'qdfrnt';
-        const source = body.source || '';
-        const sourcePart = source.split('.');
+        const source = path.join(config.uploadPath, body.source || '');
+        const sourcePart: string[] = source.split('.');
+        const sourceName = sourcePart[0];
         const sourceExtend = sourcePart[sourcePart.length - 1];
-        const output = `${source}-marked.${sourceExtend}`;
-        const secret = body.secret || '';
-        const matrix = `${source}-matrix.dat`;
-        const keys = `${source}-keys.dat`;
-        execSync([
-            `../${config.executeProgram}`,
+        const output = path.join(config.uploadPath, `${sourceName}-marked.${sourceExtend}`);
+        const secret = path.join(config.uploadPath, body.secret || '');
+        const matrix = path.join(config.uploadPath, `${sourceName}-matrix.dat`);
+        const keys = path.join(config.uploadPath, `${sourceName}-keys.dat`);
+        execFileSync(path.join(__dirname, '..', config.executeProgram), [
             '-t',
             'svm',
             '-a',
@@ -73,7 +73,7 @@ router
             matrix,
             '-k',
             keys
-        ].join(' '));
+        ]);
         await next();
     });
 
