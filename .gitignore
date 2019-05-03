@@ -19,3 +19,5 @@
 # Web
 /web/frontend/node_modules
 /web/frontend/yarn.lock
+/web/backend/node_modules
+/web/backend/yarn.lock
