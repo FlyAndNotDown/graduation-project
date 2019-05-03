@@ -10,7 +10,7 @@ interface Config {
     executeProgram: string
 }
 
-const devMode = true;
+const devMode = false;
 export const config: Config = {
     urlPrefix: '/request/watermark',
     staticPath: path.join(__dirname, '../public'),
