@@ -6,9 +6,14 @@ import { config } from '../config';
 const { Step } = Steps;
 
 interface Props {}
+interface UploadedFile {
+    name: string,
+    value: string
+}
 interface State {
     markDrawerVisible: boolean,
-    restoreDrawerVisible: boolean
+    restoreDrawerVisible: boolean,
+    markFiles: UploadedFile[]
 }
 
 export class IndexPage extends React.Component<Props, State> {
@@ -17,7 +22,8 @@ export class IndexPage extends React.Component<Props, State> {
 
         this.state = {
             markDrawerVisible: false,
-            restoreDrawerVisible: false
+            restoreDrawerVisible: false,
+            markFiles: []
         };
     }
 
@@ -27,6 +33,25 @@ export class IndexPage extends React.Component<Props, State> {
     closeRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: false }); };
     onMarkButtonClick = (): void => { this.showMarkDrawer(); };
     onRestoreButtonClick = (): void => { this.showRestoreDrawer(); };
+
+    onMarkUploadChange = (info: any): void => {
+        if (info.file.status === 'done') {
+            this.setState((prevState: State) => {
+                const newMarkFiles: UploadedFile[] = [];
+                for (let i: number = 0; i < prevState.markFiles.length; i++) {
+                    newMarkFiles.push(prevState.markFiles[i]);
+                }
+                const file: UploadedFile = {
+                    name: info.file.name,
+                    value: info.file.response.name
+                };
+                newMarkFiles.push(file);
+                return {
+                    markFiles: newMarkFiles
+                };
+            });
+        }
+    };
 
     render(): any {
         const titleRow = (
@@ -85,6 +110,7 @@ export class IndexPage extends React.Component<Props, State> {
                     <div className={'text-align-center'}>
                         <Upload
                             name={'file'}
+                            onChange={this.onMarkUploadChange}
                             action={`${config.urlPrefix}/file/upload`}>
                             <Button>
                                 <Icon type={'upload'}/>&nbsp;

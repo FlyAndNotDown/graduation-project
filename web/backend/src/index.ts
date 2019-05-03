@@ -32,11 +32,15 @@ router
         const reader = fs.createReadStream(file.path);
         const filePart = file.name.split('.');
         const fileExtend = filePart[filePart.length - 1];
-        const filePath = path.join(config.uploadPath, `${hash.sha256().update(`${file.name}-${Date.now()}`).digest('hex')}.${fileExtend}`);
+        const fileName = `${hash.sha256().update(`${file.name}-${Date.now()}`).digest('hex')}.${fileExtend}`;
+        const filePath = path.join(config.uploadPath, fileName);
         const writer = fs.createWriteStream(filePath);
         reader.pipe(writer);
         console.log(`file saved to ${filePath}`);
         context.response.status = 200;
+        context.response.body = {
+            name: fileName
+        };
         await next();
     });
 
