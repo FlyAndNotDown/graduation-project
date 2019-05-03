@@ -18,6 +18,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "file-extension": "^4.0.5",
     "hash.js": "^1.1.7",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",

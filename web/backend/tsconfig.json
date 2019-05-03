@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": { "*": ["types/*"] },
         "outDir": "./build",
         "allowJs": false,
         "target": "es5"

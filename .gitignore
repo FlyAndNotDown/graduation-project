@@ -22,4 +22,5 @@
 /web/frontend/build
 /web/backend/node_modules
 /web/backend/build
+/web/backend/public
 /web/backend/yarn.lock

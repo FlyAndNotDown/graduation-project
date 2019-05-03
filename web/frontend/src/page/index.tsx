@@ -81,10 +81,10 @@ export class IndexPage extends React.Component<Props, State> {
         );
         const markDrawerUploadSourceRow = (
             <Row className={'mt-60px'}>
-                <Col span={12} offset={6}>
+                <Col span={8} offset={8}>
                     <div className={'text-align-center'}>
                         <Upload
-                            name={'mark-source'}
+                            name={'file'}
                             action={`${config.urlPrefix}/file/upload`}>
                             <Button>
                                 <Icon type={'upload'}/>&nbsp;
