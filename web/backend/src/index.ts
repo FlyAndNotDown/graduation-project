@@ -74,6 +74,14 @@ router
             '-k',
             path.join(config.uploadPath, keys)
         ]);
+        context.response.body = algorithm === 'qdfrnt' ? {
+            output: output,
+            matrix: matrix,
+            keys: keys
+        } : {
+            output: output,
+            keys: keys
+        };
         await next();
     });
 
