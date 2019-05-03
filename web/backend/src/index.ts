@@ -48,14 +48,14 @@ router
     .post(`${config.urlPrefix}/mark`, async (context, next) => {
         const body = context.request.body || {};
         const algorithm = body.algorithm || 'qdfrnt';
-        const source = path.join(config.uploadPath, body.source || '');
+        const source = body.source || '';
         const sourcePart: string[] = source.split('.');
         const sourceName = sourcePart[0];
         const sourceExtend = sourcePart[sourcePart.length - 1];
-        const output = path.join(config.uploadPath, `${sourceName}-marked.${sourceExtend}`);
-        const secret = path.join(config.uploadPath, body.secret || '');
-        const matrix = path.join(config.uploadPath, `${sourceName}-matrix.dat`);
-        const keys = path.join(config.uploadPath, `${sourceName}-keys.dat`);
+        const output = `${sourceName}-marked.${sourceExtend}`;
+        const secret = body.secret || '';
+        const matrix = `${sourceName}-matrix.dat`;
+        const keys = `${sourceName}-keys.dat`;
         execFileSync(config.executeProgram, [
             '-t',
             'svm',
@@ -64,15 +64,15 @@ router
             '-c',
             'mark',
             '-s',
-            source,
+            path.join(config.uploadPath, source),
             '-o',
-            output,
+            path.join(config.uploadPath, output),
             '-e',
-            secret,
+            path.join(config.uploadPath, secret),
             '-r',
-            matrix,
+            path.join(config.uploadPath, matrix),
             '-k',
-            keys
+            path.join(config.uploadPath, keys)
         ]);
         await next();
     });
