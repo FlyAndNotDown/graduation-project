@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon } from 'antd';
+import { Button, Layout, Row, Col, Avatar, Drawer, Steps, Upload, Icon, Form, Input, Select } from 'antd';
 import headerImage from '../img/header.jpg';
 import { config } from '../config';
 
@@ -15,7 +15,10 @@ interface State {
     restoreDrawerVisible: boolean,
     markDrawerStep: number,
     restoreDrawerStep: number,
-    markFiles: UploadedFile[]
+    markFiles: UploadedFile[],
+    markAlgorithm: string,
+    markSource: string,
+    markSecret: string
 }
 
 export class IndexPage extends React.Component<Props, State> {
@@ -27,7 +30,11 @@ export class IndexPage extends React.Component<Props, State> {
             restoreDrawerVisible: false,
             markDrawerStep: 0,
             restoreDrawerStep: 0,
-            markFiles: []
+
+            markFiles: [],
+            markAlgorithm: 'qdfrnt',
+            markSource: '',
+            markSecret: ''
         };
     }
 
@@ -41,7 +48,6 @@ export class IndexPage extends React.Component<Props, State> {
     goPrevMarkStep = (): void => { this.setState((prevState: State) => ({ markDrawerStep: prevState.markDrawerStep - 1 })); };
     goNextRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep + 1 })); };
     goPrevRestoreStep = (): void => { this.setState((prevState: State) => ({ restoreDrawerStep: prevState.restoreDrawerStep - 1 })); };
-
     onMarkUploadChange = (info: any): void => {
         if (info.file.status === 'done') {
             this.setState((prevState: State) => {
@@ -73,6 +79,9 @@ export class IndexPage extends React.Component<Props, State> {
             };
         });
     }
+    onMarkAlgorithmChange = (value: string) => { this.setState({ markAlgorithm: value }); };
+    onMarkSourceChange = (value: string) => { this.setState({ markSource: value }); };
+    onMarkSecretChange = (value: string) => { this.setState({ markSecret: value }); };
 
     render(): any {
         const titleRow = (
@@ -128,7 +137,7 @@ export class IndexPage extends React.Component<Props, State> {
         const markDrawerUploadSourceRow = (
             <Row className={'mt-60px'}>
                 <Col span={8} offset={8}>
-                    <div className={'text-align-center mh-300px'}>
+                    <div className={'text-align-center'}>
                         <Upload
                             name={'file'}
                             onChange={this.onMarkUploadChange}
@@ -148,6 +157,42 @@ export class IndexPage extends React.Component<Props, State> {
                 </Col>
             </Row>
         );
+        const markDrawerMarkReadyRow = (
+            <Row className={'mt-60px'}>
+                <Col span={8} offset={8}>
+                    <Form>
+                        <Form.Item label={'变换算法'}>
+                            <Select defaultValue={'qdfrnt'} onChange={this.onMarkAlgorithmChange}>
+                                <Select.Option value={'qdfrnt'}>QDFRNT</Select.Option>
+                                <Select.Option value={'qdfrft'}>QDFrFT</Select.Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label={'选择要加水印的图片 (512x512)'}>
+                            <Select onChange={this.onMarkSourceChange}>
+                                {this.state.markFiles.map((file: UploadedFile): any => {
+                                    return (<Select.Option value={file.value}>{file.name}</Select.Option>);
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label={'选择水印图片 (64x64)'}>
+                            <Select onChange={this.onMarkSecretChange}>
+                                {this.state.markFiles.map((file: UploadedFile): any => {
+                                    return (<Select.Option value={file.value}>{file.name}</Select.Option>);
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button className={'w-45 float-left'} onClick={this.goPrevMarkStep}>
+                                返回上一步
+                            </Button>
+                            <Button className={'w-45 float-right'} type={'primary'} onClick={this.goNextMarkStep}>
+                                开始嵌入
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
+        );
         const markDrawer = (
             <Drawer
                 title={'嵌入水印'}
@@ -163,6 +208,7 @@ export class IndexPage extends React.Component<Props, State> {
                     <Col span={12}>
                         {markDrawerSteps}
                         {this.state.markDrawerStep === 0 && markDrawerUploadSourceRow}
+                        {this.state.markDrawerStep === 1 && markDrawerMarkReadyRow}
                     </Col>
                 </Row>
             </Drawer>
