@@ -211,6 +211,7 @@ export class IndexPage extends React.Component<Props, State> {
         try {
             response = await Axios.post(`${config.urlPrefix}/mark/restore`, this.state.restoreAlgorithm === 'qdfrnt' ? {
                 algorithm: this.state.restoreAlgorithm,
+                source: this.state.restoreSource,
                 matrix: this.state.restoreMatrix,
                 keys: this.state.restoreKeys
             } : {

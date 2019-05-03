@@ -83,6 +83,58 @@ router
             keys: keys
         };
         await next();
+    })
+    .post(`${config.urlPrefix}/restore`, async (context, next) => {
+        const body = context.request.body || {};
+        const algorithm = body.algorithm || 'qdfrnt';
+        const source = body.source || '';
+        const sourcePart: string[] = source.split('.');
+        const sourceName = sourcePart[0];
+        const sourceExtend = sourcePart[sourcePart.length - 1];
+        const keys = body.keys || '';
+        const output = `${sourceName}-marked.${sourceExtend}`;
+        if (algorithm === 'qdfrnt') {
+            const matrix = body.matrix || '';
+            execFileSync(config.executeProgram, [
+                '-t',
+                'svm',
+                '-a',
+                algorithm,
+                '-c',
+                'restore',
+                '-s',
+                path.join(config.uploadPath, source),
+                '-o',
+                path.join(config.uploadPath, output),
+                '-r',
+                path.join(config.uploadPath, matrix),
+                '-k',
+                path.join(config.uploadPath, keys),
+                '-m',
+                `${algorithm}-model.dat`
+            ]);
+        } else {
+            execFileSync(config.executeProgram, [
+                '-t',
+                'svm',
+                '-a',
+                algorithm,
+                '-c',
+                'restore',
+                '-s',
+                path.join(config.uploadPath, source),
+                '-o',
+                path.join(config.uploadPath, output),
+                '-k',
+                path.join(config.uploadPath, keys),
+                '-m',
+                `${algorithm}-model.dat`
+            ]);
+        }
+        context.response.body = {
+            output: output
+        };
+        await next();
     });
 
 server.use(router.routes());
