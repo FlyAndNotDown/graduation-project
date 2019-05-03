@@ -20,7 +20,10 @@ interface State {
     markAlgorithm: string,
     markSource: string,
     markSecret: string,
-    locked: boolean
+    locked: boolean,
+    markOutputAddr: string,
+    markMatrixAddr: string,
+    markKeysAddr: string
 }
 
 export class IndexPage extends React.Component<Props, State> {
@@ -37,13 +40,16 @@ export class IndexPage extends React.Component<Props, State> {
             markAlgorithm: 'qdfrnt',
             markSource: '',
             markSecret: '',
+            markOutputAddr: '',
+            markMatrixAddr: '',
+            markKeysAddr: '',
 
             locked: false
         };
     }
 
     showMarkDrawer = (): void => { this.setState({ markDrawerVisible: true }); };
-    closeMarkDrawer = (): void => { this.setState({ markDrawerVisible: false }); };
+    closeMarkDrawer = (): void => { this.setState({ markDrawerVisible: false, markDrawerStep: 0 }); };
     showRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: true }); };
     closeRestoreDrawer = (): void => { this.setState({ restoreDrawerVisible: false }); };
     onMarkButtonClick = (): void => { this.showMarkDrawer(); };
@@ -88,7 +94,7 @@ export class IndexPage extends React.Component<Props, State> {
     onMarkAlgorithmChange = (value: string) => { this.setState({ markAlgorithm: value }); };
     onMarkSourceChange = (value: string) => { this.setState({ markSource: value }); };
     onMarkSecretChange = (value: string) => { this.setState({ markSecret: value }); };
-    onMarkStartMarkButtonClicked = () => {
+    onMarkStartMarkButtonClicked = async () => {
         if (this.state.markAlgorithm === '') {
             return message.error('请选择算法');
         }
@@ -98,9 +104,17 @@ export class IndexPage extends React.Component<Props, State> {
         if (this.state.markSecret === '') {
             return message.error('请选择水印图像');
         }
+
+        this.setState({
+            markOutputAddr: '',
+            markMatrixAddr: '',
+            markKeysAddr: ''
+        });
+
         this.lock();
+        let response;
         try {
-            const response = Axios.post(`${config.urlPrefix}/mark`, {
+            response = await Axios.post(`${config.urlPrefix}/mark`, {
                 algorithm: this.state.markAlgorithm,
                 source: this.state.markSource,
                 secret: this.state.markSecret
@@ -109,7 +123,20 @@ export class IndexPage extends React.Component<Props, State> {
             this.unlock();
             return message.error('服务器错误，请重试');
         }
-        // TODO
+
+        response = response || {};
+        let data = response.data || {};
+        let output = data.output || '';
+        let matrix = data.matrix || '';
+        let keys = data.keys || '';
+
+        this.setState({
+            markOutputAddr: output === '' ? '' : `${config.staticPath}/${output}`,
+            markMatrixAddr: matrix === '' ? '' : `${config.staticPath}/${matrix}`,
+            markKeysAddr: keys === '' ? '' : `${config.staticPath}/${keys}`
+        });
+
+        this.goNextMarkStep();
         this.unlock();
     };
 
@@ -166,7 +193,7 @@ export class IndexPage extends React.Component<Props, State> {
         );
         const markDrawerUploadSourceRow = (
             <Row className={'mt-60px'}>
-                <Col span={8} offset={8}>
+                <Col span={12} offset={6}>
                     <div className={'text-align-center'}>
                         <Upload
                             name={'file'}
@@ -189,7 +216,7 @@ export class IndexPage extends React.Component<Props, State> {
         );
         const markDrawerMarkReadyRow = (
             <Row className={'mt-60px'}>
-                <Col span={8} offset={8}>
+                <Col span={12} offset={6}>
                     <Form>
                         <Form.Item label={'变换算法'}>
                             <Select defaultValue={'qdfrnt'} onChange={this.onMarkAlgorithmChange}>
@@ -223,6 +250,38 @@ export class IndexPage extends React.Component<Props, State> {
                 </Col>
             </Row>
         );
+        const markDrawerSaveResultRow = (
+            <Row className={'mt-60px'}>
+                <Col span={12} offset={6}>
+                    <div className={'font-size-20px color-font-primary text-align-center'}>
+                        嵌入完成，结果和提取秘钥如下
+                    </div>
+                    <div className={'font-size-15px color-font-second text-align-center'}>
+                        请自行下载并且妥善保管
+                    </div>
+                    <Form className={'mt-xxl'}>
+                        <Form.Item label={'嵌入后图像'}>
+                            <Input
+                                disabled={true}
+                                value={this.state.markOutputAddr}
+                                addonAfter={<a target={'__blank'} className={'color-font-second'} href={this.state.markOutputAddr}>下载</a>}/>
+                        </Form.Item>
+                        <Form.Item label={'Matrix 秘钥'}>
+                            <Input
+                                disabled={true}
+                                value={this.state.markMatrixAddr}
+                                addonAfter={<a target={'__blank'} className={'color-font-second'} href={this.state.markMatrixAddr}>下载</a>}/>
+                        </Form.Item>
+                        <Form.Item label={'Keys 秘钥'}>
+                            <Input
+                                disabled={true}
+                                value={this.state.markKeysAddr}
+                                addonAfter={<a target={'__blank'} className={'color-font-second'} href={this.state.markKeysAddr}>下载</a>}/>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
+        );
         const markDrawer = (
             <Drawer
                 title={'嵌入水印'}
@@ -239,6 +298,7 @@ export class IndexPage extends React.Component<Props, State> {
                         {markDrawerSteps}
                         {this.state.markDrawerStep === 0 && markDrawerUploadSourceRow}
                         {this.state.markDrawerStep === 1 && markDrawerMarkReadyRow}
+                        {this.state.markDrawerStep === 2 && markDrawerSaveResultRow}
                     </Col>
                 </Row>
             </Drawer>
