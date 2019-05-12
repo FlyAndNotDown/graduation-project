@@ -1,6 +1,6 @@
 % load image
 source = im2double(imread('lena.bmp'));
-secret = imread('secret.bmp');
+secret = imread('secret4.bmp');
 
 % calculate the kernel DFrFT
 kernel = dfrftKernel(8, 0.5);
