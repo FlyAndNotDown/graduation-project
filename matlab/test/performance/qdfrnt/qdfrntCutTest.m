@@ -18,7 +18,7 @@ for n = 1 : 20
     [output, kp] = qdfrntMark(source, secret, 3, r, ir, 13);
     output = cut(output, x(1, n));
     secretRestored = qdfrntRestore(output, model, kp, 3, r);
-    secretBers(1, n) = ber(cut(secret, x(1, n)), secretRestored);
+    secretBers(1, n) = ber(secret, secretRestored);
 
     imwrite(output, ['dist/', num2str(n), '-output.bmp']);
     imwrite(secretRestored, ['dist/', num2str(n), '-restored.bmp']);
