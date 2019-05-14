@@ -1,5 +1,5 @@
 function output = ber(source, received)
-% ber - byte error rate
+%ber - byte error rate
 %
 % - Arguments:
 %       - source [mxn logical matrix] source matrix
