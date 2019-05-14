@@ -73,7 +73,7 @@ for n = 1 : 1000
     iKernel = dfrntKernel(0 - orders(1, orderNo), cycles(1, cycleNo), randomMatrixes{1, randomMatrixNo});
 
     % do watermark
-    [output, kp] = qdfrntMark(source, secret, aOrders(1, aOrderNo), kernel, iKernel, 0.05);
+    [output, kp] = qdfrntMark(source, secret, aOrders(1, aOrderNo), kernel, iKernel, 13);
     [ssimSource, ~] = ssim(source, output);
     restored = qdfrntRestore(output, model, kp, aOrders(1, aOrderNo), kernel);
     [ssimSecret, ~] = ssim(im2uint8(secret), im2uint8(restored));

@@ -24,7 +24,7 @@ for n = 1 : 20
     x(1, n) = 0.001 * n;
 
     % watermarking
-    [output, kp] = qdfrftMark(source, secret, 3, r, ir, 0.05);
+    [output, kp] = qdfrftMark(source, secret, 3, r, ir, 13);
 
     % calculate ssim
     [sourceSsimVal, ~] = ssim(source, output);
