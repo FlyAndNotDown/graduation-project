@@ -6,7 +6,6 @@ secret = imread('secret.bmp');
 indexFile = fopen('dist/index.txt', 'w+');
 
 % calculate the kernel of DFrFT
-p = rand(8, 8);
 r = dfrftKernel(8, 0.5);
 ir = dfrftKernel(8, -0.5);
 

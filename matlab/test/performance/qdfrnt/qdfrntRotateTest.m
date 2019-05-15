@@ -3,15 +3,16 @@ secret = imread('secret4.bmp');
 
 indexFile = fopen('dist/index.txt', 'w+');
 
-r = dfrftKernel(8, 0.5);
-ir = dfrftKernel(8, -0.5);
+p = rand(8, 8);
+r = dfrntKernel(0.75, 1, p);
+ir = dfrntKernel(-0.75, 1, p);
 
 load('data/qdfrntModel.mat', 'model');
 
 secretBers = zeros(1, 12);
 x = zeros(1, 12);
 
-fprintf(indexFile, 'testNo\t\tcutPercent\t\tber\n');
+fprintf(indexFile, 'testNo\t\trotatePercent\t\tber\n');
 for n = 1 : 12
     x(1, n) = 30 * n;
     [output, kp] = qdfrntMark(source, secret, 3, r, ir, 13);

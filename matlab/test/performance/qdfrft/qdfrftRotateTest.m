@@ -11,7 +11,7 @@ load('data/qdfrftModel.mat', 'model');
 secretBers = zeros(1, 12);
 x = zeros(1, 12);
 
-fprintf(indexFile, 'testNo\t\tcutPercent\t\tber\n');
+fprintf(indexFile, 'testNo\t\trotatePercent\t\tber\n');
 for n = 1 : 12
     x(1, n) = 30 * n;
     [output, kp] = qdfrftMark(source, secret, 3, r, ir, 13);
