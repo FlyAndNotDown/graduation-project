@@ -13,10 +13,10 @@ x = zeros(1, 10);
 
 fprintf(indexFile, 'testNo\t\tjpegPercent\t\tber\n');
 for n = 1 : 10
-    x(1, n) = 0.1 * n;
+    x(1, n) = 0.05 * n;
     [output, kp] = qdfrftMark(source, secret, 3, r, ir, 13);
-    imwrite(output, ['dist/', num2str(n), '-output.bmp'], 'Quality', 100 * (1 - x(1, n)));
-    output = imread(['dist/', num2str(n), '-output.bmp']);
+    imwrite(output, ['dist/', num2str(n), '-output.jpg'], 'jpg', 'Quality', 100 * (1 - x(1, n)));
+    output = imread(['dist/', num2str(n), '-output.jpg']);
     secretRestored = qdfrftRestore(output, model, kp, 3, r);
     secretBers(1, n) = ber(secret, secretRestored);
 
