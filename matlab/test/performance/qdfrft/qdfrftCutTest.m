@@ -1,5 +1,5 @@
 source = im2double(imread('lena.bmp'));
-secret = imread('secret.bmp');
+secret = imread('secret4.bmp');
 
 indexFile = fopen('dist/index.txt', 'w+');
 
@@ -8,11 +8,11 @@ ir = dfrftKernel(8, -0.5);
 
 load('data/qdfrftModel.mat', 'model');
 
-secretBers = zeros(1, 20);
-x = zeros(1, 20);
+secretBers = zeros(1, 10);
+x = zeros(1, 10);
 
 fprintf(indexFile, 'testNo\t\tcutPercent\t\tber\n');
-for n = 1 : 20
+for n = 1 : 10
     x(1, n) = 0.05 * n;
     [output, kp] = qdfrftMark(source, secret, 3, r, ir, 13);
     output = cut(output, x(1, n));

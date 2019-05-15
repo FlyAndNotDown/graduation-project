@@ -1,23 +1,25 @@
 source = im2double(imread('lena.bmp'));
 secret = imread('secret.bmp');
 
+[sourceRows, sourceCols, ~] = size(source);
+
 indexFile = fopen('dist/index.txt', 'w+');
 
-p = rand(8, 8);
-r = dfrntKernel(0.75, 1, p);
-ir = dfrntKernel(-0.75, 1, p);
+r = dfrftKernel(8, 0.5);
+ir = dfrftKernel(8, -0.5);
 
-load('data/qdfrntModel.mat', 'model');
+load('data/qdfrftModel.mat', 'model');
 
 secretBers = zeros(1, 10);
 x = zeros(1, 10);
 
-fprintf(indexFile, 'testNo\t\tcutPercent\t\tber\n');
+fprintf(indexFile, 'testNo\t\tresizePercent\t\tber\n');
 for n = 1 : 10
     x(1, n) = 0.05 * n;
-    [output, kp] = qdfrntMark(source, secret, 3, r, ir, 13);
-    output = cut(output, x(1, n));
-    secretRestored = qdfrntRestore(output, model, kp, 3, r);
+    [output, kp] = qdfrftMark(source, secret, 3, r, ir, 13);
+    output = imresize(output, 1 - x(1, n));
+    output = imresize(output, [sourceRows, sourceRows]);
+    secretRestored = qdfrftRestore(output, model, kp, 3, r);
     secretBers(1, n) = ber(secret, secretRestored);
 
     imwrite(output, ['dist/', num2str(n), '-output.bmp']);
