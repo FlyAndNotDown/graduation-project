@@ -1,5 +1,5 @@
 source = im2double(imread('lena.bmp'));
-secret = imread('secret.bmp');
+secret = imread('secret4.bmp');
 
 indexFile = fopen('dist/index.txt', 'w+');
 
