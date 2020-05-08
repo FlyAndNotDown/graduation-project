@@ -206,7 +206,7 @@ options:
 * 输入图像大小需要按照规格，暂时不支持 `256位 RGB` 以外的其他格式
 
 # 📦 Web 应用
-基于 `C++` 版本二进制文件调用做了一个简单的 `Web` 应用，目前已经部署，可以在线使用：[📦 彩图水印系统 - kindem-dev-site](http://dev.kindemh.cn/watermark/)，如果需要自己部署，你需要做如下事情：
+基于 `C++` 版本二进制文件调用做了一个简单的 `Web` 应用，目前已经部署，可以在线使用：[📦 彩图水印系统 - kindem-dev-site](https://www.kindem.xyz/watermark)，如果需要自己部署，你需要做如下事情：
 
 首先分别进入前端和后端项目，使用 `yarn` 或者 `npm` 安装依赖：
 
